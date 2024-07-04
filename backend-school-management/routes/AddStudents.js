@@ -1,5 +1,5 @@
-import express, { response } from "express";
-import AddStudentModel from "../models/Students.js";
+import express from "express";
+import AddStudentModel from '../models/Students.js'
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.post("/addstudent", async (req, res) => {
       studentName,
       fatherName,
       motherName,
-      className,
+      classname,
       phoneNumber,
       dateOfBirth,
       section,
@@ -28,7 +28,7 @@ router.post("/addstudent", async (req, res) => {
       !motherName ||
       !phoneNumber ||
       !dateOfBirth ||
-      !className ||
+      !classname ||
       !section ||
       !gender ||
       !address
@@ -42,7 +42,7 @@ router.post("/addstudent", async (req, res) => {
       motherName,
       phoneNumber,
       dateOfBirth,
-      className,
+      classname,
       section,
       gender,
       address,
@@ -72,62 +72,54 @@ router.get("/showstudents", async (req, res) => {
     console.error("Error fetching students:", error);
     return res
       .status(500)
-      .json({ status: false, message: "Internal Server Error" });
+      .json({ status: false, message: "Internal Server Error",AllStudents });
   }
 });
-export { router as AddStudentRouter };
 
-//  edit srtudent API'S
+
+//  edit student API'S
 
 router.put("/editstudent/:id", async (req, res) => {
-  console.log("editstudent API called");
+  console.log(" edit student  API is called");
+  // console.log("params", req.params);
+  const { id } = req.params;
+  const data = req.body;
+  // console.log("id is", id);
+  console.log(data)
+ 
   try {
-    const id = req.params.id;
-    const data = req.body;
-
-    const {
-      studentName,
-      fatherName,
-      motherName,
-      phoneNumber,
-      dateOfBirth,
-      className,
-      section,
-      gender,
-      address
-    } = data;
-
-    // Validate the input
-
-    if (
-      !studentName ||
-      !fatherName ||
-      !motherName ||
-      !phoneNumber ||
-      !dateOfBirth ||
-      !className ||
-      !section ||
-      !gender ||
-      !address
-    ) {
-      return res.status(400).json({ msg: "Please enter all the fields" });
-    }
-
-    // Find the student by ID and update the details
-    const updatedStudent = await AddStudentModel.findByIdAndUpdate(
+    const updatedStudent = await AddStudentModel.updateOne(
       { _id: id },
-
       { $set: data },
-
-      { new: true }
-      // Return the updated document
+      {new: true}
     );
-    console.log(updatedStudent);
-    return res.status(200).json({ msg: "data is updated", updatedStudent });
+    console.log(updatedStudent)
+    return res.json({
+      status: true,
+      message: "update data successfully",
+      updatedStudent,
+    });
   } catch (error) {
-    console.error("Error updating student:", error);
-    return res
-      .status(500)
-      .json({ status: false, message: "Internal Server Error" });
+    console.log(error);
   }
 });
+
+
+// delete student API'S
+
+router.delete("/deletestudents/:id", async (req,res) => {
+  console.log("Delete/student  API is called ");
+   const id = req.params.id;
+  console.log("id is",id);
+  try{
+    console.log(`Deleting student with ID: ${id}`);
+      const deleteStudent = await AddStudentModel.findByIdAndDelete({_id:id});
+     return res.status(200).json({status:true,msg: "Student deleted successfully", deleteStudent});
+  } catch (error) {
+    console.log(`Error deleting student with ID: ${id}`, error);
+    return res.status(500).json({msg: "Internal server Error"});
+
+  }
+})
+
+export { router as AddStudentRouter };

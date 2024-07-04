@@ -270,7 +270,4 @@ router.put("/updateprofile/:id", async (req, res) => {
 });
 
 
-
-// this is for add-student
-
 export { router as UserRouter };

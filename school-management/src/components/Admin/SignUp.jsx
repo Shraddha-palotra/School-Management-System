@@ -1,5 +1,7 @@
 import { useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
+import eye from "../assets/images/eye.png"
+import offEye from  "../assets/images/offEye.png";
 import {useNavigate } from "react-router-dom";
 import Axios from 'axios'
 
@@ -10,8 +12,24 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({})
-
   const navigate = useNavigate();
+
+  const [passwordToggle, setPasswordToggle] = useState({
+    password:false,
+    confirmPassword:false,
+  })
+   
+  const handlePasswordToggle = (e, key, value ) => {
+    e.preventDefault();
+    console.log("e",e);
+    console.log("key",key);
+    console.log("value",value)
+    setPasswordToggle((prevData) => ({
+      ...prevData,
+      [key]:value
+    }));
+  }
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -145,8 +163,17 @@ const SignUp = () => {
                       <label htmlFor="password" className="custom-form-label">
                         Password
                       </label>
+                      <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"password",!passwordToggle.password)
+                        }}
+                         src={passwordToggle.password ? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
                       <input
-                        type="password"
+                        type={passwordToggle.password ? "text" : "password"}
                         className="custom-input-field"
                         id="lastname"
                         placeholder="Enter Password"
@@ -156,6 +183,7 @@ const SignUp = () => {
                         }}
                        
                       />
+                      </div>
                       {errors.password && (
                       <p className="required-validation">{errors.password}</p>
                     )}
@@ -164,8 +192,18 @@ const SignUp = () => {
                       <label htmlFor="password" className="custom-form-label">
                         Confirm Password
                       </label>
+                      <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"confirmPassword",!passwordToggle.confirmPassword)
+                        }}
+                         src={passwordToggle.confirmPassword ? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
+                         
                       <input
-                        type="password"
+                         type={passwordToggle.confirmPassword ? "text" : "password"}
                         className="custom-input-field"
                         id="lastname"
                         placeholder="Enter Password"
@@ -175,6 +213,7 @@ const SignUp = () => {
                         }}
                         
                       />
+                      </div>
                       {errors.confirmPassword && (
                       <p className="required-validation">{errors.confirmPassword}</p>
                     )}

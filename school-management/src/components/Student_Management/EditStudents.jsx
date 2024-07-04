@@ -1,27 +1,23 @@
 import React, {useState} from 'react'
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
+import {toast,ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import Axios  from 'axios';
 
-function EditStudents({ data, isOpen, setIsOpen }) {
+function EditStudents({ items, isOpen, setIsOpen }) {
 
   const navigate = useNavigate();
   
-  
-  const [studentData, setStudentData] = useState(data || {});
+  const location = useLocation();
+// console.log("location in edit student",location.state.items);
 
-  const [studentName, setStudentName] = useState(studentData.studentName || "");
-  const [fatherName, setFatherName] = useState(studentData.fatherName || "");
-  const [motherName, setMotherName] = useState(studentData.motherName || "");
-  const [phoneNumber, setPhoneNumber] = useState(studentData.phoneNumber || "");
-  const [className, setClassName] = useState(studentData.className || "");
-  const [dateOfBirth, setdateOfBirth] = useState(studentData.dateOfBirth || "");
-  const [section, setSection] = useState(studentData.section || "");
-  const [gender, setGender] = useState(studentData.gender || "");
-  const [address, setAddress] = useState(studentData.address || "");
+  const [studentData, setStudentData] = useState(location.state.items || {});
+  console.log("studentData",studentData);
+  
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -35,22 +31,22 @@ function EditStudents({ data, isOpen, setIsOpen }) {
   const validateForm = () => {
     let formErrors = {};
 
-    if (!studentName) formErrors.studentName = "Full name is required";
-    if (!fatherName) formErrors.fatherName = "Father name is required";
-    if (!motherName) formErrors.motherName = "Mother name is required";
+    if (!studentData.studentName) formErrors.studentName = "Full name is required";
+    if (!studentData.fatherName) formErrors.fatherName = "Father name is required";
+    if (!studentData.motherName) formErrors.motherName = "Mother name is required";
 
     const pattern = /^\d+$/;
-    if (!phoneNumber) {
+    if (!studentData.phoneNumber) {
       formErrors.phoneNumber = "Phone number is required";
-    } else if (!pattern.test(phoneNumber)) {
+    } else if (!pattern.test(studentData.phoneNumber)) {
       formErrors.phoneNumber = "Phone number should contain only digits";
     }
 
-    if (!className) formErrors.className = "Class is required";
-    if (!dateOfBirth) formErrors.dateOfBirth = "Date of birth is required";
-    if (!section) formErrors.section = "Section is required";
-    if (!gender) formErrors.gender = "Gender is required";
-    if (!address) formErrors.address = "Address is required";
+    if (!studentData.classname) formErrors.classname = "Class is required";
+    if (!studentData.dateOfBirth) formErrors.dateOfBirth = "Date of birth is required";
+    if (!studentData.section) formErrors.section = "Section is required";
+    if (!studentData.gender) formErrors.gender = "Gender is required";
+    if (!studentData.address) formErrors.address = "Address is required";
 
     return formErrors;
   };
@@ -58,28 +54,25 @@ function EditStudents({ data, isOpen, setIsOpen }) {
   // 2. Removed Nested Function
   const handleSubmit = (e) => {
     e.preventDefault();
-
+   
     const formErrors = validateForm();
     setErrors(formErrors);
+    console.log("student data on submit",studentData);
 
     if (Object.keys(formErrors).length === 0) {
       const id = studentData._id;
       
-      Axios.put(`http://localhost:8080/student/editstudent/${id}`, {
-        studentName,
-        fatherName,
-        motherName,
-        phoneNumber,
-        className,
-        dateOfBirth,
-        section,
-        gender,
-        address,
-      })
+      Axios.put(`http://localhost:8080/student/editstudent/${id}`,
+       studentData
+      )
       .then((response) => {
         if (response.data.status) {
-          navigate("/student", { state: { data } });
-          alert("Successfully updated student");
+          toast.success("Successfully added new student")
+          setTimeout(()=>{
+            navigate('/student', { state: { items } });
+          },1000)
+         
+          
         }
       })
       .catch((err) => {
@@ -89,6 +82,7 @@ function EditStudents({ data, isOpen, setIsOpen }) {
   };
   return (
     <>
+    <ToastContainer/>
       <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -163,8 +157,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             className="custom-input-field"
                             id="fullname"
                             placeholder="Enter Name"
+                            name='studentName'
                             value={studentData.studentName}
-                            onChange={(e) => setStudentName(e.target.value)}
+                            onChange={handleChange}
                           />
                           {errors.studentName && (
                             <p className="required-validation">{errors.studentName}</p>
@@ -183,8 +178,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             className="custom-input-field"
                             id="fathername"
                             placeholder="Enter Name"
-                            value={fatherName}
-                            onChange={(e) => setFatherName(e.target.value)}
+                            name='fatherName'
+                            value={studentData.fatherName}
+                            onChange={handleChange}
                           />
                           {errors.fatherName && (
                             <p className="required-validation">{errors.fatherName}</p>
@@ -203,8 +199,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             className="custom-input-field"
                             id="mothername"
                             placeholder="Enter Name"
-                            value={motherName}
-                            onChange={(e) => setMotherName(e.target.value)}
+                            name='motherName'
+                            value={studentData.motherName}
+                            onChange={handleChange}
                           />
                           {errors.motherName && (
                             <p className="required-validation">{errors.motherName}</p>
@@ -219,8 +216,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             type="date"
                             className="custom-input-field"
                             id="dateofbirth"
-                            value={dateOfBirth}
-                            onChange={(e) => setdateOfBirth(e.target.value)}
+                            name='dateOfBirth'
+                            value={studentData.dateOfBirth}
+                            onChange={handleChange}
                           />
                           {errors.dateOfBirth && (
                             <p className="required-validation">{errors.dateOfBirth}</p>
@@ -236,8 +234,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             className="custom-input-field"
                             id="phonenumber"
                             placeholder="Enter Number"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            name='phoneNumber'
+                            value={studentData.phoneNumber}
+                            onChange={handleChange}
                           />
                           {errors.phoneNumber && (
                             <p className="required-validation">{errors.phoneNumber}</p>
@@ -255,8 +254,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             className="custom-input-field"
                             id="school-class"
                             placeholder="Enter Class"
-                            value={className}
-                            onChange={(e) => setClassName(e.target.value)}
+                            name='classname'
+                            value={studentData.classname}
+                            onChange={handleChange}
                           />
                           {errors.className && (
                             <p className="required-validation">{errors.className}</p>
@@ -270,8 +270,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             Section
                           </label>
                           <select className="custom-input-field"
-                          value={section}
-                          onChange={(e) => setSection(e.target.value)}
+                          name='section'
+                          value={studentData.section}
+                          onChange={handleChange}
                           >
                             <option value="" 
                           >
@@ -298,8 +299,8 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                                 type="radio"
                                 name="gender"
                                 value="male"
-                                checked={gender === "male"}
-                                onChange={(e) => setGender(e.target.value)}
+                                checked={studentData.gender === "male"}
+                                onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="male">
                                 Male
@@ -311,8 +312,8 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                                 type="radio"
                                 name="gender"
                                 value="female"
-                                checked={gender === "female"}
-                                onChange={(e) => setGender(e.target.value)}
+                                checked={studentData.gender === "female"}
+                                onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="female">
                                 Female
@@ -324,8 +325,8 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                                 type="radio"
                                 name="gender"
                                 value="other"
-                                checked={gender === "other"}
-                                onChange={(e) => setGender(e.target.value)}
+                                checked={studentData.gender === "other"}
+                                onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="other">
                                 Other
@@ -351,8 +352,9 @@ function EditStudents({ data, isOpen, setIsOpen }) {
                             id="address"
                             placeholder="Enter Address"
                             rows="6"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
+                            value={studentData.address}
+                            name='address'
+                            onChange={handleChange}
                           ></textarea>
                           {errors.address && (
                             <p className="required-validation">{errors.address}</p>

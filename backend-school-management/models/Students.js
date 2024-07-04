@@ -6,7 +6,7 @@ const AddStudentSchema = new mongoose.Schema({
     motherName: { type: String, required: true},
     phoneNumber: { type: String, required: true, minLength:10 },
     dateOfBirth: { type: String, required: true },
-    className: { type: String, required: true },
+    classname: { type: String, required: true },
     section: { type: String, required: true },
     gender: { type: String, required: true },
     address: {type: String, required: true}

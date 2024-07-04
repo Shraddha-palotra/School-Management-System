@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
+import eye from "../assets/images/eye.png"
+import offEye from "../assets/images/offEye.png"
 import { useNavigate, useParams } from "react-router-dom";
 import  Axios   from "axios";
  
@@ -11,6 +13,23 @@ function ResetPassword() {
   
   const {token} = useParams()
   const navigate = useNavigate() 
+
+  const [passwordToggle, setPasswordToggle] = useState({
+    password:false,
+    confirmPassword:false,
+  })
+   
+  const handlePasswordToggle = (e, key, value ) => {
+    e.preventDefault();
+    console.log("e",e);
+    console.log("key",key);
+    console.log("value",value)
+    setPasswordToggle((prevData) => ({
+      ...prevData,
+      [key]:value
+    }));
+  }
+  
 
   const handleResetPasswordSubmit = (e) => {
     e.preventDefault()
@@ -72,14 +91,24 @@ function ResetPassword() {
                       >
                         New Password
                       </label>
+                      <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"password",!passwordToggle.password)
+                        }}
+                         src={passwordToggle.password ? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
                       <input
                         className="custom-input-field"
-                        type="password"
+                        type={passwordToggle.password ? "text" : "password"}
                         id="newPassword"
                         placeholder="Enter New Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}  
                       />
+                      </div>
                       {errors.password && (
                         <p className="required-validation">{errors.password}</p>
                       )}
@@ -91,14 +120,24 @@ function ResetPassword() {
                       >
                         Confirm Password
                       </label>
+                      <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"confirmPassword",!passwordToggle.confirmPassword)
+                        }}
+                         src={passwordToggle.confirmPassword ? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
                       <input
                         className="custom-input-field"
-                        type="password"
+                        type={passwordToggle.confirmPassword ? "text" : "con"}
                         id="confirmPassword"
                         placeholder="Enter Confirm Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                       />
+                      </div>
                       {errors.confirmPassword && (
                         <p className="required-validation">{errors.confirmPassword}</p>
                       )}

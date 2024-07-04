@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "./HeaderDash";
 import changePassword from "../assets/images/changePassword.png";
+import eye from "../assets/images/eye.png"
+import offEye from "../assets/images/offEye.png"
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -13,6 +15,25 @@ function Change_password({ isOpen, setIsOpen }) {
   const [errors, setErrors] = useState({})
 
   const navigate = useNavigate()
+
+  
+  const [passwordToggle, setPasswordToggle] = useState({
+    oldPassword: false,
+    confirmPassword: false,
+    newPassword : false,
+  })
+   
+  const handlePasswordToggle = (e, key, value ) => {
+    e.preventDefault();
+    console.log("e",e);
+    console.log("key",key);
+    console.log("value",value)
+    setPasswordToggle((prevData) => ({
+      ...prevData,
+      [key]:value
+    }));
+  }
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -95,13 +116,23 @@ function Change_password({ isOpen, setIsOpen }) {
                             Old Password{" "}
                             <span className="required-validation">*</span>
                           </label>
+                          <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"oldPassword",!passwordToggle.oldPassword)
+                        }}
+                         src={passwordToggle.oldPassword ? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
                           <input
-                            type="password"
+                            type={passwordToggle.oldPassword ? "text" : "password"}
                             className="custom-input-field"
                             id="oldpassword"
                             placeholder="Enter Old Password"
                             onChange={(e) => setOldPassword(e.target.value)}
                           />
+                          </div>
                            {errors.oldPassword && (
                       <p className="required-validation">{errors.oldPassword}</p>
                     )}
@@ -114,13 +145,23 @@ function Change_password({ isOpen, setIsOpen }) {
                             New Password{" "}
                             <span className="required-validation">*</span>
                           </label>
+                          <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"newPassword",!passwordToggle.newPassword)
+                        }}
+                         src={passwordToggle.newPassword ? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
                           <input
-                            type="password"
+                            type={passwordToggle.newPassword ? "text" : "password"}
                             className="custom-input-field"
                             id="newpassword"
                             placeholder="Enter New Password"
                             onChange={(e) => setNewPassword(e.target.value)}
                           />
+                          </div>
                           {errors.newPassword && (
                       <p className="required-validation">{errors.newPassword}</p>
                     )}
@@ -133,13 +174,23 @@ function Change_password({ isOpen, setIsOpen }) {
                             Confirm Password{" "}
                             <span className="required-validation">*</span>
                           </label>
+                          <div className="possionIconInput" >
+                        <img 
+                        onClick={(e) => {
+                          handlePasswordToggle(e,"confirmPassword",!passwordToggle.confirmPassword)
+                        }}
+                         src={passwordToggle.confirmPassword? eye : offEye}
+                         alt=""
+                         className="eyeIconView"
+                         />
                           <input
-                            type="password"
+                            type={passwordToggle.confirmPassword ? "text" : "password"}
                             className="custom-input-field"
                             id="confirmpassword"
                             placeholder="Enter Confirm Password"
                             onChange={(e) => setConfirmPassword(e.target.value)}
                           />
+                          </div>
                           {errors.confirmPassword && (
                       <p className="required-validation">{errors.confirmPassword}</p>
                     )}

@@ -1,10 +1,30 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from '../Sidebar/Sidebar'
 import HeaderDash from './HeaderDash'
+import  Axios  from 'axios';
 
 
 
 function Dashboard({isOpen, setIsOpen}) {
+
+  const [totalStundet, setTotalStudent ] = useState([]);
+
+
+  useEffect( () => {
+    const fun1 = async (req, res) => {
+      try {
+        const res1 =await Axios.get("http://localhost:8080/student/showstudents")
+        console.log("res1",res1.data.AllStudents);
+        if (res1.data.status){
+          setTotalStudent(res1.data.AllStudents)
+        }
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+fun1()
+  },[])
 
   return (
 <>
@@ -41,7 +61,7 @@ function Dashboard({isOpen, setIsOpen}) {
                     <div className="custom-card presentEmployee">
                       <div className="left-data">
                         <div className="heading">
-                          <h2 className="count">700</h2>
+                          <h2 className="count">{totalStundet.length}</h2>
                           <span>Number Of Student's</span>
                         </div>
                       </div>                     

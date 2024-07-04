@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
 import eye from "../assets/images/eye.png";
+import offEye from "../assets/images/offEye.png"
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 
@@ -9,6 +10,10 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({})
   const navigate = useNavigate();
+
+  const [passwordToggle, setPasswordToggle] = useState(false)
+   
+ 
 
   Axios.defaults.withCredentials = true;
   const handleLoginSubmit = (e) => {
@@ -87,11 +92,16 @@ function Login() {
                       </label>
 
                       <div className="possionIconInput">
-                        <img src={eye} alt="" className="eyeIconView" />
+                        <img 
+                        onClick={(e) => {
+                          setPasswordToggle(!passwordToggle)
+                        }}
+                        src={passwordToggle  ? eye : offEye}
+                         alt="" className="eyeIconView" />
 
                         <input
                           className="custom-input-field"
-                          type="password"
+                          type={passwordToggle ? "text" : "password"}
                           id="lastname"
                           placeholder="Enter Password"
                           value={password}

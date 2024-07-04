@@ -34,7 +34,8 @@ function Sidebar({ isOpen }) {
             className={
               window.location.pathname === "/student" ||
               window.location.pathname === "/add-student" ||
-              window.location.pathname === "/edit-students"
+              window.location.pathname === "/edit-students" ||
+              window.location.pathname === "/view-students"
                 ? "active item"
                 : "item"
             }

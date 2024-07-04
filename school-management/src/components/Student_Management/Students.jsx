@@ -8,15 +8,29 @@ import view from "../assets/icons/view.svg";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import  Axios  from "axios";
+import DeleteStudents from "../Student_Management/DeleteStudents";
 
 function Students({isOpen, setIsOpen}) {
 
   
-  const [ student, setStudent] = useState([])
-  // const data = {};
+  const [ student, setStudent] = useState([]);
+   const[isDeleteClick,setIsDeleteClick] = useState({
+     flag:false,
+     eachStudent:{}
+   })
+  console.log("is delete click",isDeleteClick);
   
-  
-  
+
+ const deleteHandle = (flag,eachStudent)=>{
+    //  console.log("delete handle of student called");
+    //  console.log("each student is",eachStudent);
+     setIsDeleteClick({
+        flag:flag,
+        eachStudent:eachStudent
+     })
+ }
+    
+
   const navigate = useNavigate();
 
 
@@ -41,7 +55,7 @@ function Students({isOpen, setIsOpen}) {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  },[isDeleteClick]);
 
   return (
     <>
@@ -97,7 +111,7 @@ function Students({isOpen, setIsOpen}) {
                          <tbody>
                          
                            {student.map((items, index) => (
-                            <tr >
+                            <tr key={index} >
                               <td>{index + 1}</td>
                               <td>
                                 <img src={Ellipse7} alt="" />
@@ -105,21 +119,21 @@ function Students({isOpen, setIsOpen}) {
                               </td>
                               <td>{items.fatherName}</td>
                               <td>{items.dateOfBirth}</td>
-                              <td>{items.className}</td>
+                              <td>{items.classname}</td>
                               <td>{items.phoneNumber}</td>
                               <td>{items.gender}</td>
                               <td>
                                 <div className="action-btn">
                                   <button
                                     onClick={() => {
-                                      navigate("/edit-students",{ state: {data} })
+                                      navigate("/edit-students",{ state: {items} })
                                     }} 
                                   >
                                     <img src={Edit} alt="Edit" />
                                   </button>
                                   <button
-                                    onClick={() => {
-                                      navigate("/delete-students",{ state: {data}});
+                                    onClick={(e) => {
+                                      deleteHandle(true, items);
                                     }}
                                     data-bs-toggle="modal"
                                     data-bs-target="#exampleModal"
@@ -128,7 +142,7 @@ function Students({isOpen, setIsOpen}) {
                                   </button>
                                   <button
                                     onClick={() => {
-                                      navigate("/view-students",{state: {data}});
+                                      navigate("/view-students",{state: {items}});
                                     }}
                                   >
                                     <img src={view} alt="View" />
@@ -145,6 +159,11 @@ function Students({isOpen, setIsOpen}) {
               </div>
             </div>
           </div>
+          <DeleteStudents
+          // isDelete={isDelete}
+          // deleteHandle={deleteHandle}
+         data={{ isDeleteClick, deleteHandle}}
+          />
         </div>
       </div>
     </>

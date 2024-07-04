@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Sidebar from '../Sidebar/Sidebar'
 import HeaderDash from '../Dashboard/HeaderDash'
 import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 
 function ViewStudents({isOpen,setIsOpen}) {
 
      const navigate = useNavigate();
+     const location = useLocation(); 
+
+     const [studentData, setStudentData] = useState(location.state.items);
+     console.log(studentData)
   return (
     <>
     <Sidebar isOpen={isOpen} />
@@ -85,6 +89,9 @@ function ViewStudents({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="fullname"
                             placeholder="Enter Name"
+                            name='classname'
+                            value={studentData.classname}
+                           
                           />
                         </div>
                         <div className="col-md-4">
@@ -100,6 +107,9 @@ function ViewStudents({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="fathername"
                             placeholder="Enter Name"
+                            name='fatherName'
+                            value={studentData.fatherName}
+                            disabled
                           />
                         </div>
                         <div className="col-md-4">
@@ -115,29 +125,38 @@ function ViewStudents({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="mothername"
                             placeholder="Enter Name"
+                            name='motherName'
+                            value={studentData.motherName}
+                            disabled
                           />
                         </div>
                         <div className="col-md-4">
-                          <label htmlFor="" className="custom-form-label">
-                            Date Of Birth{" "}
+                          <label htmlFor="dateofbirth" className="custom-form-label">
+                            Date Of Birth
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="date"
                             className="custom-input-field"
-                            id=""
+                            id="dateofbirth"
+                            name='dateOfBirth'
+                            value={studentData.dateOfBirth}
+                            disabled
                           />
                         </div>
                         <div className="col-md-4">
-                          <label htmlFor="" className="custom-form-label">
-                            Phone Number{" "}
+                          <label htmlFor="phonenumber" className="custom-form-label">
+                            Phone Number
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
-                            id=""
+                            id="phonenumber"
                             placeholder="Enter Number"
+                            name='phoneNumber'
+                            value={studentData.phoneNumber}
+                            disabled
                           />
                         </div>
                         <div className="col-md-4">
@@ -152,6 +171,9 @@ function ViewStudents({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="school-class"
                             placeholder="Enter Class"
+                            name='classname'
+                            value={studentData.classname}
+                            disabled
                           />
                         </div>
                         <div className="col-md-4">
@@ -161,8 +183,12 @@ function ViewStudents({isOpen,setIsOpen}) {
                           >
                             Section
                           </label>
-                          <select className="custom-input-field">
-                            <option value="" selected>
+                          <select className="custom-input-field"
+                          name='section'
+                          value={studentData.section}
+                          disabled
+                          >
+                            <option value="">
                               Section
                             </option>
                             <option value="">A</option>
@@ -172,7 +198,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                           </select>
                         </div>
                         <div className="col-md-8">
-                          <label for="gender" className="custom-form-label">
+                          <label htmlFor="gender" className="custom-form-label">
                             Gender{" "}
                             <span className="required-validation">*</span>
                           </label>
@@ -183,6 +209,8 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 type="radio"
                                 name="gender"
                                 value="male"
+                                checked={studentData.gender === "male"}
+                                disabled
                               />
                               <label className="ps-1" htmlFor="male">
                                 Male
@@ -194,6 +222,8 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 type="radio"
                                 name="gender"
                                 value="female"
+                                checked={studentData.gender === "female"}
+                                disabled
                               />
                               <label className="ps-1" htmlFor="female">
                                 Female
@@ -205,6 +235,8 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 type="radio"
                                 name="gender"
                                 value="other"
+                                checked={studentData.gender === "other"}
+                                disabled
                               />
                               <label className="ps-1" htmlFor="other">
                                 Other
@@ -227,6 +259,9 @@ function ViewStudents({isOpen,setIsOpen}) {
                             id="address"
                             placeholder="Enter Address"
                             rows="6"
+                            name='address'
+                            value={studentData.address}
+                            disabled
                           ></textarea>
                         </div>
                       </form>

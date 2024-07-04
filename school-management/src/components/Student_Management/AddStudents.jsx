@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Axios from "axios";
+import {toast,ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
@@ -14,7 +16,7 @@ function Add_Students({isOpen,setIsOpen}) {
   const [fatherName, setFatherName] = useState("");
   const [motherName, setMotherName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [className, setClassName] = useState("");
+  const [classname, setClassname] = useState("");
   const [dateOfBirth, setdateOfBirth] = useState("");
   const [section, setSection] = useState("");
   const [gender, setGender] = useState("");
@@ -24,13 +26,13 @@ function Add_Students({isOpen,setIsOpen}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     console.log(handleSubmit);
     console.log(studentName);
     console.log(fatherName);
     console.log(motherName);
     console.log(phoneNumber);
-    console.log(className);
+    console.log(classname);
     console.log(dateOfBirth);
     console.log(section);
     console.log(gender);
@@ -51,7 +53,7 @@ function Add_Students({isOpen,setIsOpen}) {
       formErrors.phoneNumber = "Phone number should contain only digits";
     }
 
-    if (!className) formErrors.className = "Class is required";
+    if (!classname) formErrors.classname = "Class is required";
 
     if (!dateOfBirth) formErrors.dateOfBirth = "Register date of birth is required";
 
@@ -70,7 +72,7 @@ function Add_Students({isOpen,setIsOpen}) {
       fatherName,
       motherName,
       phoneNumber,
-      className,
+      classname,
       dateOfBirth,
       section,
       gender,
@@ -80,8 +82,10 @@ function Add_Students({isOpen,setIsOpen}) {
       .then((response) => {
         console.log(response);
         if (response.data.status) {
-          navigate("/student");
-          alert("Successfully added new student")
+          toast.success("Successfully added new student")
+          setTimeout(()=>{
+            navigate('/student')
+          },1000)
         }
       })
       .catch((err) => {
@@ -90,6 +94,7 @@ function Add_Students({isOpen,setIsOpen}) {
   };
   return (
     <>
+    <ToastContainer/>
       <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -257,8 +262,9 @@ function Add_Students({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="school-class"
                             placeholder="Enter Class"
-                            value={className}
-                            onChange={(e) => setClassName(e.target.value)}
+                            name="classname"
+                            value={classname}
+                            onChange={(e) => setClassname(e.target.value)}
                           />
                           {errors.className && (
                             <p className="required-validation">{errors.className}</p>
