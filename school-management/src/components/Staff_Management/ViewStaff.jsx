@@ -1,97 +1,23 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Sidebar from "../Sidebar/Sidebar";
-import HeaderDash from "../Dashboard/HeaderDash";
+import React, {useState} from 'react'
+import { useLocation, useNavigate } from "react-router-dom";
 import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
-import { ToastContainer,toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import Axios  from "axios";
-
-function AddStaff({isOpen,setIsOpen}) {
-
-  const navigate = useNavigate();
-
-  const [staffName, setStaffName] = useState("");
-  const [staffPosition, setStaffPosition] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [joinDate, setJoinDate] = useState("");
-  const [salary, setSalary] = useState("");
-  const [gender, setGender] = useState("");
-  const [description, setDiscription] = useState("");
-  const [errors, setErrors] = useState({});
-
-   
-  const handleSubmit = (e) => {
-    e.preventDefault();
+import Sidebar from "../Sidebar/Sidebar";
+import HeaderDash from "../Dashboard/HeaderDash";
 
 
-    console.log(handleSubmit);
-    console.log(staffName);
-    console.log(staffPosition);
-    console.log(phoneNumber);
-    console.log(joinDate);
-    console.log(salary);
-    console.log(description);
-    console.log(gender);
+function ViewStaff({isOpen,setIsOpen}) {
 
+     
+     const navigate = useNavigate();
+     const location = useLocation(); 
 
-    let formErrors = {};
-  
-    if (!staffName) formErrors.staffName = "Staff name is required";
-
-   if (!staffPosition) formErrors.staffPosition = "Staff position  is required";
-
-   const Pattern = /^\d+$/;
-   if (!phoneNumber) {
-     formErrors.phoneNumber = "Phone number is required";
-   } else if (!Pattern.test(phoneNumber)) {
-     formErrors.phoneNumber = "Phone number should contain only digits";
-   }
-
-
-   if (!joinDate) formErrors.joinDate = "Register join of date  is required";
-
-   if (!salary) formErrors.salary = "Salary is required";
-
-   if (!gender) formErrors.gender = "Gender is required";
-
-   if (!description) formErrors.description = "Description is required";
-
-   setErrors(formErrors);     
-
-  Axios.post("http://localhost:8080/staff/addstaff",{
-       
-    staffName,
-    staffPosition,
-    phoneNumber,
-    joinDate,
-    salary,
-    gender,
-    description
-  })
-  .then((response) => {
-    console.log(response);
-    console.log("response is",response.data);
-    if (response.data.status) {
-      console.log("insdie whne status true");
-      toast.success("Successfully added new staff")
-      setTimeout(()=>{
-        navigate('/staff')
-      },1000)
-    }
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-};
+     const [staffData, setStaffData] = useState(location.state.items);
+     console.log(staffData)
 
   return (
     <>
-    <ToastContainer/>
-      <div className="wapper">
-      <Sidebar isOpen={isOpen} />
+     <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
           <div className="content">
@@ -117,7 +43,7 @@ function AddStaff({isOpen,setIsOpen}) {
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                Add Staff
+                                View Staff
                               </li>
                             </ol>
                           </nav>
@@ -161,12 +87,10 @@ function AddStaff({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="fullname"
                             placeholder="Enter Name"
-                            value={staffName}
-                            onChange={(e) => setStaffName(e.target.value)}
+                            name='staffName'
+                            value={staffData.staffName}
+                            disabled
                           />
-                           {errors.staffName && (
-                            <p className="required-validation">{errors.staffName}</p>
-                          )}
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="role" className="custom-form-label">
@@ -174,11 +98,11 @@ function AddStaff({isOpen,setIsOpen}) {
                             <span className="required-validation">*</span>
                           </label>
                           <select className="custom-input-field"
-                            value={staffPosition}
-                            onChange={(e) => setStaffPosition(e.target.value)}
+                          name='staffPosition'
+                            value={staffData.staffPosition}
+                            disabled
                           >
-                            <option value="">Position</option>
-                            <option value="Principle">Principle</option>
+                            <option>Principle</option>
                             <option value="Vice principle">Vice princeple</option>
                             <option value="Accountent">Accountent</option>
                             <option value="Senior Teacher">Senior Teacher</option>
@@ -186,9 +110,6 @@ function AddStaff({isOpen,setIsOpen}) {
                             <option value="Other Staff">Other Staff</option>
                             <option value="Security">Security</option>
                           </select>
-                          {errors.staffPosition && (
-                            <p className="required-validation">{errors.staffPosition}</p>
-                          )}
                         </div>
                         <div className="col-md-4">
                           <label
@@ -203,12 +124,10 @@ function AddStaff({isOpen,setIsOpen}) {
                             className="custom-input-field"
                             id="contact-number"
                             placeholder="Enter Contect Nubmer"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            name='phoneNumber'
+                            value={staffData.phoneNumber}
+                            disabled
                           />
-                           {errors.phoneNumber && (
-                            <p className="required-validation">{errors.phoneNumber}</p>
-                          )}
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="joindate" className="custom-form-label">
@@ -220,12 +139,11 @@ function AddStaff({isOpen,setIsOpen}) {
                             type="date"
                             className="custom-input-field"
                             id="joindate"
-                            value={joinDate}
-                            onChange={(e) => setJoinDate(e.target.value)}
+                            name='joinDate'
+                            value={staffData.joinDate}
+                            disabled
                           />
-                           {errors.joinDate && (
-                            <p className="required-validation">{errors.joinDate}</p>
-                          )}
+                          
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="salary" className="custom-form-label">
@@ -236,13 +154,12 @@ function AddStaff({isOpen,setIsOpen}) {
                             type="text"
                             className="custom-input-field"
                             id="salary"
+                            name='salary'
                             placeholder="Enetr Salary"
-                            value={salary}
-                            onChange={(e) => setSalary(e.target.value)}
+                            value={staffData.salary}
+                            disabled
                           />
-                           {errors.salary && (
-                            <p className="required-validation">{errors.salary}</p>
-                          )}
+                           
                         </div>
                         <div className="col-md-8">
                           <label htmlFor="gender" className="custom-form-label">
@@ -256,8 +173,8 @@ function AddStaff({isOpen,setIsOpen}) {
                                 type="radio"
                                 name="gender"
                                 value="male"
-                                checked={gender === "male"}
-                                onChange={(e) => setGender(e.target.value)}
+                                checked={staffData.gender === "male"}
+                                disabled
                               />
                               <label className="ps-1" htmlFor="male">
                                 Male
@@ -269,8 +186,9 @@ function AddStaff({isOpen,setIsOpen}) {
                                 type="radio"
                                 name="gender"
                                 value="female"
-                                checked={gender === "female"}
-                                onChange={(e) => setGender(e.target.value)}
+                                checked={staffData.gender === "female"}
+                                disabled
+                             
                               />
                               <label className="ps-1" htmlFor="female">
                                 Female
@@ -282,17 +200,16 @@ function AddStaff({isOpen,setIsOpen}) {
                                 type="radio"
                                 name="gender"
                                 value="other"
-                                checked={gender === "other"}
-                                onChange={(e) => setGender(e.target.value)}
+                                checked={staffData.gender === "other"}
+                                disabled
+                                
                               />
                               <label className="ps-1" htmlFor="other">
                                 Other
                               </label>
                             </div>
                           </span>
-                          {errors.gender && (
-                            <p className="required-validation">{errors.gender}</p>
-                          )}
+                          
                         </div>
 
                         <div className="col-md-8">
@@ -308,21 +225,10 @@ function AddStaff({isOpen,setIsOpen}) {
                             id="description"
                             placeholder="Enter Description"
                             rows="6"
-                            value={description}
-                            onChange={(e) => setDiscription(e.target.value)}
+                            name='description'
+                            value={staffData.description}
+                            disabled
                           ></textarea>
-                           {errors.description && (
-                            <p className="required-validation">{errors.description}</p>
-                          )}
-                        </div>
-                        <div className="col-md-12 mt-4">
-                          <button
-                          onClick={handleSubmit}
-                          className="custom-btn col-md-4"
-                          
-                          >
-                            Add Staff
-                          </button>
                         </div>
                       </form>
                     </div>
@@ -332,9 +238,8 @@ function AddStaff({isOpen,setIsOpen}) {
             </div>
           </div>
         </div>
-      </div>
     </>
-  );
+  )
 }
 
-export default AddStaff;
+export default ViewStaff

@@ -55,7 +55,7 @@ router.post("/addstudent", async (req, res) => {
       newStudent,
     });
   } catch (error) {
-    console.error("Error in signup API:", error);
+    console.error("Error in addstudent API:", error);
     return res
       .status(500)
       .json({ status: false, message: "Internal Server Error" });
@@ -83,12 +83,13 @@ router.put("/editstudent/:id", async (req, res) => {
   console.log(" edit student  API is called");
   // console.log("params", req.params);
   const { id } = req.params;
+  console.log("id is",id);
   const data = req.body;
   // console.log("id is", id);
   console.log(data)
  
   try {
-    const updatedStudent = await AddStudentModel.updateOne(
+    const updatedStudent = await AddStudentModel.findByIdAndUpdate(
       { _id: id },
       { $set: data },
       {new: true}

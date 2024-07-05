@@ -8,77 +8,75 @@ import {toast,ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import Axios  from 'axios';
 
-function EditStudents({ items, isOpen, setIsOpen }) {
+function EditStaff({ items, isOpen, setIsOpen }) {
 
-  const navigate = useNavigate();
-  
-  const location = useLocation();
-// console.log("location in edit student",location.state.items);
+     const navigate = useNavigate();
 
-  const [studentData, setStudentData] = useState(location.state.items || {});
-  console.log("studentData",studentData);
-  
-  const [errors, setErrors] = useState({});
+     const location = useLocation();
+     // console.log("location in edit student",location.state.items);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setStudentData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+     const [staffData , setStaffData ] = useState(location.state.items || {});
+     console.log("staffData",staffData);
 
-  const validateForm = () => {
-    let formErrors = {};
+     const [errors, setErrors] = useState({});
 
-    if (!studentData.studentName) formErrors.studentName = "Full name is required";
-    if (!studentData.fatherName) formErrors.fatherName = "Father name is required";
-    if (!studentData.motherName) formErrors.motherName = "Mother name is required";
+     const handleChange = (e) => {
+          const {name, value} = e.target;
+          setStaffData((prevData) => ({
+               ...prevData,
+               [name] : value,
+          }))
+     }
 
-    const pattern = /^\d+$/;
-    if (!studentData.phoneNumber) {
-      formErrors.phoneNumber = "Phone number is required";
-    } else if (!pattern.test(studentData.phoneNumber)) {
-      formErrors.phoneNumber = "Phone number should contain only digits";
-    }
-
-    if (!studentData.classname) formErrors.classname = "Class is required";
-    if (!studentData.dateOfBirth) formErrors.dateOfBirth = "Date of birth is required";
-    if (!studentData.section) formErrors.section = "Section is required";
-    if (!studentData.gender) formErrors.gender = "Gender is required";
-    if (!studentData.address) formErrors.address = "Address is required";
-
-    return formErrors;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-   
-    const formErrors = validateForm();
-    setErrors(formErrors);
-    console.log("student data on submit",studentData);
-
-    if (Object.keys(formErrors).length === 0) {
-      const id = studentData._id;
+     const validateForm = () => {
+          let formErrors = {};
       
-      Axios.put(`http://localhost:8080/student/editstudent/${id}`,
-       studentData
-      )
-      .then((response) => {
-        if (response.data.status) {
-          toast.success("Successfully added new student")
+          if (!staffData.staffName) formErrors.staffName = "Staff name is required";
+          if (!staffData.staffPosition) formErrors.staffPosition = "Staff position is required";
+          
+      
+          const pattern = /^\d+$/;
+          if (!staffData.phoneNumber) {
+            formErrors.phoneNumber = "Phone number is required";
+          } else if (!pattern.test(staffData.phoneNumber)) {
+            formErrors.phoneNumber = "Phone number should contain only digits";
+          }
+      
+          if (!staffData.joinDate) formErrors.joinDate = "Staff joining date is required";
+          if (!staffData.salary) formErrors.salary = "salary is required";
+          if (!staffData.gender) formErrors.gender = "Gender is required";
+          if (!staffData.description) formErrors.description = "Description is required";
+      
+          return formErrors;
+        };
+      
+     const handleSubmit = (e) => {
+         e.preventDefault();
+
+         const formError = validateForm();
+         setErrors(formError);
+         console.log("staff data on submit ",staffData);
+
+         if(Object.keys(formError).length === 0 )  {
+          const id = staffData._id;
+
+          Axios.put(`http://localhost:8080/staff/editstaffs/${id}`,
+               staffData
+          ).then((response) => {
+               if(response.data.status){
+               toast.success("Successfully added new staff")
           setTimeout(()=>{
-            navigate('/student', { state: { items } });
-          },1000)   
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    }
-  };
+            navigate('/staff', { state: { items } });
+          },1000)
+     }
+          })
+          .catch((err) => {
+               console.log(err);
+          });
+         }
+     };
   return (
-    <>
+    <> 
     <ToastContainer/>
       <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
@@ -96,22 +94,21 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                               <li className="breadcrumb-item">
                                 <button
                                   onClick={() => {
-                                    navigate("/student");
+                                    navigate("/staff");
                                   }}
                                 >
-                                  {" "}
-                                  Student
+                                  Staff
                                 </button>
                               </li>
                               <li
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                Edit Student
+                                Edit Staff
                               </li>
                             </ol>
                           </nav>
-                          <h3>Student</h3>
+                          <h3>Staff</h3>
                         </div>
                       </div>
                     </div>
@@ -142,146 +139,100 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                     <div className="col-xxl-10">
                       <form className="row g-3">
                         <div className="col-md-4">
-                          <label
-                            htmlFor="fullname"
-                            className="custom-form-label"
-                          >
-                            Student Name{" "}
+                          <label htmlFor="fullname" className="custom-form-label">
+                            Full Name{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
-                            type="text"
+                            type="test"
                             className="custom-input-field"
                             id="fullname"
                             placeholder="Enter Name"
-                            name='studentName'
-                            value={studentData.studentName}
+                            name='staffName'
+                            value={staffData.staffName}
                             onChange={handleChange}
                           />
-                          {errors.studentName && (
-                            <p className="required-validation">{errors.studentName}</p>
+                           {errors.staffName && (
+                            <p className="required-validation">{errors.staffName}</p>
+                          )}
+                        </div>
+                        <div className="col-md-4">
+                          <label htmlFor="role" className="custom-form-label">
+                            Staff Position{" "}
+                            <span className="required-validation">*</span>
+                          </label>
+                          <select className="custom-input-field"
+                          name='staffPosition'
+                            value={staffData.staffPosition}
+                            onChange={handleChange}
+                          >
+                            <option>Principle</option>
+                            <option value="Vice principle">Vice princeple</option>
+                            <option value="Accountent">Accountent</option>
+                            <option value="Senior Teacher">Senior Teacher</option>
+                            <option value="Teacher">Teacher</option>
+                            <option value="Other Staff">Other Staff</option>
+                            <option value="Security">Security</option>
+                          </select>
+                          {errors.staffPosition && (
+                            <p className="required-validation">{errors.staffPosition}</p>
                           )}
                         </div>
                         <div className="col-md-4">
                           <label
-                            htmlFor="fathername"
+                            htmlFor="contact-number"
                             className="custom-form-label"
                           >
-                            Father's Name{" "}
-                            <span className="required-validation">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="custom-input-field"
-                            id="fathername"
-                            placeholder="Enter Name"
-                            name='fatherName'
-                            value={studentData.fatherName}
-                            onChange={handleChange}
-                          />
-                          {errors.fatherName && (
-                            <p className="required-validation">{errors.fatherName}</p>
-                          )}
-                        </div>
-                        <div className="col-md-4">
-                          <label
-                            htmlFor="mothername"
-                            className="custom-form-label"
-                          >
-                            Mother's Name{" "}
-                            <span className="required-validation">*</span>
-                          </label>
-                          <input
-                            type="text"
-                            className="custom-input-field"
-                            id="mothername"
-                            placeholder="Enter Name"
-                            name='motherName'
-                            value={studentData.motherName}
-                            onChange={handleChange}
-                          />
-                          {errors.motherName && (
-                            <p className="required-validation">{errors.motherName}</p>
-                          )}
-                        </div>
-                        <div className="col-md-4">
-                          <label htmlFor="dateofbirth" className="custom-form-label">
-                            Date Of Birth{" "}
-                            <span className="required-validation">*</span>
-                          </label>
-                          <input
-                            type="date"
-                            className="custom-input-field"
-                            id="dateofbirth"
-                            name='dateOfBirth'
-                            value={studentData.dateOfBirth}
-                            onChange={handleChange}
-                          />
-                          {errors.dateOfBirth && (
-                            <p className="required-validation">{errors.dateOfBirth}</p>
-                          )}
-                        </div>
-                        <div className="col-md-4">
-                          <label htmlFor="phonenumber" className="custom-form-label">
                             Phone Number{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
-                            id="phonenumber"
-                            placeholder="Enter Number"
+                            id="contact-number"
+                            placeholder="Enter Contect Nubmer"
                             name='phoneNumber'
-                            value={studentData.phoneNumber}
+                            value={staffData.phoneNumber}
                             onChange={handleChange}
                           />
-                          {errors.phoneNumber && (
+                           {errors.phoneNumber && (
                             <p className="required-validation">{errors.phoneNumber}</p>
                           )}
                         </div>
                         <div className="col-md-4">
-                          <label
-                            htmlFor="school-class"
-                            className="custom-form-label"
-                          >
-                            Class <span className="required-validation">*</span>
+                          <label htmlFor="joindate" className="custom-form-label">
+                            {" "}
+                            Join Date
+                            <span className="required-validation">*</span>
+                          </label>
+                          <input
+                            type="date"
+                            className="custom-input-field"
+                            id="joindate"
+                            name='joinDate'
+                            value={staffData.joinDate}
+                            onChange={handleChange}
+                          />
+                           {errors.joinDate && (
+                            <p className="required-validation">{errors.joinDate}</p>
+                          )}
+                        </div>
+                        <div className="col-md-4">
+                          <label htmlFor="salary" className="custom-form-label">
+                            Salary{" "}
+                            <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
-                            id="school-class"
-                            placeholder="Enter Class"
-                            name='classname'
-                            value={studentData.classname}
+                            id="salary"
+                            name='salary'
+                            placeholder="Enetr Salary"
+                            value={staffData.salary}
                             onChange={handleChange}
                           />
-                          {errors.className && (
-                            <p className="required-validation">{errors.className}</p>
-                          )}
-                        </div>
-                        <div className="col-md-4">
-                          <label
-                            htmlFor="class-section"
-                            className="custom-form-label"
-                          >
-                            Section
-                          </label>
-                          <select className="custom-input-field"
-                          name='section'
-                          value={studentData.section}
-                          onChange={handleChange}
-                          >
-                            <option value="" 
-                          >
-                              Section
-                            </option>
-                            <option value="A">A</option>
-                            <option value="B">B</option>
-                            <option value="C">C</option>
-                            <option value="D">D</option>
-                          </select>
-                          {errors.section && (
-                            <p className="required-validation">{errors.section}</p>
+                           {errors.salary && (
+                            <p className="required-validation">{errors.salary}</p>
                           )}
                         </div>
                         <div className="col-md-8">
@@ -296,7 +247,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 type="radio"
                                 name="gender"
                                 value="male"
-                                checked={studentData.gender === "male"}
+                                checked={staffData.gender === "male"}
                                 onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="male">
@@ -309,7 +260,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 type="radio"
                                 name="gender"
                                 value="female"
-                                checked={studentData.gender === "female"}
+                                checked={staffData.gender === "female"}
                                 onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="female">
@@ -322,7 +273,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 type="radio"
                                 name="gender"
                                 value="other"
-                                checked={studentData.gender === "other"}
+                                checked={staffData.gender === "other"}
                                 onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="other">
@@ -337,30 +288,30 @@ function EditStudents({ items, isOpen, setIsOpen }) {
 
                         <div className="col-md-8">
                           <label
-                            htmlFor="address"
+                            htmlFor="description"
                             className="custom-form-label"
                           >
-                            {" "}
-                            Address
+                            Description
                           </label>
                           <textarea
                             type="text"
                             className="custom-input-field"
-                            id="address"
-                            placeholder="Enter Address"
+                            id="description"
+                            placeholder="Enter Description"
                             rows="6"
-                            value={studentData.address}
-                            name='address'
+                            name='description'
+                            value={staffData.description}
                             onChange={handleChange}
                           ></textarea>
-                          {errors.address && (
-                            <p className="required-validation">{errors.address}</p>
+                           {errors.description && (
+                            <p className="required-validation">{errors.description}</p>
                           )}
                         </div>
                         <div className="col-md-12 mt-4">
                           <button
-                           onClick={handleSubmit}
-                            className="custom-btn col-md-4"
+                          onClick={handleSubmit}
+                          className="custom-btn col-md-4"
+                          
                           >
                             Update
                           </button>
@@ -374,8 +325,8 @@ function EditStudents({ items, isOpen, setIsOpen }) {
           </div>
         </div>
     </>
-  );
 
+  )
 }
-export default EditStudents
 
+export default EditStaff

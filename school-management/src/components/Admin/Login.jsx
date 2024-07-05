@@ -46,8 +46,14 @@ function Login() {
           {localStorage.setItem("user",JSON.stringify(response.data.user))
           navigate("/dashboard");
         }
+        else{
+          setErrors({ [response.data.field] : response.data.msg})
+        }
       })
       .catch((err) => {
+        if (err.response && err.response.data && err.response.data.msg) {
+          setErrors({ [ err.response.data.field]: err.response.data.msg})
+        }
         console.log(err);
       });
 

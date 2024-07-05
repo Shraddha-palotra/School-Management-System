@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import add from "../assets/icons/add.svg";
@@ -6,11 +6,52 @@ import Ellipse7 from "../assets/images/Ellipse7.png";
 import Edit from "../assets/icons/Edit.svg";
 import Delete from "../assets/icons/Delete.svg";
 import view from "../assets/icons/view.svg";
-import picture from "../assets/images/picture.png";
 import { useNavigate } from "react-router-dom";
+import Axios  from "axios";
+import DeleteStaff from "./DeleteStaff";
 
 function Staff({isOpen, setIsOpen}) {
   const navigate = useNavigate();
+
+  const [staff, setStaff] = useState([]);
+  const [ searchStaff , setSearchStaff ] = useState("");
+   const[isDeleteClick,setIsDeleteClick] = useState({
+     flag:false,
+     eachStaff:{}
+   })
+  console.log("is delete click",isDeleteClick);
+
+  const deleteHandle = (flag, eachStaff) => {
+       setIsDeleteClick({
+        flag:flag,
+        eachStaff:eachStaff
+       })
+  }
+
+  const filteredStaff = staff.filter(
+    (staff) =>
+      staff.staffName.toLowerCase().includes(searchStaff.toLowerCase()) || 
+      staff.staffPosition.toLowerCase().includes(searchStaff.toLowerCase()) ||
+      staff.joinDate.toLowerCase().includes(searchStaff.toLowerCase()) ||
+      staff.salary.toLowerCase().includes(searchStaff.toLowerCase()) ||
+      staff.phoneNumber.toLowerCase().includes(searchStaff.toLowerCase()) ||
+      staff.gender.toLowerCase().includes(searchStaff.toLowerCase())
+  ); 
+  console.log(filteredStaff)
+
+
+  useEffect( () => {
+    Axios.get("http://localhost:8080/staff/showstaffs")
+    .then((response) => {
+      console.log(response.data.status)
+      if(response.data.status) {
+            setStaff(response.data.AllStaff)
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  },[isDeleteClick]);
   return (
     <>
       <div className="wapper">
@@ -41,6 +82,8 @@ function Staff({isOpen, setIsOpen}) {
                       type="text"
                       className="custom-input-field"
                       placeholder="Search Staff"
+                      value={searchStaff}
+                      onChange={(e) => setSearchStaff(e.target.value)}
                     />
                   </div>
                 </div>
@@ -61,162 +104,48 @@ function Staff({isOpen, setIsOpen}) {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>A01</td>
-                            <td className="d-flex">
-                              <img src={Ellipse7} alt="" />
-                              <span>Pooja Patel</span>
-                            </td>
-                            <td>Senior Teacher</td>
-                            <td>11/06/2023</td>
-                            <td>Female</td>
-                            <td>15000</td>
-                            <td>9898765423</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>A02</td>
-                            <td className="d-flex">
-                              <img src={picture} alt="" />
-                              <span>Vijay Sharma</span>
-                            </td>
-                            <td>Accountent</td>
-                            <td>25/07/2022</td>
-                            <td>Male</td>
-                            <td>40000</td>
-                            <td>6266765423</td>
-                            <td className="d-flex">
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>A03</td>
-                            <td className="d-flex">
-                              <img src={Ellipse7} alt="" />
-                              <span>Pooja Patel</span>
-                            </td>
-                            <td>Principle</td>
-                            <td>12/05/2018</td>
-                            <td>Female</td>
-                            <td>70000</td>
-                            <td>6678962343</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>A04</td>
-                            <td className="d-flex">
-                              <img src={picture} alt="" />
-                              <span>Vijay Sharma</span>
-                            </td>
-                            <td>Vice Principle</td>
-                            <td>15/07/2020</td>
-                            <td>Male</td>
-                            <td>50000</td>
-                            <td>6678962343</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
+                        {filteredStaff.map((items, index) => (
+                            <tr key={index} >
+                              <td>{index + 1}</td>
+                              <td>
+                                <img src={Ellipse7} alt="" />
+                                <span>{items.staffName}</span>
+                              </td>
+                              <td>{items.staffPosition}</td>
+                              <td>{items.joinDate}</td>
+                              <td>{items.gender}</td>
+                              <td>{items.salary}</td>
+                              <td>{items.phoneNumber}</td>
+                              
+                              <td>
+                                <div className="action-btn">
+                                  <button
+                                    onClick={() => {
+                                      navigate("/edit-staffs",{ state: {items} })
+                                    }} 
+                                  >
+                                    <img src={Edit} alt="Edit" />
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      deleteHandle(true, items);
+                                    }}
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                  >
+                                    <img src={Delete} alt="Delete" />
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      navigate("/view-staffs",{state: {items}});
+                                    }}
+                                  >
+                                    <img src={view} alt="View" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
@@ -225,28 +154,11 @@ function Staff({isOpen, setIsOpen}) {
               </div>
             </div>
           </div>
+          <DeleteStaff
+          data={{ isDeleteClick, deleteHandle}}
+          />
         </div>
       </div>
-
-      {/* <div className="modal fade customDesign" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">&nbsp;</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div className="modal-body">
-                        <img src="assets/images/deleteModal_icon.png" alt="" className="mainIconModal"/>
-                        <h2>Delete Staff</h2>
-                        <p>Are you sure you want to Delete Vijay Sharma?</p>
-                        <div className="footbutton">
-                            <button type="button" className="custom-btn cancelBtn" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" className="custom-btn custom-btnCus">Confirm</button>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div> */}
     </>
   );
 }

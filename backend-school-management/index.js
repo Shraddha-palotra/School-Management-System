@@ -5,6 +5,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import {UserRouter} from './routes/user.js';
 import { AddStudentRouter } from './routes/AddStudents.js'
+import { AddStaffRouter } from './routes/AddStaff.js'
 
 dotenv.config()
 
@@ -18,7 +19,7 @@ app.use(cors({
 app.use(cookieParser())
 app.use('/auth', UserRouter)
 app.use('/student', AddStudentRouter)
-// app.use('/staff', StaffRouter)
+app.use('/staff', AddStaffRouter)
 
 mongoose.connect("mongodb://127.0.0.1:27017/school" ,{
 }).then( () => {

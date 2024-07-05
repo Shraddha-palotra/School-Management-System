@@ -16,6 +16,8 @@ import Profile from "./components/Dashboard/Profile";
 import Change_password from "./components/Dashboard/Change_password";
 import EditStudents from "./components/Student_Management/EditStudents";
 import ViewStudents from "./components/Student_Management/ViewStudents";
+import EditStaff from "./components/Staff_Management/EditStaff";
+import ViewStaff from "./components/Staff_Management/ViewStaff";
 
 
 
@@ -35,7 +37,9 @@ function App() {
         <Route path="/edit-students" element={<EditStudents isOpen={isOpen} setIsOpen={setIsOpen} />} />
         <Route path="/view-students" element={<ViewStudents isOpen={isOpen} setIsOpen={setIsOpen}/>} />
         <Route path="/staff" element={<Staff isOpen={isOpen} setIsOpen={setIsOpen}/>}/>
-        <Route path="/add-staff" element={<AddStaff/>} />
+        <Route path="/add-staff" element={<AddStaff isOpen={isOpen} setIsOpen={setIsOpen} />} />
+        <Route path="/edit-staffs" element={<EditStaff isOpen={isOpen} setIsOpen={setIsOpen}  />} />
+        <Route path="/view-staffs" element={<ViewStaff isOpen={isOpen} setIsOpen={setIsOpen} />} /> 
         <Route path="/fee" element={<Fee isOpen={isOpen} setIsOpen={setIsOpen}/>} />
         <Route path="/add-fee" element={<AddFee/>} />
         <Route path="/profile" element={<Profile isOpen={isOpen} setIsOpen={setIsOpen}/>} />

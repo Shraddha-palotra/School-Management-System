@@ -51,7 +51,9 @@ function Sidebar({ isOpen }) {
           <div
             className={
               window.location.pathname === "/staff" ||
-              window.location.pathname === "/add-staff"
+              window.location.pathname === "/add-staff" ||
+              window.location.pathname === "/edit-staffs" ||
+              window.location.pathname === "/view-staffs" 
                 ? "active item"
                 : "item"
             }

@@ -95,12 +95,12 @@ router.post("/login", async (req, res) => {
   const user = await AnotherModel.findOne({ email });
   if (!user) {
     console.log("inside user check");
-    return res.json({ status: false, message: "user is not registered" });
+    return res.json({field: "email" ,status: false, msg: "user is not registered" });
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
-    return res.status(400).json({ message: "password is incorrect" });
+    return res.status(400).json({ field: "password", msg: "password is incorrect" });
   }
 
   const token = jwt.sign({ name: user.name }, process.env.KEY, {
@@ -108,7 +108,7 @@ router.post("/login", async (req, res) => {
   });
   res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
 
-  return res.json({ status: true, message: "login successful", user });
+  return res.json({ status: true, msg: "login successful", user });
 });
 
 //this is for forgot password
@@ -119,7 +119,7 @@ router.post("/forgot_password", async (req, res) => {
   try {
     const user = await AnotherModel.findOne({ email });
     if (!user) {
-      return res.json({ message: "user is not registered" });
+      return res.json({field: "email", msg: "user is not registered" });
     }
     const token = jwt.sign({ id: user._id }, process.env.KEY, {
       expiresIn: "5m",
@@ -207,18 +207,18 @@ router.put("/changepassword/:id", async (req, res) => {
   try {
     const user = await AnotherModel.findById({_id:id});
     if (!user) {
-      return res.status(404).json({ msg: "user not found" });
+      return res.status(404).json({ field: "id" ,msg: "user not found" });
     }
 
     const passwordValid = await bcrypt.compare(oldPassword, user.password);
     if (!passwordValid) {
-      return res.status(400).json({ message: "password is incorrect" });
+      return res.status(400).json({field: "oldPassword", msg: "password is incorrect" });
     }
 
     if (newPassword !== confirmPassword) {
       console.log("password and confirmpassword do not match");
       return res.json({
-        message: "Password and ConsirmPassword do not match",
+        msg: "Password and ConsirmPassword do not match",
       });
     }
      
@@ -233,7 +233,7 @@ router.put("/changepassword/:id", async (req, res) => {
     );
     return res.json({
       status: true,
-      message: "Password changed successfully",
+      msg: "Password changed successfully",
       updatedLoggedUser,
     });
   } catch (error) {

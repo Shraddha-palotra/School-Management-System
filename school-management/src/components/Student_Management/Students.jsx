@@ -12,8 +12,9 @@ import DeleteStudents from "../Student_Management/DeleteStudents";
 
 function Students({isOpen, setIsOpen}) {
 
-  
+  const navigate = useNavigate();
   const [ student, setStudent] = useState([]);
+  const [ searchStudent , setSearchStudent ] = useState("");
    const[isDeleteClick,setIsDeleteClick] = useState({
      flag:false,
      eachStudent:{}
@@ -22,27 +23,25 @@ function Students({isOpen, setIsOpen}) {
   
 
  const deleteHandle = (flag,eachStudent)=>{
-    //  console.log("delete handle of student called");
-    //  console.log("each student is",eachStudent);
+     console.log("delete handle of student called");
+     console.log("each student is",eachStudent);
      setIsDeleteClick({
         flag:flag,
         eachStudent:eachStudent
      })
  }
-    
 
-  const navigate = useNavigate();
+  const filteredStudents = student.filter(
+    (student) =>
+      student.studentName.toLowerCase().includes(searchStudent.toLowerCase()) || 
+      student.fatherName.toLowerCase().includes(searchStudent.toLowerCase()) ||
+      student.dateOfBirth.toLowerCase().includes(searchStudent.toLowerCase()) ||
+      student.classname.toLowerCase().includes(searchStudent.toLowerCase()) ||
+      student.phoneNumber.toLowerCase().includes(searchStudent.toLowerCase()) ||
+      student.gender.toLowerCase().includes(searchStudent.toLowerCase())
+  );
 
 
-  // const filteredStudents = student.filter(student =>
-  //   student.name.toLowerCase().includes(searchStudent.toLowerCase()) || 
-  //   student.fatherName.toLowerCase().includes(searchStudent.toLocaleLowerCase()) ||
-  //   student.dob.toLowerCase().includes(searchStudent.toLowerCase()) || 
-  //   student.class.toLowerCase().includes(searchStudent.toLowerCase()) ||
-  //   student.contact.toLowerCase().includes(searchStudent.toLowerCase()) ||
-  //   student.gender.toLowerCase().includes(searchStudent.toLowerCase()) 
-  // );
-  
   useEffect(() => {
     Axios.get("http://localhost:8080/student/showstudents")
       .then((response) => {
@@ -87,8 +86,8 @@ function Students({isOpen, setIsOpen}) {
                       type="text"
                       className="custom-input-field"
                       placeholder="Search Student"
-                      // value={searchStudent}
-                      // onChange={(e) => setSearchStudent(e.target.value)}
+                      value={searchStudent}
+                      onChange={(e) => setSearchStudent(e.target.value)}
                     />
                   </div>
                 </div>
@@ -110,7 +109,7 @@ function Students({isOpen, setIsOpen}) {
                         </thead>
                          <tbody>
                          
-                           {student.map((items, index) => (
+                           {filteredStudents.map((items, index) => (
                             <tr key={index} >
                               <td>{index + 1}</td>
                               <td>
@@ -160,8 +159,6 @@ function Students({isOpen, setIsOpen}) {
             </div>
           </div>
           <DeleteStudents
-          // isDelete={isDelete}
-          // deleteHandle={deleteHandle}
          data={{ isDeleteClick, deleteHandle}}
           />
         </div>

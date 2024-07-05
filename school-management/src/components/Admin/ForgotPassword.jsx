@@ -35,9 +35,15 @@ function ForgotPassword() {
         alert("check your email Box for password link")
         navigate("/login");
       }
+      else{
+        setErrors({ [response.data.field] : response.data.msg})
+      }
      console.log(response.data)
     })
     .catch((err) => {
+      if (err.response && err.response.data && err.response.data.msg) {
+        setErrors({ [ err.response.data.field]: err.response.data.msg})
+      }
       console.log(err);
     });
 
