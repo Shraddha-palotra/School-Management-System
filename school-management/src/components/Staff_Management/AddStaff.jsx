@@ -42,13 +42,14 @@ function AddStaff({isOpen,setIsOpen}) {
 
    if (!staffPosition) formErrors.staffPosition = "Staff position  is required";
 
-   const Pattern = /^\d+$/;
+   const Pattern = /^\d{10}$/;
+
    if (!phoneNumber) {
      formErrors.phoneNumber = "Phone number is required";
    } else if (!Pattern.test(phoneNumber)) {
-     formErrors.phoneNumber = "Phone number should contain only digits";
+     formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
    }
-
+   
 
    if (!joinDate) formErrors.joinDate = "Register join of date  is required";
 

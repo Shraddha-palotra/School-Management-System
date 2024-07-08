@@ -1,85 +1,87 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
+import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import dummyProfile from "../assets/images/dummyProfile.png";
-import camera from "../assets/images/camera.png";
-import Axios from "axios";
+import { useLocation, useNavigate } from 'react-router-dom';
+import {toast,ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import dummyProfile from "../assets/images/dummyProfile.png"
+import  Axios  from 'axios';
 
-function AddFee({ isOpen, setIsOpen }) {
-  const navigate = useNavigate();
+function EditFee({ items, isOpen, setIsOpen}) {
 
-  const [studentName, setStudentName] = useState("");
-  const [fatherName, setFatherName] = useState("");
-  const [classname, setClassname] = useState("");
-  const [quaterlyFee, setQuaterlyFee] = useState("");
-  const [feeStatus, setFeeStatus] = useState("");
-  const [section, setSection] = useState("");
-  const [description, setDescription] = useState("");
-  const [errors, setErrors] = useState({});
+     const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+     const location = useLocation();
+     console.log("location in edit ",location.state.items)
 
-    console.log(handleSubmit);
-    console.log(studentName);
-    console.log(fatherName);
-    console.log(classname);
-    console.log(quaterlyFee);
-    console.log(feeStatus);
-    console.log(section);
-    console.log(description);
+     const [feeData, setFeeData ] = useState(location.state.items || {});
+          console.log("feeData is ",feeData);
 
-    let formErrors = {};
+      const [errors, setErrors] = useState({});
+      
+      const handleChange = (e) => {
+          const { name, value } = e.target;
+          setFeeData((prevData) => ({
+               ...prevData,
+               [name]: value,
+          }));
+      };
 
-    if (!studentName) formErrors.studentName = "Full name is required";
+      const validateForm = () => {
+          let formErrors =  {};
 
-    if (!fatherName) formErrors.fatherName = "Full name is required";
+          const { studentName, fatherName, classname, quaterlyFee, feeStatus, section, description } = feeData;
+         
+          if (!studentName) formErrors.studentName = "Full name is required";
 
-    if (!classname) formErrors.classname = "Class is required";
+          if (!fatherName) formErrors.fatherName = "Full name is required";
+      
+          if (!classname) formErrors.classname = "Class is required";
+      
+          if (!quaterlyFee) formErrors.quaterlyFee = "QuaterlyFee is required";
+      
+          if (!feeStatus) formErrors.feeStatus = "Fee status is required";
+      
+          if (!section) formErrors.section = "Section is required";
+      
+          if (!description) formErrors.description = "Description is required";
+      
+         return formErrors;
+      };
 
-    if (!quaterlyFee) formErrors.quaterlyFee = "QuaterlyFee is required";
+      const handleSubmit = (e) => {
+          e.preventDefault();
 
-    if (!feeStatus) formErrors.feeStatus = "Fee status is required";
+          const formErrors = validateForm();
+          setErrors(formErrors);
+          console.log("fee data on submit",feeData);
 
-    if (!section) formErrors.section = "Section is required";
+          if  (Object.keys(formErrors).length === 0) {
+               const id = feeData._id;
 
-    if (!description) formErrors.description = "Description is required";
-
-    setErrors(formErrors);
-
-    Axios.post("http://localhost:8080/fee/addfees", {
-      studentName,
-      fatherName,
-      classname,
-      quaterlyFee,
-      feeStatus,
-      section,
-      description,
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.status) {
-          toast.success("Successfully added new student");
-          setTimeout(() => {
-            navigate("/fee");
-          }, 1000);
-        }
-        else {
-          setErrors({general : "Student name , father name or status are wrong."})
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+               Axios.put(`http://localhost:8080/fee/editfees/${id}`,
+                    feeData
+               )
+               .then((response) => {
+                    if (response.data.status) {
+                         toast.success("Successfully added new data")
+                         setTimeout(()=>{
+                           navigate('/fee', { state: { items } });
+                         },1000)   
+                       }
+               })
+               .catch((err) => {
+                    console.log(err);
+                  });
+          }
+      }
+       
 
   return (
     <>
- <ToastContainer />
-    <Sidebar isOpen={isOpen} />
+    <ToastContainer/>
+     <Sidebar isOpen={isOpen} />
       <div className={`main-container ${isOpen && "main-content_large"}`}>
         <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="content">
@@ -105,7 +107,7 @@ function AddFee({ isOpen, setIsOpen }) {
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              Add Fee
+                              Edit Fee
                             </li>
                           </ol>
                         </nav>
@@ -150,8 +152,10 @@ function AddFee({ isOpen, setIsOpen }) {
                           className="custom-input-field"
                           id="fullname"
                           placeholder="Enter Name"
-                          value={studentName}
-                          onChange={(e) => setStudentName(e.target.value)}
+                          name='studentName'
+                          value={feeData.studentName}
+                          onChange={handleChange}
+                          disabled
                         />
                         {errors.studentName && (
                           <p className="required-validation">
@@ -173,8 +177,10 @@ function AddFee({ isOpen, setIsOpen }) {
                           className="custom-input-field"
                           id="fathername"
                           placeholder="Enter Fahter's  Name"
-                          value={fatherName}
-                          onChange={(e) => setFatherName(e.target.value)}
+                          name='fatherName'
+                          value={feeData.fatherName}
+                          onChange={handleChange}
+                          disabled
                         />
                         {errors.fatherName && (
                           <p className="required-validation">
@@ -196,8 +202,9 @@ function AddFee({ isOpen, setIsOpen }) {
                           id="school-class"
                           placeholder="Enter Class"
                           name="classname"
-                          value={classname}
-                          onChange={(e) => setClassname(e.target.value)}
+                          value={feeData.classname}
+                          onChange={handleChange}
+                          disabled
                         />
                         {errors.classname && (
                           <p className="required-validation">
@@ -214,8 +221,10 @@ function AddFee({ isOpen, setIsOpen }) {
                         </label>
                         <select
                           className="custom-input-field"
-                          value={section}
-                          onChange={(e) => setSection(e.target.value)}
+                          name='section'
+                          value={feeData.section}
+                          onChange={handleChange}
+                          disabled
                         >
                           <option>Section</option>
                           <option value="A">A</option>
@@ -243,8 +252,8 @@ function AddFee({ isOpen, setIsOpen }) {
                           id="quarterly"
                           placeholder="Enter Quarterly fee"
                           name="quaterlyFee"
-                          value={quaterlyFee}
-                          onChange={(e) => setQuaterlyFee(e.target.value)}
+                          value={feeData.quaterlyFee}
+                          onChange={handleChange}
                         />
                         {errors.quaterlyFee && (
                           <p className="required-validation">
@@ -263,8 +272,8 @@ function AddFee({ isOpen, setIsOpen }) {
                               type="radio"
                               name="feeStatus"
                               value="paid"
-                              checked={feeStatus === "paid"}
-                              onChange={(e) => setFeeStatus(e.target.value)}
+                              checked={feeData.feeStatus === "paid"}
+                              onChange={handleChange}
                             />
                             <label className="ps-1" htmlFor="paid">
                               Paid
@@ -274,10 +283,10 @@ function AddFee({ isOpen, setIsOpen }) {
                             <input
                               id="due"
                               type="radio"
-                              name="status"
+                              name="feeStatus"
                               value="due"
-                              checked={feeStatus === "due"}
-                              onChange={(e) => setFeeStatus(e.target.value)}
+                              checked={feeData.feeStatus === "due"}
+                              onChange={handleChange}
                             />
                             <label className="ps-1" htmlFor="due">
                               Due
@@ -305,8 +314,8 @@ function AddFee({ isOpen, setIsOpen }) {
                           placeholder="Enter Description"
                           rows="6"
                           name="description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
+                          value={feeData.description}
+                          onChange={handleChange}
                         ></textarea>
                         {errors.description && (
                           <p className="required-validation">
@@ -314,17 +323,12 @@ function AddFee({ isOpen, setIsOpen }) {
                           </p>
                         )}
                       </div>
-                      {errors.general && (
-                          <p className="required-validation">
-                            {errors.general}
-                          </p>
-                        )}
                       <div className="col-md-12 mt-4">
                         <button
                           onClick={handleSubmit}
                           className="custom-btn col-md-4"
                         >
-                          Add Fee
+                         Update
                         </button>
                       </div>
                     </form>
@@ -336,7 +340,7 @@ function AddFee({ isOpen, setIsOpen }) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default AddFee;
+export default EditFee

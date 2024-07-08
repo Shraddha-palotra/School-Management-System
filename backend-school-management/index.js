@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import {UserRouter} from './routes/user.js';
 import { AddStudentRouter } from './routes/AddStudents.js'
 import { AddStaffRouter } from './routes/AddStaff.js'
+import { AddFeeRouter } from './routes/AddFee.js'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use('/auth', UserRouter)
 app.use('/student', AddStudentRouter)
 app.use('/staff', AddStaffRouter)
+app.use('/fee', AddFeeRouter)
 
 mongoose.connect("mongodb://127.0.0.1:27017/school" ,{
 }).then( () => {

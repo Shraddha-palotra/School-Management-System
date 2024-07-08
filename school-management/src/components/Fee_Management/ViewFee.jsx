@@ -1,85 +1,23 @@
-import React, { useState } from "react";
+import React, { useState }  from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import {ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
-import Axios from "axios";
 
-function AddFee({ isOpen, setIsOpen }) {
-  const navigate = useNavigate();
+function ViewFee({isOpen,setIsOpen}) {
 
-  const [studentName, setStudentName] = useState("");
-  const [fatherName, setFatherName] = useState("");
-  const [classname, setClassname] = useState("");
-  const [quaterlyFee, setQuaterlyFee] = useState("");
-  const [feeStatus, setFeeStatus] = useState("");
-  const [section, setSection] = useState("");
-  const [description, setDescription] = useState("");
-  const [errors, setErrors] = useState({});
+     const navigate = useNavigate();
+     const location = useLocation();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    console.log(handleSubmit);
-    console.log(studentName);
-    console.log(fatherName);
-    console.log(classname);
-    console.log(quaterlyFee);
-    console.log(feeStatus);
-    console.log(section);
-    console.log(description);
-
-    let formErrors = {};
-
-    if (!studentName) formErrors.studentName = "Full name is required";
-
-    if (!fatherName) formErrors.fatherName = "Full name is required";
-
-    if (!classname) formErrors.classname = "Class is required";
-
-    if (!quaterlyFee) formErrors.quaterlyFee = "QuaterlyFee is required";
-
-    if (!feeStatus) formErrors.feeStatus = "Fee status is required";
-
-    if (!section) formErrors.section = "Section is required";
-
-    if (!description) formErrors.description = "Description is required";
-
-    setErrors(formErrors);
-
-    Axios.post("http://localhost:8080/fee/addfees", {
-      studentName,
-      fatherName,
-      classname,
-      quaterlyFee,
-      feeStatus,
-      section,
-      description,
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.status) {
-          toast.success("Successfully added new student");
-          setTimeout(() => {
-            navigate("/fee");
-          }, 1000);
-        }
-        else {
-          setErrors({general : "Student name , father name or status are wrong."})
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
+     const [ feeData, setFeeData] = useState(location.state.items);
+     console.log(feeData);
   return (
     <>
- <ToastContainer />
-    <Sidebar isOpen={isOpen} />
+       <ToastContainer/>
+     <Sidebar isOpen={isOpen} />
       <div className={`main-container ${isOpen && "main-content_large"}`}>
         <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
         <div className="content">
@@ -105,7 +43,7 @@ function AddFee({ isOpen, setIsOpen }) {
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              Add Fee
+                              View Fee
                             </li>
                           </ol>
                         </nav>
@@ -150,14 +88,11 @@ function AddFee({ isOpen, setIsOpen }) {
                           className="custom-input-field"
                           id="fullname"
                           placeholder="Enter Name"
-                          value={studentName}
-                          onChange={(e) => setStudentName(e.target.value)}
+                          name='studentName'
+                          value={feeData.studentName}
+                          disabled
                         />
-                        {errors.studentName && (
-                          <p className="required-validation">
-                            {errors.studentName}
-                          </p>
-                        )}
+                        
                       </div>
 
                       <div className="col-md-4">
@@ -173,14 +108,11 @@ function AddFee({ isOpen, setIsOpen }) {
                           className="custom-input-field"
                           id="fathername"
                           placeholder="Enter Fahter's  Name"
-                          value={fatherName}
-                          onChange={(e) => setFatherName(e.target.value)}
+                          name='fatherName'
+                          value={feeData.fatherName}
+                          disabled
                         />
-                        {errors.fatherName && (
-                          <p className="required-validation">
-                            {errors.fatherName}
-                          </p>
-                        )}
+                        
                       </div>
 
                       <div className="col-md-4">
@@ -196,14 +128,9 @@ function AddFee({ isOpen, setIsOpen }) {
                           id="school-class"
                           placeholder="Enter Class"
                           name="classname"
-                          value={classname}
-                          onChange={(e) => setClassname(e.target.value)}
+                          value={feeData.classname}
+                         disabled
                         />
-                        {errors.classname && (
-                          <p className="required-validation">
-                            {errors.classname}
-                          </p>
-                        )}
                       </div>
                       <div className="col-md-4">
                         <label
@@ -214,8 +141,9 @@ function AddFee({ isOpen, setIsOpen }) {
                         </label>
                         <select
                           className="custom-input-field"
-                          value={section}
-                          onChange={(e) => setSection(e.target.value)}
+                          name='section'
+                          value={feeData.section}
+                          disabled
                         >
                           <option>Section</option>
                           <option value="A">A</option>
@@ -223,11 +151,6 @@ function AddFee({ isOpen, setIsOpen }) {
                           <option value="C">C</option>
                           <option value="D">D</option>
                         </select>
-                        {errors.section && (
-                          <p className="required-validation">
-                            {errors.section}
-                          </p>
-                        )}
                       </div>
                       <div className="col-md-4">
                         <label
@@ -243,14 +166,9 @@ function AddFee({ isOpen, setIsOpen }) {
                           id="quarterly"
                           placeholder="Enter Quarterly fee"
                           name="quaterlyFee"
-                          value={quaterlyFee}
-                          onChange={(e) => setQuaterlyFee(e.target.value)}
+                          value={feeData.quaterlyFee}
+                          disabled
                         />
-                        {errors.quaterlyFee && (
-                          <p className="required-validation">
-                            {errors.quaterlyFee}
-                          </p>
-                        )}
                       </div>
                       <div className="col-md-12">
                         <label htmlFor="status" className="custom-form-label">
@@ -263,8 +181,8 @@ function AddFee({ isOpen, setIsOpen }) {
                               type="radio"
                               name="feeStatus"
                               value="paid"
-                              checked={feeStatus === "paid"}
-                              onChange={(e) => setFeeStatus(e.target.value)}
+                              checked={feeData.feeStatus === "paid"}
+                              disabled
                             />
                             <label className="ps-1" htmlFor="paid">
                               Paid
@@ -274,21 +192,16 @@ function AddFee({ isOpen, setIsOpen }) {
                             <input
                               id="due"
                               type="radio"
-                              name="status"
+                              name="feeStatus"
                               value="due"
-                              checked={feeStatus === "due"}
-                              onChange={(e) => setFeeStatus(e.target.value)}
+                              checked={feeData.feeStatus === "due"}
+                              disabled
                             />
                             <label className="ps-1" htmlFor="due">
                               Due
                             </label>
                           </div>
                         </span>
-                        {errors.feeStatus && (
-                          <p className="required-validation">
-                            {errors.feeStatus}
-                          </p>
-                        )}
                       </div>
 
                       <div className="col-md-8">
@@ -305,27 +218,9 @@ function AddFee({ isOpen, setIsOpen }) {
                           placeholder="Enter Description"
                           rows="6"
                           name="description"
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
+                          value={feeData.description}
+                          disabled
                         ></textarea>
-                        {errors.description && (
-                          <p className="required-validation">
-                            {errors.description}
-                          </p>
-                        )}
-                      </div>
-                      {errors.general && (
-                          <p className="required-validation">
-                            {errors.general}
-                          </p>
-                        )}
-                      <div className="col-md-12 mt-4">
-                        <button
-                          onClick={handleSubmit}
-                          className="custom-btn col-md-4"
-                        >
-                          Add Fee
-                        </button>
                       </div>
                     </form>
                   </div>
@@ -336,7 +231,7 @@ function AddFee({ isOpen, setIsOpen }) {
         </div>
       </div>
     </>
-  );
+  )
 }
 
-export default AddFee;
+export default ViewFee

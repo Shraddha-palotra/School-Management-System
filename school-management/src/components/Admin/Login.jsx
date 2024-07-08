@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
 import eye from "../assets/images/eye.png";
 import offEye from "../assets/images/offEye.png"
@@ -11,9 +11,34 @@ function Login() {
   const [errors, setErrors] = useState({})
   const navigate = useNavigate();
 
+  const [isChecked, setIsChecked] = useState(false);
+
   const [passwordToggle, setPasswordToggle] = useState(false)
    
- 
+  useEffect(() => {
+    // Check if there is a value in local storage
+    const rememberMe = localStorage.getItem('rememberMe') === 'true';
+    setIsChecked(rememberMe);
+
+    // Retrieve email and password if 'rememberMe' is true
+    if (rememberMe) {
+      const storedEmail = localStorage.getItem('email') || '';
+      const storedPassword = localStorage.getItem('password') || '';
+      setEmail(storedEmail);
+      setPassword(storedPassword);
+    }
+  }, []);
+
+  const handleCheckboxChange = () => {
+    const newCheckedStatus = !isChecked;
+    setIsChecked(newCheckedStatus);
+    localStorage.setItem('rememberMe', newCheckedStatus);
+    if (!newCheckedStatus) {
+      localStorage.removeItem('email');
+      localStorage.removeItem('password');
+    }
+  };
+
 
   Axios.defaults.withCredentials = true;
   const handleLoginSubmit = (e) => {
@@ -126,18 +151,18 @@ function Login() {
                           type="checkbox"
                           value=""
                           id="flexCheckChecked"
+                          checked={isChecked}
+                          onChange={handleCheckboxChange}
                         />
                         &nbsp;
                         <label
                           className="form-check-label"
                           htmlFor="flexCheckChecked"
+                          
                         >
                           Remember Me
                         </label>
                       </div>
-                      {/* <Link to="/forgot_password" className="password-btn">
-                        Forgot Password?
-                      </Link> */}
                       <span
                         onClick={() => {
                           navigate("/forgot_password");
@@ -148,9 +173,6 @@ function Login() {
                       </span>
                     </div>
                     <div className="col-md-12 mt-4">
-                      {/* <Link to="/login" className="custom-btn">
-                        Login
-                      </Link> */}
                       <button
                         className="custom-btn">
                         Login

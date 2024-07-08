@@ -65,7 +65,7 @@ router.post("/addstudent", async (req, res) => {
 // show student in front end
 router.get("/showstudents", async (req, res) => {
   try {
-    console.log("showstudent API called");
+    console.log("show student API called");
     const AllStudents = await AddStudentModel.find();
     return res.json({ status: true, AllStudents });
   } catch (error) {

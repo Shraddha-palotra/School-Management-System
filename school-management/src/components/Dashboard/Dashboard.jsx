@@ -7,28 +7,71 @@ import  Axios  from 'axios';
 
 function Dashboard({isOpen, setIsOpen}) {
 
-  const [totalStundet, setTotalStudent ] = useState([]);
-
-
+  const [totalStudent, setTotalStudent ] = useState([]);
+  const [totalStaff, setTotalStaff ] = useState([]);
+  const [totalFee, setTotalFee] = useState([]);
   useEffect( () => {
-    const fun1 = async (req, res) => {
+    const fetchStudent = async (req, res) => {
       try {
         const res1 =await Axios.get("http://localhost:8080/student/showstudents")
         console.log("res1",res1.data.AllStudents);
         if (res1.data.status){
           setTotalStudent(res1.data.AllStudents)
         }
-
+        else {
+          setTotalStudent([]);
+        }
       } catch (error) {
         console.log(error);
+        setTotalStudent([]);
       }
     }
-fun1()
+fetchStudent();
   },[])
+
+  useEffect( () => {
+    const fetchStaff = async (req,res) => {
+      try {
+        const res = await Axios.get("http://localhost:8080/staff/showstaffs")
+        console.log("res",res.data.AllStaff);
+        if (res.data.status){
+          setTotalStaff(res.data.AllStaff)
+        }
+        else {
+          setTotalStaff([]);
+        }
+      } catch (error) {
+        console.log(error);
+        setTotalStaff([]);
+      }
+    }
+  fetchStaff();
+  },[])
+
+  useEffect( () => {
+    const fetchFeeData = async (req,res) => {
+      try {
+        const res3 = await Axios.get("http://localhost:8080/fee/showfees")
+        console.log("res3",res3.data.AllFee);
+        if (res3.data.AllFee){
+          setTotalFee(res3.data.AllFee)
+        }
+        else {
+          setTotalFee([]);
+        }
+      } catch (error) {
+        console.log(error);
+        setTotalFee([]);
+      }
+    }
+  fetchFeeData();
+  },[])
+
+
 
   return (
 <>
- <div className="wapper">
+ <div className="wrapper">
       <Sidebar isOpen={isOpen}/>
     <div className={`main-container ${isOpen && 'main-content_large'}`}>
       <HeaderDash isOpen={isOpen}  setIsOpen={setIsOpen}  />
@@ -61,8 +104,8 @@ fun1()
                     <div className="custom-card presentEmployee">
                       <div className="left-data">
                         <div className="heading">
-                          <h2 className="count">{totalStundet.length}</h2>
-                          <span>Number Of Student's</span>
+                          <h2 className="count">{totalStudent.length}</h2>
+                          <span>Total Student's</span>
                         </div>
                       </div>                     
                     </div>
@@ -71,7 +114,7 @@ fun1()
                     <div className="custom-card presentEmployee">
                       <div className="left-data">
                         <div className="heading">
-                          <h2 className="count">150</h2>
+                          <h2 className="count">{totalStaff.length}</h2>
                           <span>Total Staff</span>
                         </div>
                       </div>
@@ -81,8 +124,8 @@ fun1()
                     <div className="custom-card absentEmployee">
                       <div className="left-data">
                         <div className="heading">
-                          <h2 className="count">55</h2>
-                          <span>Fee's Amount</span>
+                          <h2 className="count">{totalFee.length}</h2>
+                          <span>Due Fee Amount's</span>
                         </div>
                       </div>
                     </div>

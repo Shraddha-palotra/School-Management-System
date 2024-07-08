@@ -35,11 +35,11 @@ function EditStudents({ items, isOpen, setIsOpen }) {
     if (!studentData.fatherName) formErrors.fatherName = "Father name is required";
     if (!studentData.motherName) formErrors.motherName = "Mother name is required";
 
-    const pattern = /^\d+$/;
+    const pattern = /^\d{10}$/;
     if (!studentData.phoneNumber) {
       formErrors.phoneNumber = "Phone number is required";
     } else if (!pattern.test(studentData.phoneNumber)) {
-      formErrors.phoneNumber = "Phone number should contain only digits";
+      formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
     }
 
     if (!studentData.classname) formErrors.classname = "Class is required";

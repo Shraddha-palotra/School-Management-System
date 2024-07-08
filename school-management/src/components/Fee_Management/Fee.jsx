@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import add from "../assets/icons/add.svg";
@@ -6,14 +6,60 @@ import Ellipse7 from "../assets/images/Ellipse7.png";
 import Edit from "../assets/icons/Edit.svg";
 import Delete from "../assets/icons/Delete.svg";
 import view from "../assets/icons/view.svg";
-import picture from "../assets/images/picture.png";
+import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import DeleteFee from "./DeleteFee";
 
 function Fee({isOpen, setIsOpen}) {
+  
   const navigate = useNavigate();
+  const [ fee, setFee] = useState([]);
+
+  const [searchFeeData, setSearchFeeData] = useState("");
+
+  const[isDeleteClick,setIsDeleteClick] = useState({
+    flag:false,
+    eachFeeData:{}
+  })
+ console.log("is delete click",isDeleteClick);
+
+ const deleteHandle = (flag,eachFeeData)=>{
+  console.log("delete handle of student called");
+  console.log("each student is",eachFeeData);
+  setIsDeleteClick({
+     flag:flag,
+     eachFeeData:eachFeeData,
+  })
+}
+ 
+const filteredFeeData = fee.filter(
+  (fee) =>
+    fee.studentName.toLowerCase().includes(searchFeeData.toLowerCase()) || 
+    fee.fatherName.toLowerCase().includes(searchFeeData.toLowerCase()) ||
+    fee.classname.toLowerCase().includes(searchFeeData.toLowerCase()) ||
+    fee.quaterlyFee.toLowerCase().includes(searchFeeData.toLowerCase()) ||
+    fee.feeStatus.toLowerCase().includes(searchFeeData.toLowerCase()) 
+);
+
+ 
+  useEffect(() => {
+    Axios.get("http://localhost:8080/fee/showfees")
+
+      .then((res) => {
+        
+        console.log(res.data.AllFee);
+        if (res.data.AllFee) {
+          setFee(res.data.AllFee);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },[isDeleteClick]);
+
   return (
     <>
-      <div className="wapper">
+      
         <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -40,7 +86,9 @@ function Fee({isOpen, setIsOpen}) {
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder="Search Transaction"
+                      placeholder="Search Fee's Student"
+                      value={searchFeeData}
+                      onChange={(e) => setSearchFeeData(e.target.value)}
                     />
                   </div>
                 </div>
@@ -60,158 +108,46 @@ function Fee({isOpen, setIsOpen}) {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td>A01</td>
-                            <td>
-                              <img src={Ellipse7} alt="" />
-                              <span>Pooja Patel</span>
-                            </td>
-                            <td>Amit Patel </td>
-                            <td>11th</td>
-                            <td>20000</td>
-                            <td>Paid/due</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>A02</td>
-                            <td>
-                              <img src={picture} alt="" />
-                              <span>Vijay Sharma</span>
-                            </td>
-                            <td>suraj sharma </td>
-                            <td>12th</td>
-                            <td>20000</td>
-                            <td>Paid/due</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>A03</td>
-                            <td>
-                              <img src={Ellipse7} alt="" />
-                              <span>Pooja Patel</span>
-                            </td>
-                            <td>amit sharma </td>
-                            <td>11th</td>
-                            <td>20000</td>
-                            <td>Paid/due</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>A04</td>
-                            <td>
-                              <img src={picture} alt="" />
-                              <span>Vijay Sharma</span>
-                            </td>
-                            <td>suraj sharma </td>
-                            <td>12th</td>
-                            <td>20000</td>
-                            <td>Paid/due</td>
-                            <td>
-                              <div className="action-btn">
-                                <button
-                                  onClick={() => {
-                                    navigate("/edit-transaction");
-                                  }}
-                                >
-                                  <img src={Edit} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate(" ");
-                                  }}
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#exampleModal"
-                                >
-                                  <img src={Delete} alt="" />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    navigate("/view-transaction");
-                                  }}
-                                >
-                                  <img src={view} alt="" />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
+                        {filteredFeeData.map((items, index) => (
+                            <tr key={index} >
+                              <td>{index + 1}</td>
+                              <td>
+                                <img src={Ellipse7} alt="" />
+                                <span>{items.studentName}</span>
+                              </td>
+                              <td>{items.fatherName}</td>
+                              <td>{items.classname}</td>
+                              <td>{items.quaterlyFee}</td>
+                              <td>{items.feeStatus}</td>
+                              <td>
+                                <div className="action-btn">
+                                  <button
+                                    onClick={() => {
+                                      navigate("/edit-fee",{ state: {items} })
+                                    }} 
+                                  >
+                                    <img src={Edit} alt="Edit" />
+                                  </button>
+                                  <button
+                                    onClick={(e) => {
+                                      deleteHandle(true, items);
+                                    }}
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal"
+                                  >
+                                    <img src={Delete} alt="Delete" />
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      navigate("/view-fee",{state: {items}});
+                                    }}
+                                  >
+                                    <img src={view} alt="View" />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
                         </tbody>
                       </table>
                     </div>
@@ -219,29 +155,11 @@ function Fee({isOpen, setIsOpen}) {
                 </div>
               </div>
             </div>
+            <DeleteFee
+         data={{ isDeleteClick, deleteHandle}}
+          />
           </div>
         </div>
-
-        {/* <div className="modal fade customDesign" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                    <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">&nbsp;</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div className="modal-body">
-                        <img src="assets/images/deleteModal_icon.png" alt="" className="mainIconModal"/>
-                        <h2>Delete Transaction</h2>
-                        <p>Are you sure you want to Delete Vijay Sharma?</p>
-                        <div className="footbutton">
-                            <button type="button" className="custom-btn cancelBtn" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" className="custom-btn custom-btnCus">Confirm</button>
-                      </div>
-                    </div>
-                </div>
-            </div>
-        </div> */}
-      </div>
     </>
   );
 }

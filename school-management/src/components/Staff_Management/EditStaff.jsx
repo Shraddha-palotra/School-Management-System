@@ -35,11 +35,11 @@ function EditStaff({ items, isOpen, setIsOpen }) {
           if (!staffData.staffPosition) formErrors.staffPosition = "Staff position is required";
           
       
-          const pattern = /^\d+$/;
+          const pattern = /^\d{10}$/;
           if (!staffData.phoneNumber) {
             formErrors.phoneNumber = "Phone number is required";
           } else if (!pattern.test(staffData.phoneNumber)) {
-            formErrors.phoneNumber = "Phone number should contain only digits";
+            formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
           }
       
           if (!staffData.joinDate) formErrors.joinDate = "Staff joining date is required";
