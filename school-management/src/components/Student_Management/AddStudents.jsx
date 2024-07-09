@@ -3,7 +3,6 @@ import Axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
@@ -21,6 +20,12 @@ function Add_Students({ isOpen, setIsOpen }) {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({});
+
+  const [ profileImage, setProfileImage] = useState("");
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -65,16 +70,33 @@ function Add_Students({ isOpen, setIsOpen }) {
 
     setErrors(formErrors);
 
-    Axios.post("http://localhost:8080/student/addstudent", {
-      studentName,
-      fatherName,
-      motherName,
-      phoneNumber,
-      classname,
-      dateOfBirth,
-      section,
-      gender,
-      address,
+    const formData = new FormData();
+    formData.append("studentName", studentName);
+    formData.append("fatherName", fatherName);
+    formData.append("motherName", motherName);
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("classname", classname);
+    formData.append("dateOfBirth", dateOfBirth);
+    formData.append("section", section);
+    formData.append("gender", gender);
+    formData.append("address", address);
+    
+    if (profileImage) formData.append('profileImage', profileImage);
+    console.log("fromdata is ",formData)
+
+    Axios.post("http://localhost:8080/student/addstudent",formData ,{
+      // studentName,
+      // fatherName,
+      // motherName,
+      // phoneNumber,
+      // classname,
+      // dateOfBirth,
+      // section,
+      // gender,
+      // address,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
       .then((response) => {
         console.log(response);
@@ -131,7 +153,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                     <div className="addProjectlogo">
                       <div className="upload-img-box">
                         <div className="circle">
-                          <img src={dummyProfile} alt="" />
+                        <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${profileImage}`} alt="" />
                         </div>
                         <div className="p-image ml-auto">
                           <label htmlFor="logoSelect">
@@ -145,6 +167,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                             name="projectLogo"
                             type="file"
                             accept="image/*"
+                            onChange={handleImageChange}
                           />
                         </div>
                       </div>

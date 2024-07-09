@@ -1,13 +1,40 @@
 import express from "express";
 import AddFeeModel from "../models/Fee.js";
+import multer from 'multer';
+import fs from 'fs';
+import path from "path";
+import { fileURLToPath } from "url";
+import AddStudentModel from '../models/Students.js'
 
 const router = express.Router();
 
 //  add fee
-router.post("/addfees", async (req, res) => {
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, '../uploads/profiles');
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post("/addfees",upload.single('profileImage'), async (req, res) => {
   console.log("Fee API's called");
+
+  if (req.file) {
+    req.body.profileImage = `/uploads/profiles/${req.file.filename}`;
+  }
+
   try {
-    const { studentName, fatherName, classname, quaterlyFee, feeStatus, section, description } =
+    const { studentName, fatherName, classname, quaterlyFee, feeStatus, section, description,  profileImage} =
       req.body;
     console.log(req.body);
 
@@ -23,7 +50,7 @@ router.post("/addfees", async (req, res) => {
       return res.status(400).json({ msg: "please enter all fields" });
     }
 
-    const user = await AddFeeModel.findOne({studentName: studentName, fatherName:fatherName, classname:classname});
+    const user = await AddStudentModel.findOne({studentName: studentName, fatherName:fatherName, classname:classname});
     console.log("Student found", user);
     if (!user) {
          return res.json({ msg: "Student is not register or status not match"})
@@ -38,6 +65,7 @@ router.post("/addfees", async (req, res) => {
       feeStatus,
       section,
       description,
+      profileImage,
     });
     console.log(newFee);
     await newFee.save();

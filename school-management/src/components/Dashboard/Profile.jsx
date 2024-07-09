@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import axios from "axios";
-import profileImage from "../assets/images/profileImage.png";
+import profileImg from "../assets/images/profileImg.png"
 import camera from "../assets/images/camera.png";
-import dummyProfile from "../assets/images/dummyProfile.png";
+import {toast,ToastContainer} from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "./HeaderDash";
 
-function Profile({ isOpen, setIsOpen }) {
+function Profile({items, isOpen, setIsOpen }) {
+
+  const [profileImage, setProfileImage] = useState('');
 
      const [loggedAdmin, setLoggedAdmin] = useState(JSON.parse(localStorage.getItem('user')))
      console.log(loggedAdmin);
@@ -24,19 +27,40 @@ function Profile({ isOpen, setIsOpen }) {
          [name] : value,
        }))
      }
-   
+    const handleImageChange = (e) => {
+      setProfileImage(e.target.files[0]);
+    }
+
      const handleSubmit = (e) => {
        e.preventDefault();
        console.log("logged admin int handle submit profile",loggedAdmin);
+      
+
+       const formData = new FormData();
+       formData.append("fullname", loggedAdmin.name);
+       formData.append("email", loggedAdmin.email);
+       formData.append("phoneNum", loggedAdmin.phoneNumber);
+       
+       if (profileImage) formData.append('profileImage', profileImage);
+       console.log("fromdata is ",formData)
+
        const id = loggedAdmin._id;
        console.log("id in profile handle submit",id);
+
        const fun = async (req, res) => {
          try {
-           const res =  await axios.put(`http://localhost:8080/auth/updateprofile/${id}`, loggedAdmin)
+           const res =  await axios.put(`http://localhost:8080/auth/updateprofile/${id}`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+           })
              console.log("response is",res.data)
              if(res.data.status){
-               localStorage.setItem('user',JSON.stringify(res.data.updatedProfileUser))
-               navigate('/dashboard')
+               localStorage.setItem('user',JSON.stringify(res.data.updatedProfileUser));
+               toast.success("Successfully update prodile")
+               setTimeout(()=>{
+                navigate('/dashboard', { state: { items } });
+              },1000) 
              }
          }
           catch (error) {
@@ -48,6 +72,7 @@ function Profile({ isOpen, setIsOpen }) {
      }
   return (
     <>
+    <ToastContainer/>
       <div className="wapper">
         <Sidebar isOpen={isOpen}  />
         <div
@@ -57,7 +82,7 @@ function Profile({ isOpen, setIsOpen }) {
           <div className="content">
             <div className="row mb-3">
               <div className="col-xxl-12">
-                <div className="htmlForm-body">
+                <div className="form-body">
                   <div className="row">
                     <div className="col-xxl-12">
                       <div className="greetingsText mb-3">
@@ -69,7 +94,7 @@ function Profile({ isOpen, setIsOpen }) {
 
                     <div className="col-lg-6 align-self-center">
                       <img
-                        src={profileImage}
+                        src={profileImg}
                         alt=""
                         className="img-fluid"
                       />
@@ -81,10 +106,7 @@ function Profile({ isOpen, setIsOpen }) {
                           <div className="addProjectlogo">
                             <div className="upload-img-box">
                               <div className="circle">
-                                <img
-                                  src={dummyProfile}
-                                  alt=""
-                                />
+                              <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${loggedAdmin.profileImage}`} alt="" />
                               </div>
                               <div className="p-image ml-auto">
                                 <label htmlFor="logoSelect">
@@ -101,6 +123,7 @@ function Profile({ isOpen, setIsOpen }) {
                                   name="projectLogo"
                                   type="file"
                                   accept="image/*"
+                                  onChange={handleImageChange}
                                 />
                               </div>
                             </div>

@@ -8,6 +8,7 @@ const AddFeeSchema = new mongoose.Schema({
     feeStatus : {type:String, required: true},
     section : {type:String, required: true},
     description: {type:String, required: true},
+    profileImage : {type : String , required: true},
 })
 
 const AddFeeModel = mongoose.model("addfee", AddFeeSchema)

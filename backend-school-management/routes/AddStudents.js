@@ -1,10 +1,35 @@
 import express from "express";
 import AddStudentModel from '../models/Students.js'
+import multer from 'multer';
+import fs from 'fs';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
 
-router.post("/addstudent", async (req, res) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, '../uploads/profiles');
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
   console.log("addstudent API called");
+
+  if (req.file) {
+    req.body.profileImage = `/uploads/profiles/${req.file.filename}`;
+  }
+
   try {
     console.log("addstudent API called");
 
@@ -18,6 +43,7 @@ router.post("/addstudent", async (req, res) => {
       section,
       gender,
       address,
+      profileImage,
     } = req.body;
 
     console.log(req.body);
@@ -46,6 +72,7 @@ router.post("/addstudent", async (req, res) => {
       section,
       gender,
       address,
+      profileImage,
     });
     console.log(newStudent);
     await newStudent.save();

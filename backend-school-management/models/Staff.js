@@ -7,7 +7,8 @@ const AddStaffSchema = new mongoose.Schema({
      joinDate : {type:String , required : true},
      salary : {type:String , required : true},
      gender : {type:String , required : true},
-     description : {type:String , required : true}
+     description : {type:String , required : true},
+     profileImage : {type : String , required: true},
 })
 
 const AddStaffModel = mongoose.model("addstaff",AddStaffSchema)

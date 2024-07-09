@@ -90,7 +90,8 @@ function ViewStudents({isOpen,setIsOpen}) {
                             id="fullname"
                             placeholder="Enter Name"
                             name='classname'
-                            value={studentData.classname}
+                            value={studentData.studentName}
+                            disabled
                            
                           />
                         </div>

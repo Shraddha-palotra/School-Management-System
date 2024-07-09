@@ -6,7 +6,8 @@ import cookieParser from 'cookie-parser'
 import {UserRouter} from './routes/user.js';
 import { AddStudentRouter } from './routes/AddStudents.js'
 import { AddStaffRouter } from './routes/AddStaff.js'
-import { AddFeeRouter } from './routes/AddFee.js'
+import { AddFeeRouter } from './routes/AddFee.js';
+import bodyParser from 'body-parser';
 
 dotenv.config()
 
@@ -22,6 +23,9 @@ app.use('/auth', UserRouter)
 app.use('/student', AddStudentRouter)
 app.use('/staff', AddStaffRouter)
 app.use('/fee', AddFeeRouter)
+
+app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'));
 
 mongoose.connect("mongodb://127.0.0.1:27017/school" ,{
 }).then( () => {

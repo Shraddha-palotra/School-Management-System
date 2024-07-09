@@ -110,8 +110,7 @@ function Login() {
                         id="email"
                         placeholder="Enter Email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        
+                        onChange={(e) => setEmail(e.target.value)}  
                       />
                       {errors.email && (
                       <p className="required-validation">{errors.email}</p>

@@ -4,7 +4,6 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
 import Axios from "axios";
 
@@ -19,6 +18,12 @@ function AddFee({ isOpen, setIsOpen }) {
   const [section, setSection] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
+
+  const [profileImage, setProfileImage] = useState("");
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,14 +55,31 @@ function AddFee({ isOpen, setIsOpen }) {
 
     setErrors(formErrors);
 
-    Axios.post("http://localhost:8080/fee/addfees", {
-      studentName,
-      fatherName,
-      classname,
-      quaterlyFee,
-      feeStatus,
-      section,
-      description,
+    if (Object.keys(formErrors).length === 0) {
+
+    const formData = new FormData();
+    formData.append("studentName", studentName);
+    formData.append("fatherName", fatherName);
+    formData.append("classname", classname);
+    formData.append("quaterlyFee", quaterlyFee);
+    formData.append("feeStatus",feeStatus);
+    formData.append("section", section);
+    formData.append("description", description);
+    
+    if (profileImage) formData.append('profileImage', profileImage);
+    console.log("fromdata is ",formData)
+
+    Axios.post("http://localhost:8080/fee/addfees", formData, {
+      // studentName,
+      // fatherName,
+      // classname,
+      // quaterlyFee,
+      // feeStatus,
+      // section,
+      // description,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
       .then((response) => {
         console.log(response);
@@ -74,6 +96,7 @@ function AddFee({ isOpen, setIsOpen }) {
       .catch((err) => {
         console.log(err);
       });
+    };
   };
 
   return (
@@ -118,7 +141,7 @@ function AddFee({ isOpen, setIsOpen }) {
                     <div className="addProjectlogo">
                       <div className="upload-img-box">
                         <div className="circle">
-                          <img src={dummyProfile} alt="" />
+                        <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${profileImage}`} alt="" />
                         </div>
                         <div className="p-image ml-auto">
                           <label htmlFor="logoSelect">
@@ -132,6 +155,7 @@ function AddFee({ isOpen, setIsOpen }) {
                             name="projectLogo"
                             type="file"
                             accept="image/*"
+                            onChange={handleImageChange}
                           />
                         </div>
                       </div>
@@ -274,7 +298,7 @@ function AddFee({ isOpen, setIsOpen }) {
                             <input
                               id="due"
                               type="radio"
-                              name="status"
+                              name="feeStatus"
                               value="due"
                               checked={feeStatus === "due"}
                               onChange={(e) => setFeeStatus(e.target.value)}

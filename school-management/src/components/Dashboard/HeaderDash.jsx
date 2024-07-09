@@ -47,6 +47,7 @@ function HeaderDash({isOpen, setIsOpen}) {
                   </button>
                   <div className="avatar">
                     <div className="dropdown">
+                    <span className="d-flex align-items-center cusProfileCir">
                       <button 
                         className={`dropdown-toggle ${isCollapsed ? "show" : ""}`}
                         type="button"
@@ -55,11 +56,14 @@ function HeaderDash({isOpen, setIsOpen}) {
                         aria-expanded={isCollapsed ? "true" : "false"}
                         onClick={openCollapsedHandler}
                       >
-                        <img src={avatar} alt=""></img>
+                        <img 
+                      src={loggedUser.profileImage ? `http://localhost:8080${loggedUser.profileImage}` :avatar}
+                      alt="" />
                         <h6>
                          {loggedUser.name}<span>Admin</span>
                         </h6>
                       </button>
+                    </span>
                       <ul
                         className={`dropdown-menu ${isCollapsed ? "show" : ""}`}
                         aria-labelledby="dropdownMenuButton1"

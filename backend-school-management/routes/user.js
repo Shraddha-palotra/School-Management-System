@@ -3,6 +3,11 @@ import bcrypt from "bcrypt";
 import AnotherModel from "../models/User.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import multer from 'multer';
+import fs from 'fs';
+import path from "path";
+import { fileURLToPath } from "url";
+
 
 const router = express.Router();
 
@@ -246,13 +251,32 @@ router.put("/changepassword/:id", async (req, res) => {
 
 // this is for profile
 
-router.put("/updateprofile/:id", async (req, res) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, '../uploads/profiles');
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
+
+const upload = multer({ storage });
+
+router.put("/updateprofile/:id", upload.single('profileImage'), async (req, res) => {
   console.log("Updateprofile API is called");
   console.log("params", req.params);
   const { id } = req.params;
   const data = req.body;
   console.log("id is", id);
 
+  if (req.file) {
+    data.profileImage = `/uploads/profiles/${req.file.filename}`;
+  }
   try {
     const updatedProfileUser = await AnotherModel.findByIdAndUpdate(
       { _id: id },

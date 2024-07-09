@@ -1,12 +1,38 @@
 import express from "express";
 import AddStaffModel from "../models/Staff.js";
+import multer from 'multer';
+import fs from 'fs';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
 
 //  addstaff API's 
 
-router.post("/addstaff", async (req, res) => {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = path.join(__dirname, '../uploads/profiles');
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
+
+const upload = multer({ storage });
+
+
+router.post("/addstaff", upload.single('profileImage'),async (req, res) => {
   console.log("Add Staff API'S called ");
+
+  if (req.file) {
+    req.body.profileImage = `/uploads/profiles/${req.file.filename}`;
+  }
+
 
   try {
     const {
@@ -17,6 +43,7 @@ router.post("/addstaff", async (req, res) => {
       salary,
       gender,
       description,
+      profileImage,
     } = req.body;
     console.log(req.body);
 
@@ -40,6 +67,7 @@ router.post("/addstaff", async (req, res) => {
       salary,
       gender,
       description,
+      profileImage,
     });
     console.log(newStaff);
     await newStaff.save();

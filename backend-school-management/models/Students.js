@@ -9,7 +9,8 @@ const AddStudentSchema = new mongoose.Schema({
     classname: { type: String, required: true },
     section: { type: String, required: true },
     gender: { type: String, required: true },
-    address: {type: String, required: true}
+    address: {type: String, required: true},
+    profileImage : {type : String , required: true},
 })
 
 const AddStudentModel = mongoose.model("addstudent", AddStudentSchema)

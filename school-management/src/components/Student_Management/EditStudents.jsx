@@ -87,7 +87,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
             <div className="row mb-3">
               <div className="col-xxl-12">
                 <div className="form-body">
-                  <div className="row">
+                  <div className="row"> 
                     <div className="col-xxl-12">
                       <div className="greetingsText mb-3">
                         <div className="greetingsText-heading">

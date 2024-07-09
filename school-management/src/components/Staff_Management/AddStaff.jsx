@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
-import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
 import { ToastContainer,toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Axios  from "axios";
 
 function AddStaff({isOpen,setIsOpen}) {
+  
 
   const navigate = useNavigate();
 
@@ -21,6 +21,11 @@ function AddStaff({isOpen,setIsOpen}) {
   const [description, setDiscription] = useState("");
   const [errors, setErrors] = useState({});
 
+  const [profileImage, setProfileImage] = useState("");
+
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  }
    
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,17 +64,32 @@ function AddStaff({isOpen,setIsOpen}) {
 
    if (!description) formErrors.description = "Description is required";
 
-   setErrors(formErrors);     
+   setErrors(formErrors);  
+   
+   const formData = new FormData();
+   formData.append("staffName", staffName);
+   formData.append("staffPosition", staffPosition);
+   formData.append("phoneNumber", phoneNumber);
+   formData.append("joinDate", joinDate);
+   formData.append("salary", salary);
+   formData.append("gender", gender);
+   formData.append("description", description);
+   
+   if (profileImage) formData.append('profileImage', profileImage);
+   console.log("fromdata is ",formData)
 
-  Axios.post("http://localhost:8080/staff/addstaff",{
+  Axios.post("http://localhost:8080/staff/addstaff", formData,{
        
-    staffName,
-    staffPosition,
-    phoneNumber,
-    joinDate,
-    salary,
-    gender,
-    description
+    // staffName,
+    // staffPosition,
+    // phoneNumber,
+    // joinDate,
+    // salary,
+    // gender,
+    // description
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   })
   .then((response) => {
     console.log(response);
@@ -130,7 +150,7 @@ function AddStaff({isOpen,setIsOpen}) {
                       <div className="addProjectlogo">
                         <div className="upload-img-box">
                           <div className="circle">
-                            <img src={dummyProfile} alt="" />
+                          <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${profileImage}`} alt="" />
                           </div>
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">
@@ -144,6 +164,7 @@ function AddStaff({isOpen,setIsOpen}) {
                               name="projectLogo"
                               type="file"
                               accept="image/*"
+                              onChange={handleImageChange}
                             />
                           </div>
                         </div>

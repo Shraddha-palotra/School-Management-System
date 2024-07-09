@@ -108,8 +108,11 @@ function Staff({isOpen, setIsOpen}) {
                             <tr key={index} >
                               <td>{index + 1}</td>
                               <td>
-                                <img src={Ellipse7} alt="" />
+                                <span className="d-flex align-items-center cusProfileCir">
+                                {/* <img src={Ellipse7} alt="" /> */}
+                                <img src={items.profileImage ? `http://localhost:8080${items.profileImage}` :Ellipse7 } alt=" " />
                                 <span>{items.staffName}</span>
+                                </span>
                               </td>
                               <td>{items.staffPosition}</td>
                               <td>{items.joinDate}</td>
