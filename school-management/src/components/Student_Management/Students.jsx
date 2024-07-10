@@ -33,9 +33,9 @@ function Students({isOpen, setIsOpen}) {
 
   const filteredStudents = student.filter(
     (student) =>
+      student.rollNumber.toLowerCase().includes(searchStudent.toLowerCase()) ||
       student.studentName.toLowerCase().includes(searchStudent.toLowerCase()) || 
       student.fatherName.toLowerCase().includes(searchStudent.toLowerCase()) ||
-      student.dateOfBirth.toLowerCase().includes(searchStudent.toLowerCase()) ||
       student.classname.toLowerCase().includes(searchStudent.toLowerCase()) ||
       student.phoneNumber.toLowerCase().includes(searchStudent.toLowerCase()) ||
       student.gender.toLowerCase().includes(searchStudent.toLowerCase())
@@ -45,7 +45,7 @@ function Students({isOpen, setIsOpen}) {
   useEffect(() => {
     Axios.get("http://localhost:8080/student/showstudents")
       .then((response) => {
-        
+        console.log(response.data.AllStudents);
         console.log(response.data.status);
         if (response.data.status) {
           setStudent(response.data.AllStudents);
@@ -97,10 +97,10 @@ function Students({isOpen, setIsOpen}) {
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">Roll Number</th>
                             <th scope="col">Student Name</th>
                             <th scope="col">Father Name </th>
-                            <th scope="col">Date of Birth</th>
+                            {/* <th scope="col">Date of Birth</th> */}
                             <th scope="col">Class</th>
                             <th scope="col">Contact</th>
                             <th scope="col">Gender</th>
@@ -111,16 +111,16 @@ function Students({isOpen, setIsOpen}) {
                          
                            {filteredStudents.map((items, index) => (
                             <tr key={index} >
-                              <td>{index + 1}</td>
+                              <td>{items.rollNumber}</td>
                               <td>
                                 <span className="d-flex align-items-center cusProfileCir">
                                 {/* <img src={Ellipse7} alt="" /> */}
-                                <img src={items.profileImage ? `http://localhost:8080${items.profileImage}` :Ellipse7 } alt=" " />
+                                <img src={items.profileImage ? `http://localhost:8080${items.profileImage}` : Ellipse7 } alt=" " />
                                 <span>{items.studentName}</span>
                                 </span>
                               </td>
                               <td>{items.fatherName}</td>
-                              <td>{items.dateOfBirth}</td>
+                              {/* <td>{items.dateOfBirth}</td> */}
                               <td>{items.classname}</td>
                               <td>{items.phoneNumber}</td>
                               <td>{items.gender}</td>

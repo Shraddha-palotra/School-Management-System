@@ -14,6 +14,7 @@ function AddStaff({isOpen,setIsOpen}) {
 
   const [staffName, setStaffName] = useState("");
   const [staffPosition, setStaffPosition] = useState("");
+  const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [joinDate, setJoinDate] = useState("");
   const [salary, setSalary] = useState("");
@@ -34,6 +35,7 @@ function AddStaff({isOpen,setIsOpen}) {
     console.log(handleSubmit);
     console.log(staffName);
     console.log(staffPosition);
+    console.log(email)
     console.log(phoneNumber);
     console.log(joinDate);
     console.log(salary);
@@ -42,10 +44,18 @@ function AddStaff({isOpen,setIsOpen}) {
 
 
     let formErrors = {};
+    if (!profileImage) formErrors.profileImage = "Please upload image";
   
     if (!staffName) formErrors.staffName = "Staff name is required";
 
    if (!staffPosition) formErrors.staffPosition = "Staff position  is required";
+
+   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      formErrors.email = "Email is required"
+    }else if (!emailPattern.test(email)) {
+      formErrors.email = "Please enter a valid email address";
+    }
 
    const Pattern = /^\d{10}$/;
 
@@ -69,6 +79,7 @@ function AddStaff({isOpen,setIsOpen}) {
    const formData = new FormData();
    formData.append("staffName", staffName);
    formData.append("staffPosition", staffPosition);
+   formData.append("email",email);
    formData.append("phoneNumber", phoneNumber);
    formData.append("joinDate", joinDate);
    formData.append("salary", salary);
@@ -104,6 +115,7 @@ function AddStaff({isOpen,setIsOpen}) {
   })
   .catch((err) => {
     console.log(err);
+    setErrors({[err.response.data.field] : err.response.data.msg})
   });
 
 };
@@ -168,6 +180,10 @@ function AddStaff({isOpen,setIsOpen}) {
                             />
                           </div>
                         </div>
+                        {errors.profileImage && (
+                          <p className="required-validation"> 
+                          {errors.profileImage}</p>
+                        )}
                         <h6>Profile Image</h6>
                       </div>
                     </div>
@@ -179,7 +195,7 @@ function AddStaff({isOpen,setIsOpen}) {
                             <span className="required-validation">*</span>
                           </label>
                           <input
-                            type="test"
+                            type="text"
                             className="custom-input-field"
                             id="fullname"
                             placeholder="Enter Name"
@@ -210,6 +226,23 @@ function AddStaff({isOpen,setIsOpen}) {
                           </select>
                           {errors.staffPosition && (
                             <p className="required-validation">{errors.staffPosition}</p>
+                          )}
+                        </div>
+                        <div className="col-md-4">
+                          <label htmlFor="email" className="custom-form-label">
+                            Email {" "}
+                            <span className="required-validation">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            className="custom-input-field"
+                            id="email"
+                            placeholder="Enter Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                          />
+                           {errors.email && (
+                            <p className="required-validation">{errors.email}</p>
                           )}
                         </div>
                         <div className="col-md-4">

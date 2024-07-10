@@ -29,11 +29,12 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
   if (req.file) {
     req.body.profileImage = `/uploads/profiles/${req.file.filename}`;
   }
-
+   console.log("after adding profile image req body is",req.body);
   try {
     console.log("addstudent API called");
 
     const {
+      rollNumber,
       studentName,
       fatherName,
       motherName,
@@ -45,24 +46,11 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
       address,
       profileImage,
     } = req.body;
-
+    
     console.log(req.body);
 
-    if (
-      !studentName ||
-      !fatherName ||
-      !motherName ||
-      !phoneNumber ||
-      !dateOfBirth ||
-      !classname ||
-      !section ||
-      !gender ||
-      !address
-    ) {
-      return res.status(400).json({ msg: "Please enter all the fields" });
-    }
-
     const newStudent = new AddStudentModel({
+      rollNumber,
       studentName,
       fatherName,
       motherName,
@@ -75,11 +63,12 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
       profileImage,
     });
     console.log(newStudent);
-    await newStudent.save();
+   const savedStudent =  await newStudent.save();
+   console.log("saved student is",savedStudent);
     return res.json({
       status: true,
       message: "Registerd Successfully",
-      newStudent,
+      newStudent : savedStudent
     });
   } catch (error) {
     console.error("Error in addstudent API:", error);
@@ -106,15 +95,19 @@ router.get("/showstudents", async (req, res) => {
 
 //  edit student API'S
 
-router.put("/editstudent/:id", async (req, res) => {
+router.put("/editstudent/:id", upload.single('profileImage'), async (req, res) => {
   console.log(" edit student  API is called");
   // console.log("params", req.params);
   const { id } = req.params;
   console.log("id is",id);
-  const data = req.body;
-  // console.log("id is", id);
-  console.log(data)
- 
+  // const data = req.body;
+  // console.log(data)
+    
+  const data = {
+    ...req.body,
+    profileImage:  req.file ?  `/uploads/profiles/${req.file.filename}` :req.body.profileImage
+  };
+  console.log("data after adding image");
   try {
     const updatedStudent = await AddStudentModel.findByIdAndUpdate(
       { _id: id },

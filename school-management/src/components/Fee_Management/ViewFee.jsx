@@ -4,7 +4,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import dummyProfile from "../assets/images/dummyProfile.png";
+import dummyprofile from '../assets/images/dummyProfile.png'
 import camera from "../assets/images/camera.png";
 
 function ViewFee({isOpen,setIsOpen}) {
@@ -56,7 +56,8 @@ function ViewFee({isOpen,setIsOpen}) {
                     <div className="addProjectlogo">
                       <div className="upload-img-box">
                         <div className="circle">
-                          <img src={dummyProfile} alt="" />
+                          {/* <img src={dummyProfile} alt=""  */}
+                          <img  src={feeData.profileImage ? `http://localhost:8080${feeData.profileImage}` : dummyprofile } />
                         </div>
                         <div className="p-image ml-auto">
                           <label htmlFor="logoSelect">
@@ -78,6 +79,20 @@ function ViewFee({isOpen,setIsOpen}) {
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
+                    <div className="col-md-4">
+                        <label htmlFor="rollnumber" className="custom-form-label">
+                          Roll Number{" "}
+                          <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="rollnumber"
+                          placeholder="Enter Roll Number"
+                          value={feeData.rollNumber}
+                          disabled
+                        />
+                      </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
                           Student Name{" "}

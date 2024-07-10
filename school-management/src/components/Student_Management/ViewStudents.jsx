@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import Sidebar from '../Sidebar/Sidebar'
 import HeaderDash from '../Dashboard/HeaderDash'
-import dummyProfile from "../assets/images/dummyProfile.png";
+import dummyprofile from '../assets/images/dummyProfile.png'
 import camera from "../assets/images/camera.png";
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -54,7 +54,8 @@ function ViewStudents({isOpen,setIsOpen}) {
                       <div className="addProjectlogo">
                         <div className="upload-img-box">
                           <div className="circle">
-                            <img src={dummyProfile} alt="" />
+                            {/* <img src={dummyProfile} alt="" /> */}
+                            <img  src={studentData.profileImage ? `http://localhost:8080${studentData.profileImage}` : dummyprofile } />
                           </div>
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">
@@ -76,6 +77,21 @@ function ViewStudents({isOpen,setIsOpen}) {
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
+                      <div className="col-md-4">
+                        <label htmlFor="rollnumber" className="custom-form-label">
+                          Roll Number{" "}
+                          <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="rollnumber"
+                          placeholder="Enter Roll Number"
+                          value={studentData.rollNumber}
+                          disabled
+                        />
+                       
+                      </div>
                         <div className="col-md-4">
                           <label
                             htmlFor="fullname"

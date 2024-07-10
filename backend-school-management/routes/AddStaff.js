@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
+//  add staff
 router.post("/addstaff", upload.single('profileImage'),async (req, res) => {
   console.log("Add Staff API'S called ");
 
@@ -38,6 +38,7 @@ router.post("/addstaff", upload.single('profileImage'),async (req, res) => {
     const {
       staffName,
       staffPosition,
+      email,
       phoneNumber,
       joinDate,
       salary,
@@ -47,21 +48,15 @@ router.post("/addstaff", upload.single('profileImage'),async (req, res) => {
     } = req.body;
     console.log(req.body);
 
-    if (
-      (!staffName,
-      !staffPosition,
-      !phoneNumber,
-      !joinDate,
-      !salary,
-      !gender,
-      !description)
-    ) {
-      return res.status(200).json({ msg: "Please enter all fields" });
+    const isExistingEmail = await AddStaffModel.findOne({email});
+    if (isExistingEmail) {
+      return res.status(400).json({status : false, field: "email", msg: "Staff email already register"})
     }
 
     const newStaff = new AddStaffModel({
       staffName,
       staffPosition,
+      email,
       phoneNumber,
       joinDate,
       salary,
@@ -97,14 +92,28 @@ router.get("/showstaffs", async (req,res) => {
 
 // edit staff API's 
 
-router.put("/editstaffs/:id", async (req, res) => {
+router.put("/editstaffs/:id", upload.single('profileImage'),async (req, res) => {
   console.log("Edit staff API's called")
-  console.log(req.params)
+  // console.log(req.params)
+
   const { id } = req.params;
   console.log("id is",id);
-  const data = req.body;
-  console.log("id is ",id)
-  console.log("data from backend",data)
+
+  // const data = req.body;
+  // console.log("data from backend",data)
+
+  const isExistingStaffEmail = await AddStaffModel.find({
+    email: req.body.email,
+    _id:{$ne: id},
+  })
+  if (isExistingStaffEmail.length > 0) {
+    return res.status(400).json({status: false, field: "email", msg:"Staff is already register"});
+  } 
+ 
+  const data = {
+    ...req.body,
+    profileImage: req.file ? `/uploads/profiles/${req.file.filename}`: req.body.profileImage
+  };
 
   try {
      const updateStaff = await AddStaffModel.findByIdAndUpdate(

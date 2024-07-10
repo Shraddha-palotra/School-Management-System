@@ -1,12 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useLocation, useNavigate } from "react-router-dom";
-import dummyProfile from "../assets/images/dummyProfile.png";
 import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import {toast,ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import Axios  from 'axios';
+import  Axios from 'axios';
 
 function EditStudents({ items, isOpen, setIsOpen }) {
 
@@ -19,18 +18,36 @@ function EditStudents({ items, isOpen, setIsOpen }) {
   console.log("studentData",studentData);
   
   const [errors, setErrors] = useState({});
+   
+  const [selectImage, setSelectImage] = useState(null);
+
+  useEffect(() => {
+    if (items) {
+     setStudentData(items);
+    }
+  }, [items]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, files } = e.target;
+    console.log("name is", name);
+    console.log("value is", value);
+
+  if(name === "profileImage"){
+    setSelectImage(files[0]);
+  }else{
     setStudentData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
-  };
+  }
+    
+  }; 
+
+
 
   const validateForm = () => {
     let formErrors = {};
-
+    if (!studentData.rollNumber) formErrors.rollNumber = "Roll Number is required";
     if (!studentData.studentName) formErrors.studentName = "Full name is required";
     if (!studentData.fatherName) formErrors.fatherName = "Father name is required";
     if (!studentData.motherName) formErrors.motherName = "Mother name is required";
@@ -53,22 +70,36 @@ function EditStudents({ items, isOpen, setIsOpen }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+
+    const formData = new FormData();
+    Object.keys(studentData).forEach((key) => {
+      formData.append(key, studentData[key]);
+    });
+    if (selectImage) { 
+      formData.append("profileImage", selectImage);
+    }
    
     const formErrors = validateForm();
     setErrors(formErrors);
     console.log("student data on submit",studentData);
 
+   
+
     if (Object.keys(formErrors).length === 0) {
       const id = studentData._id;
       
-      Axios.put(`http://localhost:8080/student/editstudent/${id}`,
-       studentData
+      Axios.put(`http://localhost:8080/student/editstudent/${id}`, formData,{
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
       )
       .then((response) => {
         if (response.data.status) {
           toast.success("Successfully added new student")
           setTimeout(()=>{
-            navigate('/student', { state: { items } });
+           navigate('/student');
           },1000)   
         }
       })
@@ -119,8 +150,9 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                       <div className="addProjectlogo">
                         <div className="upload-img-box">
                           <div className="circle">
-                            <img src={dummyProfile} alt="" />
-                          </div>
+                            {/* <img src={dummyProfile} alt="" /> */}
+                           <img src={selectImage ? URL.createObjectURL(selectImage) : `http://localhost:8080${studentData.profileImage}`} />
+                          </div> 
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">
                               <div>
@@ -130,9 +162,10 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             <input
                               className="file-upload"
                               id="logoSelect"
-                              name="projectLogo"
+                              name="profileImage"
                               type="file"
                               accept="image/*"
+                              onChange={handleChange}
                             />
                           </div>
                         </div>
@@ -141,6 +174,26 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
+                      <div className="col-md-4">
+                        <label htmlFor="rollNumber" className="custom-form-label">
+                          Roll Number{" "}
+                          <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="rollNumber"
+                          placeholder="Enter Roll Number"
+                          name='rollNumber'
+                          value={studentData.rollNumber}
+                          onChange={handleChange}
+                        />
+                        {errors.rollNumber && (
+                          <p className="required-validation">
+                            {errors.rollNumber}
+                          </p>
+                        )}
+                      </div>
                         <div className="col-md-4">
                           <label
                             htmlFor="fullname"

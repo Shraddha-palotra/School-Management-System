@@ -212,7 +212,7 @@ router.put("/changepassword/:id", async (req, res) => {
   try {
     const user = await AnotherModel.findById({_id:id});
     if (!user) {
-      return res.status(404).json({ field: "id" ,msg: "user not found" });
+      return res.status(400).json({ field: "id" ,msg: "user not found" });
     }
 
     const passwordValid = await bcrypt.compare(oldPassword, user.password);
@@ -222,8 +222,9 @@ router.put("/changepassword/:id", async (req, res) => {
 
     if (newPassword !== confirmPassword) {
       console.log("password and confirmpassword do not match");
-      return res.json({
-        msg: "Password and ConsirmPassword do not match",
+      return res.status(400).json({
+        field: "confirmPassword",
+        msg: "Password and ConfirmPassword do not match",
       });
     }
      

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 const AddFeeSchema = new mongoose.Schema({
+    rollNumber: {type:String, required:true},
     studentName: { type: String, required: true },
     fatherName: { type: String, required: true },
     classname: { type: String, required: true },

@@ -34,6 +34,7 @@ function Fee({isOpen, setIsOpen}) {
  
 const filteredFeeData = fee.filter(
   (fee) =>
+    fee.rollNumber.toLowerCase().includes(searchFeeData.toLowerCase()) ||
     fee.studentName.toLowerCase().includes(searchFeeData.toLowerCase()) || 
     fee.fatherName.toLowerCase().includes(searchFeeData.toLowerCase()) ||
     fee.classname.toLowerCase().includes(searchFeeData.toLowerCase()) ||
@@ -98,7 +99,7 @@ const filteredFeeData = fee.filter(
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">Id</th>
+                            <th scope="col">Roll Number</th>
                             <th scope="col">Student Name</th>
                             <th scope="col">Father's Name</th>
                             <th scope="col">Class</th>
@@ -110,7 +111,7 @@ const filteredFeeData = fee.filter(
                         <tbody>
                         {filteredFeeData.map((items, index) => (
                             <tr key={index} >
-                              <td>{index + 1}</td>
+                              <td>{items.rollNumber}</td>
                               <td>
                                 <span className="d-flex align-items-center cusProfileCir">
                                 {/* <img src={Ellipse7} alt="" /> */}

@@ -9,7 +9,7 @@ import Axios from "axios";
 
 function AddFee({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
-
+  const [rollNumber, setRollNumber] = useState("");
   const [studentName, setStudentName] = useState("");
   const [fatherName, setFatherName] = useState("");
   const [classname, setClassname] = useState("");
@@ -19,16 +19,15 @@ function AddFee({ isOpen, setIsOpen }) {
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
 
-  const [profileImage, setProfileImage] = useState("");
+  
 
-  const handleImageChange = (e) => {
-    setProfileImage(e.target.files[0]);
-  }
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     console.log(handleSubmit);
+    console.log(rollNumber);
     console.log(studentName);
     console.log(fatherName);
     console.log(classname);
@@ -38,6 +37,8 @@ function AddFee({ isOpen, setIsOpen }) {
     console.log(description);
 
     let formErrors = {};
+
+    if (!rollNumber) formErrors.rollNumber = "Roll Number is required";
 
     if (!studentName) formErrors.studentName = "Full name is required";
 
@@ -57,29 +58,16 @@ function AddFee({ isOpen, setIsOpen }) {
 
     if (Object.keys(formErrors).length === 0) {
 
-    const formData = new FormData();
-    formData.append("studentName", studentName);
-    formData.append("fatherName", fatherName);
-    formData.append("classname", classname);
-    formData.append("quaterlyFee", quaterlyFee);
-    formData.append("feeStatus",feeStatus);
-    formData.append("section", section);
-    formData.append("description", description);
-    
-    if (profileImage) formData.append('profileImage', profileImage);
-    console.log("fromdata is ",formData)
-
-    Axios.post("http://localhost:8080/fee/addfees", formData, {
-      // studentName,
-      // fatherName,
-      // classname,
-      // quaterlyFee,
-      // feeStatus,
-      // section,
-      // description,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+    Axios.post("http://localhost:8080/fee/addfees", {
+      rollNumber,
+      studentName,
+      fatherName,
+      classname,
+      quaterlyFee,
+      feeStatus,
+      section,
+      description,
+      
     })
       .then((response) => {
         console.log(response);
@@ -137,7 +125,7 @@ function AddFee({ isOpen, setIsOpen }) {
                     </div>
                   </div>
 
-                  <div className="col-xxl-2">
+                  {/* <div className="col-xxl-2">
                     <div className="addProjectlogo">
                       <div className="upload-img-box">
                         <div className="circle">
@@ -161,9 +149,29 @@ function AddFee({ isOpen, setIsOpen }) {
                       </div>
                       <h6>Profile Image</h6>
                     </div>
-                  </div>
+                  </div> */}
+
                   <div className="col-xxl-10">
                     <form className="row g-3">
+                    <div className="col-md-4">
+                        <label htmlFor="rollnumber" className="custom-form-label">
+                          Roll Number{" "}
+                          <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="rollnumber"
+                          placeholder="Enter Roll Number"
+                          value={rollNumber}
+                          onChange={(e) =>setRollNumber(e.target.value)}
+                        />
+                        {errors.rollNumber && (
+                          <p className="required-validation">
+                            {errors.rollNumber}
+                          </p>
+                        )}
+                      </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
                           Student Name{" "}

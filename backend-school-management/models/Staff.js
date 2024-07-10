@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const AddStaffSchema = new mongoose.Schema({
      staffName : {type:String , required : true},
      staffPosition : {type:String , required : true},
+     email: {type:String, required: true, unique: true},
      phoneNumber : {type:String , required : true , minLength : 10},
      joinDate : {type:String , required : true},
      salary : {type:String , required : true},

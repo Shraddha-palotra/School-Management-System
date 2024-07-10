@@ -5,6 +5,8 @@ import changePassword from "../assets/images/changePassword.png";
 import eye from "../assets/images/eye.png";
 import offEye from "../assets/images/offEye.png";
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 function Change_password({ isOpen, setIsOpen }) {
@@ -12,6 +14,7 @@ function Change_password({ isOpen, setIsOpen }) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [backendError, setBackendError] = useState("");
 
   const navigate = useNavigate();
 
@@ -55,6 +58,7 @@ function Change_password({ isOpen, setIsOpen }) {
       formErrors.confirmPassword = "Passwords do not match";
     }
     setErrors(formErrors);
+    setBackendError("");
 
     const data = {
       oldPassword,
@@ -72,10 +76,25 @@ function Change_password({ isOpen, setIsOpen }) {
         );
         console.log(res.data.status);
         if (res.data.status) {
+          toast.success('Successfully update password');
+          setTimeout(() => {
           navigate("/dashboard");
+        },1000);
+        }else {
+          if (res.data.field === 'oldPassword') {
+            setBackendError(res.data.msg)
+          }
         }
       } catch (err) {
-        console.log();
+        if (
+          err.response && 
+          err.response.data && 
+          err.response.data.field === 'oldPassword'
+        ) {
+          setBackendError(err.response.data.msg);
+        }else {
+          console.log(err);
+        }
       }
     };
     fun();
@@ -83,7 +102,7 @@ function Change_password({ isOpen, setIsOpen }) {
 
   return (
     <>
-      <div className="wapper">
+      <ToastContainer/>
         <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
@@ -116,11 +135,7 @@ function Change_password({ isOpen, setIsOpen }) {
                           <div className="possionIconInput">
                             <img
                               onClick={(e) => {
-                                handlePasswordToggle(
-                                  e,
-                                  "oldPassword",
-                                  !passwordToggle.oldPassword
-                                );
+                                handlePasswordToggle(e,"oldPassword",!passwordToggle.oldPassword);
                               }}
                               src={passwordToggle.oldPassword ? eye : offEye}
                               alt=""
@@ -136,10 +151,16 @@ function Change_password({ isOpen, setIsOpen }) {
                               onChange={(e) => setOldPassword(e.target.value)}
                             />
                           </div>
-                          {errors.oldPassword && (
+                          {errors.oldPassword ? (
                             <p className="required-validation">
                               {errors.oldPassword}
                             </p>
+                          ) : (
+                          backendError && (
+                            <p className="required-validation">
+                              {backendError}
+                            </p>
+                          )
                           )}
                         </div>
                         <div className="col-md-12">
@@ -239,7 +260,7 @@ function Change_password({ isOpen, setIsOpen }) {
             </div>
           </div>
         </div>
-      </div>
+     
     </>
   );
 }

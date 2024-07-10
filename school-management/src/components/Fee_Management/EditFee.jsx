@@ -116,7 +116,7 @@ function EditFee({ items, isOpen, setIsOpen}) {
                     </div>
                   </div>
 
-                  <div className="col-xxl-2">
+                  {/* <div className="col-xxl-2">
                     <div className="addProjectlogo">
                       <div className="upload-img-box">
                         <div className="circle">
@@ -139,9 +139,28 @@ function EditFee({ items, isOpen, setIsOpen}) {
                       </div>
                       <h6>Profile Image</h6>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-xxl-10">
                     <form className="row g-3">
+                    <div className="col-md-4">
+                        <label htmlFor="rollnumber" className="custom-form-label">
+                          Roll Number{" "}
+                          <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="rollnumber"
+                          placeholder="Enter Roll Number"
+                          value={feeData.rollNumber}
+                          onChange={handleChange}
+                        />
+                        {errors.rollNumber && (
+                          <p className="required-validation">
+                            {errors.rollNumber}
+                          </p>
+                        )}
+                      </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
                           Student Name{" "}

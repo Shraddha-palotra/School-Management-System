@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { useLocation, useNavigate } from "react-router-dom";
-import dummyProfile from "../assets/images/dummyProfile.png";
+import dummyprofile from "../assets/images/dummyProfile.png"
 import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
@@ -55,7 +55,8 @@ function ViewStaff({isOpen,setIsOpen}) {
                       <div className="addProjectlogo">
                         <div className="upload-img-box">
                           <div className="circle">
-                            <img src={dummyProfile} alt="" />
+                            {/* <img src={dummyProfile} alt="" /> */}
+                            <img  src={staffData.profileImage ? `http://localhost:8080${staffData.profileImage}` : dummyprofile } />
                           </div>
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">
@@ -111,6 +112,20 @@ function ViewStaff({isOpen,setIsOpen}) {
                             <option value="Security">Security</option>
                           </select>
                         </div>
+                        <div className="col-md-4">
+                        <label htmlFor="email" className="custom-form-label">
+                          Email <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="email"
+                          placeholder="Enter Email"
+                          name="email"
+                          value={staffData.email}
+                          disabled
+                        />
+                      </div>
                         <div className="col-md-4">
                           <label
                             htmlFor="contact-number"

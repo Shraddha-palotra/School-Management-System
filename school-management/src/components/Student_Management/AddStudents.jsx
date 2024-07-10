@@ -9,7 +9,8 @@ import HeaderDash from "../Dashboard/HeaderDash";
 
 function Add_Students({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
-
+   
+  const [rollNumber, setRollNumber] = useState("");
   const [studentName, setStudentName] = useState("");
   const [fatherName, setFatherName] = useState("");
   const [motherName, setMotherName] = useState("");
@@ -29,8 +30,8 @@ function Add_Students({ isOpen, setIsOpen }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log(handleSubmit);
+    console.log("handle submit fun of add student called");
+    console.log(rollNumber)
     console.log(studentName);
     console.log(fatherName);
     console.log(motherName);
@@ -40,8 +41,12 @@ function Add_Students({ isOpen, setIsOpen }) {
     console.log(section);
     console.log(gender);
     console.log(address);
-
+     console.log(profileImage);
     let formErrors = {};
+    if(!profileImage){
+        formErrors.profileImage = "please upload image"
+    }
+    if (!rollNumber) formErrors.rollNumber = "Roll Number ise required";
 
     if (!studentName) formErrors.studentName = "Full name is required";
 
@@ -71,6 +76,7 @@ function Add_Students({ isOpen, setIsOpen }) {
     setErrors(formErrors);
 
     const formData = new FormData();
+    formData.append("rollNumber", rollNumber)
     formData.append("studentName", studentName);
     formData.append("fatherName", fatherName);
     formData.append("motherName", motherName);
@@ -105,6 +111,8 @@ function Add_Students({ isOpen, setIsOpen }) {
           setTimeout(() => {
             navigate("/student");
           }, 1000);
+        }else{
+          console.log("else block of add student response");
         }
       })
       .catch((err) => {
@@ -176,6 +184,25 @@ function Add_Students({ isOpen, setIsOpen }) {
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
+                    <div className="col-md-4">
+                        <label htmlFor="rollnumber" className="custom-form-label">
+                          Roll Number{" "}
+                          <span className="required-validation">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          className="custom-input-field"
+                          id="rollnumber"
+                          placeholder="Enter Roll Number"
+                          value={rollNumber}
+                          onChange={(e) =>setRollNumber(e.target.value)}
+                        />
+                        {errors.rollNumber && (
+                          <p className="required-validation">
+                            {errors.rollNumber}
+                          </p>
+                        )}
+                      </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
                           Student Name{" "}
