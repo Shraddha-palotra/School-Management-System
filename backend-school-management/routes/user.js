@@ -53,7 +53,7 @@ router.post("/signup", async (req, res) => {
   const user = await AnotherModel.findOne({ email });
   // Check if user already exists
   if (user) {
-    return res.json({ message: "user already exsited" });
+    return res.json({field:"email", message: "user already exsited" });
   }
 
   const hashpassword = await bcrypt.hash(password, 10);
@@ -79,28 +79,28 @@ router.post("/login", async (req, res) => {
   //  console.log(req.body);
 
   // Validate required fields
-  if (!email || !password) {
-    return res.status(400).json({ msg: "Please enter all the fields" });
-  }
+  // if (!email || !password) {
+  //   return res.status(400).json({field:"form", msg: "Please enter all the fields" });
+  // }
 
   // Validate password length
-  if (password.length < 8) {
-    return res
-      .status(400)
-      .json({ msg: "Password should be atleast 8 characters" });
-  }
+  // if (password.length < 8) {
+  //   return res
+  //     .status(400)
+  //     .json({field: "password", msg: "Password should be atleast 8 characters" });
+  // }
 
   // Validate email format
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!emailPattern.test(email)) {
-    return res.status(400).json({ msg: "Please enter a valid email address" });
-  }
+  // if (!emailPattern.test(email)) {
+  //   return res.status(400).json({ field: "email", msg: "Please enter a valid email address" });
+  // }
 
   const user = await AnotherModel.findOne({ email });
   if (!user) {
     console.log("inside user check");
-    return res.json({field: "email" ,status: false, msg: "user is not registered" });
+    return res.json({field: "email", msg: "user is not registered" });
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
@@ -115,6 +115,29 @@ router.post("/login", async (req, res) => {
 
   return res.json({ status: true, msg: "login successful", user });
 });
+
+// try {
+//   const user = await AnotherModel.findOne({ email });
+//   if (!user) {
+//     return res.json({ field: "email", msg: "User is not registered" });
+//   }
+
+//   const validPassword = await bcrypt.compare(password, user.password);
+//   if (!validPassword) {
+//     return res.json({ field: "password", msg: "Password is incorrect" });
+//   }
+
+//   const token = jwt.sign({ name: user.name }, process.env.KEY, {
+//     expiresIn: "1h",
+//   });
+//   res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
+
+//   return res.json({ status: true, msg: "Login successful", user });
+// } catch (err) {
+//   console.error("Error during login:", err);
+//   return res.status(500).json({ msg: "Internal server error" });
+// }
+// });
 
 //this is for forgot password
 router.post("/forgot_password", async (req, res) => {

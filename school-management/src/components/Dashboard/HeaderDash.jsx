@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import collaps_btn from "../assets/icons/collaps_btn.svg";
 import avatar from "../assets/icons/avatar.png";
+// import LogoutButton from "./LogoutButton";
 
 
 function HeaderDash({isOpen, setIsOpen}) {
@@ -24,6 +25,7 @@ function HeaderDash({isOpen, setIsOpen}) {
     }
   };
 
+
   useEffect( () => {
     document.addEventListener('mousedown', closeHandler);
 
@@ -31,6 +33,11 @@ function HeaderDash({isOpen, setIsOpen}) {
       document.removeEventListener('mousedown', closeHandler);
     }
   },[])
+
+  const logOut = () => {
+    window.localStorage.removeItem("isLoggin");
+    window.localStorage.removeItem("user");  
+  }
 
   return (
     <>
@@ -60,7 +67,9 @@ function HeaderDash({isOpen, setIsOpen}) {
                       src={loggedUser.profileImage ? `http://localhost:8080${loggedUser.profileImage}` :avatar}
                       alt="" />
                         <h6>
-                         {loggedUser.name}<span>Admin</span>
+                        {loggedUser ? loggedUser.name : "Guest"}
+                         {/* {loggedUser.name} */}
+                         <span>Admin</span>
                         </h6>
                       </button>
                     </span>
@@ -75,7 +84,9 @@ function HeaderDash({isOpen, setIsOpen}) {
                         <Link to="/change-password" className="dropdown-item">Change Password</Link>
                         </li>
                         <li>
-                        <Link to="/login" className="dropdown-item">Log Out</Link>
+                        <Link to="/login" className="dropdown-item"
+                        onClick={logOut}>Log Out</Link>
+                        {/* <LogoutButton/> */}
                         </li>
                       </ul>
                     </div>

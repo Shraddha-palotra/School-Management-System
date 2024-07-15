@@ -63,6 +63,13 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
       profileImage,
     });
     console.log(newStudent);
+
+    const roll = await AddStudentModel.findOne({ rollNumber });
+  // Check if roll number  already exists
+  if (roll) {
+    return res.json({field: "rollNumber",message: "Roll Number already exsited" });
+  }
+
    const savedStudent =  await newStudent.save();
    console.log("saved student is",savedStudent);
     return res.json({
@@ -102,12 +109,31 @@ router.put("/editstudent/:id", upload.single('profileImage'), async (req, res) =
   console.log("id is",id);
   // const data = req.body;
   // console.log(data)
-    
+
+  const { rollNumber, studentName, fatherName, motherName, dateOfBirth, phoneNumber, classname, section, gender, address } = req.body;
+
   const data = {
-    ...req.body,
-    profileImage:  req.file ?  `/uploads/profiles/${req.file.filename}` :req.body.profileImage
+    rollNumber,
+    studentName,
+    fatherName,
+    motherName,
+    dateOfBirth,
+    phoneNumber,
+    classname,
+    section,
+    gender,
+    address,
+    profileImage: req.file ? `/uploads/profiles/${req.file.filename}` : req.body.profileImage
   };
-  console.log("data after adding image");
+
+  console.log("data after adding image", data);
+
+  const roll = await AddStudentModel.findOne({ rollNumber });
+  // Check if roll number  already exists
+  if (roll) {
+    return res.json({field: "rollNumber",message: "Roll Number already exsited" });
+  }
+    
   try {
     const updatedStudent = await AddStudentModel.findByIdAndUpdate(
       { _id: id },

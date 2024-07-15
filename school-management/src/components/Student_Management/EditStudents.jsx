@@ -102,6 +102,9 @@ function EditStudents({ items, isOpen, setIsOpen }) {
            navigate('/student');
           },1000)   
         }
+        else {
+          setErrors ({rollNumber : response.data.message})
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -151,7 +154,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                         <div className="upload-img-box">
                           <div className="circle">
                             {/* <img src={dummyProfile} alt="" /> */}
-                           <img src={selectImage ? URL.createObjectURL(selectImage) : `http://localhost:8080${studentData.profileImage}`} />
+                           <img src={selectImage ? URL.createObjectURL(selectImage) : `http://localhost:8080${studentData.profileImage}`}  alt=''/>
                           </div> 
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">

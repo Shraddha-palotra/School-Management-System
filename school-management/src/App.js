@@ -26,10 +26,12 @@ import ViewFee from "./components/Fee_Management/ViewFee";
  
 function App() {
   const [isOpen, setIsOpen] = useState(false); 
+  const login = JSON.parse(window.localStorage.getItem("isLoggin"));
   return (
     <>
       <Routes>
-        <Route path="/" element={<SignUp />} />
+        <Route path="/" element={login ? (<Dashboard isOpen={isOpen} setIsOpen={setIsOpen} />
+        ) : ( <SignUp /> )  } />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot_password" element={<ForgotPassword/>} />
         <Route path="/resetpassword/:token" element={<ResetPassword /> } />

@@ -14,7 +14,7 @@ router.post("/addfees", async (req, res) => {
       req.body;
     console.log(req.body);
 
-    const user = await AddStudentModel.findOne({studentName: studentName, fatherName:fatherName, classname:classname});
+    const user = await AddStudentModel.findOne({rollNumber: rollNumber,studentName: studentName, fatherName:fatherName, classname:classname});
     console.log("Student found", user);
 
     if (!user) {

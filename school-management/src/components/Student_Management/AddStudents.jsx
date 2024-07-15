@@ -46,7 +46,7 @@ function Add_Students({ isOpen, setIsOpen }) {
     if(!profileImage){
         formErrors.profileImage = "please upload image"
     }
-    if (!rollNumber) formErrors.rollNumber = "Roll Number ise required";
+    if (!rollNumber) formErrors.rollNumber = "Roll Number is required";
 
     if (!studentName) formErrors.studentName = "Full name is required";
 
@@ -90,6 +90,7 @@ function Add_Students({ isOpen, setIsOpen }) {
     if (profileImage) formData.append('profileImage', profileImage);
     console.log("fromdata is ",formData)
 
+
     Axios.post("http://localhost:8080/student/addstudent",formData ,{
       // studentName,
       // fatherName,
@@ -111,8 +112,8 @@ function Add_Students({ isOpen, setIsOpen }) {
           setTimeout(() => {
             navigate("/student");
           }, 1000);
-        }else{
-          console.log("else block of add student response");
+        } else {
+          setErrors({rollNumber: response.data.message})
         }
       })
       .catch((err) => {

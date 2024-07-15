@@ -75,14 +75,19 @@ const SignUp = () => {
         console.log(response)
         if(response.data.status){
           
-         
+          // localStorage.removeItem("credentials")
           navigate('/login')
+        }
+        else {
+          setErrors({email : response.data.message})
         }
         
 
       }).catch(err => {
         console.log(err)
       })
+
+
     
   };
   return (

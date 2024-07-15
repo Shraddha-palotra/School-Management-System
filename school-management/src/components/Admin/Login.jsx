@@ -12,11 +12,11 @@ function Login() {
   const navigate = useNavigate();
 
   const [isChecked, setIsChecked] = useState(false);
-
+ 
   const [passwordToggle, setPasswordToggle] = useState(false)
    
   useEffect(() => {
-    // Check if there is a value in local storage
+    // Check if there is a value in local storage for remember me
     const rememberMe = localStorage.getItem('rememberMe') === 'true';
     setIsChecked(rememberMe);
 
@@ -25,26 +25,29 @@ function Login() {
       const storedEmail = localStorage.getItem('email') || '';
       const storedPassword = localStorage.getItem('password') || '';
       setEmail(storedEmail);
+      console.log(storedPassword);
       setPassword(storedPassword);
     }
   }, []);
-
+                                                                                              
   const handleCheckboxChange = () => {
     const newCheckedStatus = !isChecked;
     setIsChecked(newCheckedStatus);
     localStorage.setItem('rememberMe', newCheckedStatus);
+
+    // Clear email and password from local storage if remember me is unchecked
     if (!newCheckedStatus) {
       localStorage.removeItem('email');
       localStorage.removeItem('password');
     }
   };
 
-
   Axios.defaults.withCredentials = true;
+
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     
-    let formErrors = {};
+    let formErrors = {};      
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
@@ -61,29 +64,44 @@ function Login() {
 
     setErrors(formErrors);
 
+    console.log("Login form submitted with:", email, password);
+
+    if (Object.keys(formErrors).length === 0) {
     Axios.post("http://localhost:8080/auth/login", {
       email,
       password,
     })
       .then((response) => {
-      console.log("user is not found");
-        if (response.data.status) 
-          {localStorage.setItem("user",JSON.stringify(response.data.user))
-          navigate("/dashboard");
-        }
-        else{
-          setErrors({ [response.data.field] : response.data.msg})
-        }
-      })
+      console.log(response);
+      
+      window.localStorage.setItem("isLoggin", JSON.stringify(true));
+
+      if (response.data.status) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+
+        // Store email and password in local storage if remember me is checked
+        if (isChecked) {
+          localStorage.setItem("email", email);
+          localStorage.setItem("password", password);
+        } 
+        navigate("/dashboard");
+      } else {
+        setErrors({ [response.data.field]: response.data.msg });
+      }
+    })
       .catch((err) => {
         if (err.response && err.response.data && err.response.data.msg) {
           setErrors({ [ err.response.data.field]: err.response.data.msg})
         }
-        console.log(err);
+       
       });
 
     console.log("Login form submitted with:", email, password);
   };
+};
   return (
     <>
       <div className="login">
