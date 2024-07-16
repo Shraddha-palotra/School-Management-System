@@ -2,14 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import collaps_btn from "../assets/icons/collaps_btn.svg";
 import avatar from "../assets/icons/avatar.png";
-// import LogoutButton from "./LogoutButton";
+
 
 
 function HeaderDash({isOpen, setIsOpen}) {
   
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [loggedUser, setLoggedUser] = useState(JSON.parse(localStorage.getItem("user")))
-
+  const [loggedUser, setLoggedUser] = useState(null)
+ 
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+  
+  if (userString) {
+    try {
+      const user = JSON.parse(userString);
+      setLoggedUser(user);
+      console.log(user);
+    } catch (error) {
+      console.error("error parsing user data: ",error)
+    }
+  } else {
+    console.log("No user data found in localstorage");
+  }
+}, [])
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen); 
@@ -35,8 +50,10 @@ function HeaderDash({isOpen, setIsOpen}) {
   },[])
 
   const logOut = () => {
-    window.localStorage.removeItem("isLoggin");
+    // window.localStorage.removeItem("isLoggIn");
     window.localStorage.removeItem("user");  
+    setLoggedUser(null);
+    // setIsLogIn(false);
   }
 
   return (
@@ -64,11 +81,11 @@ function HeaderDash({isOpen, setIsOpen}) {
                         onClick={openCollapsedHandler}
                       >
                         <img 
-                      src={loggedUser.profileImage ? `http://localhost:8080${loggedUser.profileImage}` :avatar}
+                      src={loggedUser?.profileImage ? `http://localhost:8080${loggedUser.profileImage}` :avatar}
                       alt="" />
                         <h6>
-                        {loggedUser ? loggedUser.name : "Guest"}
-                         {/* {loggedUser.name} */}
+                        {/* {loggedUser ? loggedUser.name : " "} */}
+                         {loggedUser?.name}
                          <span>Admin</span>
                         </h6>
                       </button>

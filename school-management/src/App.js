@@ -1,5 +1,5 @@
-import { Route, Routes } from "react-router-dom";
-import React, {useState} from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import "./App.css";
 import SignUp from "./components/Admin/SignUp";
 import Login from "./components/Admin/Login";
@@ -21,17 +21,24 @@ import ViewStaff from "./components/Staff_Management/ViewStaff";
 import EditFee from "./components/Fee_Management/EditFee";
 import ViewFee from "./components/Fee_Management/ViewFee";
 
-
-
- 
 function App() {
   const [isOpen, setIsOpen] = useState(false); 
-  const login = JSON.parse(window.localStorage.getItem("isLoggin"));
+  const login = JSON.parse(window.localStorage.getItem("isLogIn"));
+
+  const [isLogIn, setIsLogIn] = useState(false);
+
+  useEffect(() => {
+    const loggedUder = localStorage.getItem("user");
+    if (loggedUder) {
+      setIsLogIn(true);
+    } else {
+      setIsLogIn(false);
+    }
+   }, [])
   return (
     <>
       <Routes>
-        <Route path="/" element={login ? (<Dashboard isOpen={isOpen} setIsOpen={setIsOpen} />
-        ) : ( <SignUp /> )  } />
+        <Route path="/" element={isLogIn ? (<Navigate to="/dashboard"/>) : ( <SignUp /> )  } />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot_password" element={<ForgotPassword/>} />
         <Route path="/resetpassword/:token" element={<ResetPassword /> } />

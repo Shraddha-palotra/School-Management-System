@@ -1,9 +1,11 @@
 import { useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
-import eye from "../assets/images/eye.png"
-import offEye from  "../assets/images/offEye.png";
-import {useNavigate } from "react-router-dom";
-import Axios from 'axios'
+import eye from "../assets/images/eye.png";
+import offEye from "../assets/images/offEye.png";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Axios from "axios";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -11,25 +13,24 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const [passwordToggle, setPasswordToggle] = useState({
-    password:false,
-    confirmPassword:false,
-  })
-   
-  const handlePasswordToggle = (e, key, value ) => {
+    password: false,
+    confirmPassword: false,
+  });
+
+  const handlePasswordToggle = (e, key, value) => {
     e.preventDefault();
-    console.log("e",e);
-    console.log("key",key);
-    console.log("value",value)
+    console.log("e", e);
+    console.log("key", key);
+    console.log("value", value);
     setPasswordToggle((prevData) => ({
       ...prevData,
-      [key]:value
+      [key]: value,
     }));
-  }
-  
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,7 +38,7 @@ const SignUp = () => {
     let formErrors = {};
 
     if (!name) formErrors.name = "Full name is required";
-    console.log(formErrors.name);
+    // console.log(formErrors.name);
 
     if (!phoneNumber) {
       formErrors.phoneNumber = "Phone number is required";
@@ -45,53 +46,52 @@ const SignUp = () => {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = "Email is required"
-    }else if (!emailPattern.test(email)) {
+      formErrors.email = "Email is required";
+    } else if (!emailPattern.test(email)) {
       formErrors.email = "Please enter a valid email address";
     }
 
     if (!password) {
       formErrors.password = "Password is required";
-    }else if (password.length < 8) {
+    } else if (password.length < 8) {
       formErrors.password = "Password should be at least 8 characters";
     }
 
-    if (!confirmPassword){
+    if (!confirmPassword) {
       formErrors.confirmPassword = "Confirm password is required";
-    }else if (password !== confirmPassword) {
+    } else if (password !== confirmPassword) {
       formErrors.confirmPassword = "Passwords do not match";
     }
-    
+
     setErrors(formErrors);
 
-  
-     Axios.post("http://localhost:8080/auth/signup",{
+    Axios.post("http://localhost:8080/auth/signup", {
       name,
       phoneNumber,
       email,
       password,
-      confirmPassword
-      }).then(response => {
-        console.log(response)
-        if(response.data.status){
-          
-          // localStorage.removeItem("credentials")
-          navigate('/login')
+      confirmPassword,
+    })
+      .then((response) => {
+        console.log(response);
+        if (response.data.status) {
+          localStorage.removeItem("credentials");
+          localStorage.setItem("user", JSON.stringify(response.data.savedUser));
+          toast.success("Successfully SignUp");
+          setTimeout(() => {
+            navigate("/dashboard");
+          }, 1000);
+        } else {
+          setErrors({ email: response.data.message });
         }
-        else {
-          setErrors({email : response.data.message})
-        }
-        
-
-      }).catch(err => {
-        console.log(err)
       })
-
-
-    
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <>
+    <ToastContainer/>
       <div className="login">
         <div className="container-fluid">
           <div className="row">
@@ -119,12 +119,10 @@ const SignUp = () => {
                         onChange={(e) => {
                           setName(e.target.value);
                         }}
-                       
                       />
                       {errors.name && (
-                      <p className="required-validation">{errors.name}</p>
-                    )}
-
+                        <p className="required-validation">{errors.name}</p>
+                      )}
                     </div>
                     <div className="col-md-12">
                       <label htmlFor="phoneNuber" className="custom-form-label">
@@ -139,11 +137,12 @@ const SignUp = () => {
                         onChange={(e) => {
                           setPhoneNumber(e.target.value);
                         }}
-                        
                       />
                       {errors.phoneNumber && (
-                      <p className="required-validation">{errors.phoneNumber}</p>
-                    )}
+                        <p className="required-validation">
+                          {errors.phoneNumber}
+                        </p>
+                      )}
                     </div>
                     <div className="col-md-12">
                       <label htmlFor="email" className="custom-form-label">
@@ -158,75 +157,82 @@ const SignUp = () => {
                         onChange={(e) => {
                           setEmail(e.target.value);
                         }}
-                       
                       />
                       {errors.email && (
-                      <p className="required-validation">{errors.email}</p>
-                    )}
+                        <p className="required-validation">{errors.email}</p>
+                      )}
                     </div>
                     <div className="col-md-6">
                       <label htmlFor="password" className="custom-form-label">
                         Password
                       </label>
-                      <div className="possionIconInput" >
-                        <img 
-                        onClick={(e) => {
-                          handlePasswordToggle(e,"password",!passwordToggle.password)
-                        }}
-                         src={passwordToggle.password ? eye : offEye}
-                         alt=""
-                         className="eyeIconView"
-                         />
-                      <input
-                        type={passwordToggle.password ? "text" : "password"}
-                        className="custom-input-field"
-                        id="lastname"
-                        placeholder="Enter Password"
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                        }}
-                       
-                      />
+                      <div className="possionIconInput">
+                        <img
+                          onClick={(e) => {
+                            handlePasswordToggle(
+                              e,
+                              "password",
+                              !passwordToggle.password
+                            );
+                          }}
+                          src={passwordToggle.password ? eye : offEye}
+                          alt=""
+                          className="eyeIconView"
+                        />
+                        <input
+                          type={passwordToggle.password ? "text" : "password"}
+                          className="custom-input-field"
+                          id="lastname"
+                          placeholder="Enter Password"
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                          }}
+                        />
                       </div>
                       {errors.password && (
-                      <p className="required-validation">{errors.password}</p>
-                    )}
+                        <p className="required-validation">{errors.password}</p>
+                      )}
                     </div>
                     <div className="col-md-6">
                       <label htmlFor="password" className="custom-form-label">
                         Confirm Password
                       </label>
-                      <div className="possionIconInput" >
-                        <img 
-                        onClick={(e) => {
-                          handlePasswordToggle(e,"confirmPassword",!passwordToggle.confirmPassword)
-                        }}
-                         src={passwordToggle.confirmPassword ? eye : offEye}
-                         alt=""
-                         className="eyeIconView"
-                         />
-                         
-                      <input
-                         type={passwordToggle.confirmPassword ? "text" : "password"}
-                        className="custom-input-field"
-                        id="lastname"
-                        placeholder="Enter Password"
-                        value={confirmPassword}
-                        onChange={(e) => {
-                          setConfirmPassword(e.target.value);
-                        }}
-                        
-                      />
+                      <div className="possionIconInput">
+                        <img
+                          onClick={(e) => {
+                            handlePasswordToggle(
+                              e,
+                              "confirmPassword",
+                              !passwordToggle.confirmPassword
+                            );
+                          }}
+                          src={passwordToggle.confirmPassword ? eye : offEye}
+                          alt=""
+                          className="eyeIconView"
+                        />
+
+                        <input
+                          type={
+                            passwordToggle.confirmPassword ? "text" : "password"
+                          }
+                          className="custom-input-field"
+                          id="lastname"
+                          placeholder="Enter Password"
+                          value={confirmPassword}
+                          onChange={(e) => {
+                            setConfirmPassword(e.target.value);
+                          }}
+                        />
                       </div>
                       {errors.confirmPassword && (
-                      <p className="required-validation">{errors.confirmPassword}</p>
-                    )}
+                        <p className="required-validation">
+                          {errors.confirmPassword}
+                        </p>
+                      )}
                     </div>
                     <div className="col-md-12 mt-4">
-                      <button  className="custom-btn">
-                        Signup
-                      </button>
+                      <button className="custom-btn">Signup</button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
                       Already Have an Account? &nbsp;

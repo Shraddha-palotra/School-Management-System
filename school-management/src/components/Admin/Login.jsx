@@ -3,6 +3,8 @@ import dummy_logo from "../assets/images/dummy_logo.png";
 import eye from "../assets/images/eye.png";
 import offEye from "../assets/images/offEye.png"
 import { useNavigate } from "react-router-dom";
+import { ToastContainer,toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import Axios from "axios";
 
 function Login() {
@@ -16,31 +18,13 @@ function Login() {
   const [passwordToggle, setPasswordToggle] = useState(false)
    
   useEffect(() => {
-    // Check if there is a value in local storage for remember me
-    const rememberMe = localStorage.getItem('rememberMe') === 'true';
-    setIsChecked(rememberMe);
-
-    // Retrieve email and password if 'rememberMe' is true
-    if (rememberMe) {
-      const storedEmail = localStorage.getItem('email') || '';
-      const storedPassword = localStorage.getItem('password') || '';
-      setEmail(storedEmail);
-      console.log(storedPassword);
-      setPassword(storedPassword);
+    const savedCredentials =JSON.parse(localStorage.getItem('credentials'));
+    if (savedCredentials) {
+      setEmail(savedCredentials.email);
+      setPassword(savedCredentials.password);
+      setIsChecked(true);
     }
-  }, []);
-                                                                                              
-  const handleCheckboxChange = () => {
-    const newCheckedStatus = !isChecked;
-    setIsChecked(newCheckedStatus);
-    localStorage.setItem('rememberMe', newCheckedStatus);
-
-    // Clear email and password from local storage if remember me is unchecked
-    if (!newCheckedStatus) {
-      localStorage.removeItem('email');
-      localStorage.removeItem('password');
-    }
-  };
+  }, [])
 
   Axios.defaults.withCredentials = true;
 
@@ -79,15 +63,16 @@ function Login() {
       if (response.data.status) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
-        localStorage.removeItem("email");
-        localStorage.removeItem("password");
-
-        // Store email and password in local storage if remember me is checked
         if (isChecked) {
-          localStorage.setItem("email", email);
-          localStorage.setItem("password", password);
-        } 
-        navigate("/dashboard");
+          localStorage.setItem("credentials", JSON.stringify({email, password})
+        );
+        } else {
+          localStorage.removeItem("credentials");
+        }
+        toast.success("Successfully Login")
+        setTimeout(() => {
+         navigate("/dashboard");
+        }, 1000);
       } else {
         setErrors({ [response.data.field]: response.data.msg });
       }
@@ -95,6 +80,8 @@ function Login() {
       .catch((err) => {
         if (err.response && err.response.data && err.response.data.msg) {
           setErrors({ [ err.response.data.field]: err.response.data.msg})
+        } else {
+           console.log(err)
         }
        
       });
@@ -104,6 +91,7 @@ function Login() {
 };
   return (
     <>
+    <ToastContainer/>
       <div className="login">
         <div className="container-fluid">
           <div className="row">
@@ -169,7 +157,8 @@ function Login() {
                           value=""
                           id="flexCheckChecked"
                           checked={isChecked}
-                          onChange={handleCheckboxChange}
+                          onChange={(e) => setIsChecked(e.target.checked)}
+                          
                         />
                         &nbsp;
                         <label

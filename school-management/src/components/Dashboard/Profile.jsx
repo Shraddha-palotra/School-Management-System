@@ -1,83 +1,84 @@
 import React, { useState } from "react";
 import axios from "axios";
-import profileImg from "../assets/images/profileImg.png"
+import profileImg from "../assets/images/profileImg.png";
 import camera from "../assets/images/camera.png";
-import {toast,ToastContainer} from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "./HeaderDash";
 
-function Profile({items, isOpen, setIsOpen }) {
+function Profile({ items, isOpen, setIsOpen }) {
+  const [profileImage, setProfileImage] = useState("");
 
-  const [profileImage, setProfileImage] = useState('');
+   const [loggedAdmin, setLoggedAdmin] = useState(JSON.parse(localStorage.getItem('user')))
+  console.log(loggedAdmin);
 
-     const [loggedAdmin, setLoggedAdmin] = useState(JSON.parse(localStorage.getItem('user')))
-     console.log(loggedAdmin);
-   
-     const navigate = useNavigate()
-   
-     const handleChange = (e) => {
-       console.log(handleChange );
-       const {name, value} = e.target;
-       console.log("name is", name);
-       console.log("value is", value);
-       setLoggedAdmin((prevData) => ({
-         ...prevData,
-         [name] : value,
-       }))
-     }
-    const handleImageChange = (e) => {
-      setProfileImage(e.target.files[0]);
-    }
+  const navigate = useNavigate();
 
-     const handleSubmit = (e) => {
-       e.preventDefault();
-       console.log("logged admin int handle submit profile",loggedAdmin);
-      
+  const handleChange = (e) => {
+    console.log(handleChange);
+    const { name, value } = e.target;
+    console.log("name is", name);
+    console.log("value is", value);
+    setLoggedAdmin((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+  const handleImageChange = (e) => {
+    setProfileImage(e.target.files[0]);
+  };
 
-       const formData = new FormData();
-       formData.append("fullname", loggedAdmin.name);
-       formData.append("email", loggedAdmin.email);
-       formData.append("phoneNum", loggedAdmin.phoneNumber);
-       
-       if (profileImage) formData.append('profileImage', profileImage);
-       console.log("fromdata is ",formData)
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("logged admin int handle submit profile", loggedAdmin);
 
-       const id = loggedAdmin._id;
-       console.log("id in profile handle submit",id);
+    const formData = new FormData();
+    formData.append("fullname", loggedAdmin.name);
+    formData.append("email", loggedAdmin.email);
+    formData.append("phoneNum", loggedAdmin.phoneNumber);
 
-       const fun = async (req, res) => {
-         try {
-           const res =  await axios.put(`http://localhost:8080/auth/updateprofile/${id}`, formData, {
+    if (profileImage) formData.append("profileImage", profileImage);
+    console.log("fromdata is ", formData);
+
+    const id = loggedAdmin._id;
+    console.log("id in profile handle submit", id);
+
+    const fun = async (req, res) => {
+      try {
+        const res = await axios.put(
+          `http://localhost:8080/auth/updateprofile/${id}`,
+          formData,
+          {
             headers: {
               "Content-Type": "multipart/form-data",
             },
-           })
-             console.log("response is",res.data)
-             if(res.data.status){
-               localStorage.setItem('user',JSON.stringify(res.data.updatedProfileUser));
-               toast.success("Successfully update prodile")
-               setTimeout(()=>{
-                navigate('/dashboard', { state: { items } });
-              },1000) 
-             }
-         }
-          catch (error) {
-           console.log(error);
-         }
-        
-       }
-       fun();
-     }
+          }
+        );
+        console.log("response is", res.data);
+        if (res.data.status) {
+          localStorage.setItem(
+            "user",
+            JSON.stringify(res.data.updatedProfileUser)
+          );
+          toast.success("Successfully update prodile");
+          setTimeout(() => {
+            navigate("/dashboard", { state: { items } });
+          }, 1000);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fun();
+  };
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <div className="wapper">
-        <Sidebar isOpen={isOpen}  />
-        <div
-          className={`main-container ${isOpen && "main-content_large"}`}
-        >
+        <Sidebar isOpen={isOpen} />
+        <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
           <div className="content">
             <div className="row mb-3">
@@ -93,11 +94,7 @@ function Profile({items, isOpen, setIsOpen }) {
                     </div>
 
                     <div className="col-lg-6 align-self-center">
-                      <img
-                        src={profileImg}
-                        alt=""
-                        className="img-fluid"
-                      />
+                      <img src={profileImg} alt="" className="img-fluid" />
                     </div>
 
                     <div className="col-lg-6 align-self-center">
@@ -106,15 +103,12 @@ function Profile({items, isOpen, setIsOpen }) {
                           <div className="addProjectlogo">
                             <div className="upload-img-box">
                               <div className="circle">
-                              <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${loggedAdmin.profileImage}`} alt="" />
+                                <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${loggedAdmin.profileImage}`} alt="" />
                               </div>
                               <div className="p-image ml-auto">
                                 <label htmlFor="logoSelect">
                                   <div>
-                                    <img
-                                      src={camera}
-                                      alt=""
-                                    />
+                                    <img src={camera} alt="" />
                                   </div>
                                 </label>
                                 <input
@@ -131,7 +125,10 @@ function Profile({items, isOpen, setIsOpen }) {
                           </div>
                         </div>
                         <div className="col-md-12">
-                          <label htmlFor="fullname" className="custom-htmlForm-label">
+                          <label
+                            htmlFor="fullname"
+                            className="custom-htmlForm-label"
+                          >
                             Full Name{" "}
                             <span className="required-validation">*</span>
                           </label>
@@ -141,11 +138,14 @@ function Profile({items, isOpen, setIsOpen }) {
                             id="fullname"
                             value={loggedAdmin.name}
                             name="name"
-                            onChange={handleChange }
+                            onChange={handleChange}
                           />
                         </div>
                         <div className="col-md-12">
-                          <label htmlFor="email" className="custom-htmlForm-label">
+                          <label
+                            htmlFor="email"
+                            className="custom-htmlForm-label"
+                          >
                             Email
                           </label>
                           <input
@@ -154,7 +154,7 @@ function Profile({items, isOpen, setIsOpen }) {
                             id="email"
                             value={loggedAdmin.email}
                             name="email"
-                            onChange={handleChange }
+                            onChange={handleChange}
                           />
                         </div>
                         <div className="col-md-12">
@@ -171,11 +171,14 @@ function Profile({items, isOpen, setIsOpen }) {
                             id="contact-number"
                             value={loggedAdmin.phoneNumber}
                             name="phoneNumber"
-                            onChange={handleChange }
+                            onChange={handleChange}
                           />
                         </div>
                         <div className="col-md-12">
-                          <label htmlFor="address" className="custom-htmlForm-label">
+                          <label
+                            htmlFor="address"
+                            className="custom-htmlForm-label"
+                          >
                             Address
                           </label>
                           <textarea
@@ -183,12 +186,13 @@ function Profile({items, isOpen, setIsOpen }) {
                             className="custom-input-field"
                             id="address"
                             rows="4"
-                          >
-                          </textarea>
+                          ></textarea>
                         </div>
                         <div className="col-md-12 mt-4">
-                          <button   onClick={handleSubmit}
-                          className="custom-btn col-md-6">
+                          <button
+                            onClick={handleSubmit}
+                            className="custom-btn col-md-6"
+                          >
                             Save
                           </button>
                         </div>
