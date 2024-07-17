@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
+import VerifyOtp from "./VerifyOtp";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -13,6 +14,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [otpSent, setOtpSent] = useState(true)
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -75,12 +77,8 @@ const SignUp = () => {
       .then((response) => {
         console.log(response);
         if (response.data.status) {
-          localStorage.removeItem("credentials");
-          localStorage.setItem("user", JSON.stringify(response.data.savedUser));
-          toast.success("Successfully SignUp");
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1000);
+          toast.success("Successfully SignUp", {autoClose:1000});
+          setOtpSent(true);
         } else {
           setErrors({ email: response.data.message });
         }
@@ -92,6 +90,9 @@ const SignUp = () => {
   return (
     <>
     <ToastContainer/>
+    {!otpSent ? (
+
+    
       <div className="login">
         <div className="container-fluid">
           <div className="row">
@@ -253,6 +254,16 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      ) : (
+        <VerifyOtp 
+        email={email}
+        name={name}
+        phoneNumber={phoneNumber}
+        password={password}
+        navigate={navigate}
+        setOtpSent={setOtpSent}
+        />
+      )}
     </>
   );
 };

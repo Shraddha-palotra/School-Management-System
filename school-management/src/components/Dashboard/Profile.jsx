@@ -136,7 +136,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            value={loggedAdmin.name}
+                            value={loggedAdmin.name}                          
                             name="name"
                             onChange={handleChange}
                           />

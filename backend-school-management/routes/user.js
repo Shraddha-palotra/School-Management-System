@@ -1,6 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 import AnotherModel from "../models/User.js";
+import Otp from "../models/Otp.js";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import multer from 'multer';
@@ -14,7 +15,8 @@ const router = express.Router();
 // this is for signup authentication
 router.post("/signup", async (req, res) => {
   // console.log("signup API called");
-  const { name, phoneNumber, email, password, confirmPassword } = req.body;
+  try {
+    const { name, phoneNumber, email, password, confirmPassword } = req.body;
   // console.log(req.body);
 
   // Validate required fields
@@ -56,21 +58,99 @@ router.post("/signup", async (req, res) => {
     return res.json({field:"email", message: "user already exsited" });
   }
 
-  const hashpassword = await bcrypt.hash(password, 10);
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const otpExpiresAt = new Date(Date.now() + 2 * 60000); // OTP valid for 2 minutes
 
-  // create new user
-  const newUser = AnotherModel({
-    name,
-    phoneNumber,
-    email,
-    password: hashpassword,
+  const newOtp = new Otp({ email, otp, expiresAt: otpExpiresAt });
+  await newOtp.save();
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "shraddhapalotra@gmail.com",
+      pass: "xmey fuij fzdd vyuy",
+    },
   });
 
-  // save the user
-  await newUser.save();
-  const savedUser = newUser
-  return res.json({ status: true, message: "record register",savedUser });
+  const mailOptions = {
+    from: "shraddhapalotra@gmail.com",
+    to: email,
+    subject: "Your OTP for Signup",
+    text: `Your OTP is ${otp}. It is valid for 2 minutes.`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+      return res.json({ message: "Error sending email" });
+    } else {
+      console.log("Email sent: " + info.response);
+      return res.json({ status: true, message: "OTP sent to your email" });
+    }
+  });
+
+  } catch (error) {
+  console.error("Error in signup API:", error);
+  return res
+    .status(500)
+    .json({ status: false, message: "Internal Server Error" });
+}
 });
+
+// for verify email
+router.post("/verify-otp", async (req, res) => {
+  console.log("Verify-otp called");
+  try {
+    const { email, otp } = req.body;
+
+    const otpRecord = await Otp.findOne({ email, otp });
+    if (!otpRecord) {
+      return res.status(400).json({ status: false, message: "Invalid OTP" });
+    }
+
+  
+    // Check if OTP has expired
+    if (otpRecord.expiresAt < new Date()) {
+      console.error("Error: OTP has expired"); // Log the specific error
+      return res.status(400).json({ status: false, message: "OTP has expired" });
+    }
+
+    const {name, phoneNumber, password } = req.body;
+    const hashPassword = await bcrypt.hash(password, 8);
+    const newUser = new AnotherModel({
+      name,
+      email,
+      phoneNumber,
+      password: hashPassword,
+      isVerified: true,
+    });
+
+    await newUser.save();
+    await Otp.deleteOne({ email, otp });
+
+    const savedUser = newUser;
+    return res.json({ status: true, message: "Registered successfully", savedUser });
+  } catch (error) {
+    console.error("Error in verify-otp API:", error);
+    return res.status(500).json({ status: false, message: "Internal Server Error" });
+  }
+});
+
+//   const hashpassword = await bcrypt.hash(password, 10);
+
+//   // create new user
+//   const newUser = AnotherModel({
+//     name,
+//     phoneNumber,
+//     email,
+//     password: hashpassword,
+//   });
+
+//   // save the user
+//   await newUser.save();
+//   const savedUser = newUser
+//   return res.json({ status: true, message: "record register",savedUser });
+// });
 
 //this is for login authentication
 
