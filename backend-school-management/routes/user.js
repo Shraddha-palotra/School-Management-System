@@ -14,10 +14,10 @@ const router = express.Router();
 
 // this is for signup authentication
 router.post("/signup", async (req, res) => {
-  // console.log("signup API called");
+  console.log("signup API called");
   try {
     const { name, phoneNumber, email, password, confirmPassword } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
 
   // Validate required fields
   if (!name || !email || !phoneNumber || !password || !confirmPassword) {
