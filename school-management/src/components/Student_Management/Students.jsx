@@ -9,6 +9,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import  Axios  from "axios";
 import DeleteStudents from "../Student_Management/DeleteStudents";
+import { useTranslation } from "react-i18next";
 
 function Students({isOpen, setIsOpen}) {
 
@@ -19,6 +20,8 @@ function Students({isOpen, setIsOpen}) {
      flag:false,
      eachStudent:{}
    })
+    const {t} = useTranslation();
+
   console.log("is delete click",isDeleteClick);
   
 
@@ -41,7 +44,7 @@ function Students({isOpen, setIsOpen}) {
       student.gender.toLowerCase().includes(searchStudent.toLowerCase())
   );
 
-
+ 
   useEffect(() => {
     Axios.get("http://localhost:8080/student/showstudents")
       .then((response) => {
@@ -69,7 +72,7 @@ function Students({isOpen, setIsOpen}) {
                   <div className="col-lg-4">
                     <div className="greetingsText">
                       <div className="greetingsText-heading">
-                        <h3>Student's</h3>
+                        <h3>{t("Student")}</h3>
                       </div>
                     </div>
                   </div>
@@ -85,7 +88,7 @@ function Students({isOpen, setIsOpen}) {
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder="Search Student"
+                      placeholder={t("Search Student")}
                       value={searchStudent}
                       onChange={(e) => setSearchStudent(e.target.value)}
                     />
@@ -97,14 +100,14 @@ function Students({isOpen, setIsOpen}) {
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">Roll Number</th>
-                            <th scope="col">Student Name</th>
-                            <th scope="col">Father Name </th>
+                            <th scope="col">{t("Roll Number")}</th>
+                            <th scope="col">{t("Student Name")}</th>
+                            <th scope="col">{t("Father Name")} </th>
                             {/* <th scope="col">Date of Birth</th> */}
-                            <th scope="col">Class</th>
-                            <th scope="col">Contact</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">{t("Class")}</th>
+                            <th scope="col">{t("Contact")}</th>
+                            <th scope="col">{t("Gender")}</th>
+                            <th scope="col">{t("Action")}</th>
                           </tr>
                         </thead>
                          <tbody>

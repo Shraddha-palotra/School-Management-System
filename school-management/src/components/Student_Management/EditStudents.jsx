@@ -6,6 +6,7 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import {toast,ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import  Axios from 'axios';
+import { useTranslation } from 'react-i18next';
 
 function EditStudents({ items, isOpen, setIsOpen }) {
 
@@ -20,6 +21,8 @@ function EditStudents({ items, isOpen, setIsOpen }) {
   const [errors, setErrors] = useState({});
    
   const [selectImage, setSelectImage] = useState(null);
+
+  const {t} = useTranslation();
 
   useEffect(() => {
     if (items) {
@@ -47,23 +50,23 @@ function EditStudents({ items, isOpen, setIsOpen }) {
 
   const validateForm = () => {
     let formErrors = {};
-    if (!studentData.rollNumber) formErrors.rollNumber = "Roll Number is required";
-    if (!studentData.studentName) formErrors.studentName = "Full name is required";
-    if (!studentData.fatherName) formErrors.fatherName = "Father name is required";
-    if (!studentData.motherName) formErrors.motherName = "Mother name is required";
+    if (!studentData.rollNumber) formErrors.rollNumber = t("Roll Number is required");
+    if (!studentData.studentName) formErrors.studentName = t("Full name is required");
+    if (!studentData.fatherName) formErrors.fatherName = t("Father name is required");
+    if (!studentData.motherName) formErrors.motherName = t("Mother name is required");
 
     const pattern = /^\d{10}$/;
     if (!studentData.phoneNumber) {
-      formErrors.phoneNumber = "Phone number is required";
+      formErrors.phoneNumber = t("Phone number is required");
     } else if (!pattern.test(studentData.phoneNumber)) {
-      formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
+      formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
     }
 
-    if (!studentData.classname) formErrors.classname = "Class is required";
-    if (!studentData.dateOfBirth) formErrors.dateOfBirth = "Date of birth is required";
-    if (!studentData.section) formErrors.section = "Section is required";
-    if (!studentData.gender) formErrors.gender = "Gender is required";
-    if (!studentData.address) formErrors.address = "Address is required";
+    if (!studentData.classname) formErrors.classname = t("Class is required");
+    if (!studentData.dateOfBirth) formErrors.dateOfBirth = t("Register date of birth is required");
+    if (!studentData.section) formErrors.section = t("Section is required");
+    if (!studentData.gender) formErrors.gender = t("Gender is required");
+    if (!studentData.address) formErrors.address = t("Address is required");
 
     return formErrors;
   };
@@ -134,18 +137,18 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                   }}
                                 >
                                   {" "}
-                                  Student
+                                  {t("Student")}
                                 </button>
                               </li>
                               <li
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                Edit Student
+                                {t("Edit Student")}
                               </li>
                             </ol>
                           </nav>
-                          <h3>Student</h3>
+                          <h3>{t("Student")}</h3>
                         </div>
                       </div>
                     </div>
@@ -172,21 +175,21 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             />
                           </div>
                         </div>
-                        <h6>Profile Image</h6>
+                        <h6>{t("Profile Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
                       <div className="col-md-4">
                         <label htmlFor="rollNumber" className="custom-form-label">
-                          Roll Number{" "}
+                          {t("Roll Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="rollNumber"
-                          placeholder="Enter Roll Number"
+                          placeholder={t("Enter Roll Number")}
                           name='rollNumber'
                           value={studentData.rollNumber}
                           onChange={handleChange}
@@ -202,14 +205,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="fullname"
                             className="custom-form-label"
                           >
-                            Student Name{" "}
+                            {t("Student Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            placeholder="Enter Name"
+                            placeholder={t("Enter Name")}
                             name='studentName'
                             value={studentData.studentName}
                             onChange={handleChange}
@@ -223,14 +226,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="fathername"
                             className="custom-form-label"
                           >
-                            Father's Name{" "}
+                            {t("Father Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="fathername"
-                            placeholder="Enter Name"
+                            placeholder={t("Enter Father Name")}
                             name='fatherName'
                             value={studentData.fatherName}
                             onChange={handleChange}
@@ -244,14 +247,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="mothername"
                             className="custom-form-label"
                           >
-                            Mother's Name{" "}
+                            {t("Mother Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="mothername"
-                            placeholder="Enter Name"
+                            placeholder={t("Enter Mother Name")}
                             name='motherName'
                             value={studentData.motherName}
                             onChange={handleChange}
@@ -262,7 +265,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="dateofbirth" className="custom-form-label">
-                            Date Of Birth{" "}
+                            {t("Date Of Birth")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -279,14 +282,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="phonenumber" className="custom-form-label">
-                            Phone Number{" "}
+                            {t("Phone Number")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="phonenumber"
-                            placeholder="Enter Number"
+                            placeholder={t("Enter Number")}
                             name='phoneNumber'
                             value={studentData.phoneNumber}
                             onChange={handleChange}
@@ -300,19 +303,19 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="school-class"
                             className="custom-form-label"
                           >
-                            Class <span className="required-validation">*</span>
+                            {t("Class")} <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="school-class"
-                            placeholder="Enter Class"
+                            placeholder={t("Enter Class")}
                             name='classname'
                             value={studentData.classname}
                             onChange={handleChange}
                           />
-                          {errors.className && (
-                            <p className="required-validation">{errors.className}</p>
+                          {errors.classname && (
+                            <p className="required-validation">{errors.classname}</p>
                           )}
                         </div>
                         <div className="col-md-4">
@@ -320,7 +323,8 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="class-section"
                             className="custom-form-label"
                           >
-                            Section
+                            {t("Section")}  <span className="required-validation">*</span>
+                            
                           </label>
                           <select className="custom-input-field"
                           name='section'
@@ -329,7 +333,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                           >
                             <option value="" 
                           >
-                              Section
+                              {t("Section")} 
                             </option>
                             <option value="A">A</option>
                             <option value="B">B</option>
@@ -342,7 +346,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                         </div>
                         <div className="col-md-8">
                           <label htmlFor="gender" className="custom-form-label">
-                            Gender{" "}
+                            {t("Gender")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <span className="d-flex">
@@ -356,7 +360,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="male">
-                                Male
+                                {t("Male")}
                               </label>
                             </div>
                             <div className="containGender">
@@ -369,7 +373,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="female">
-                                Female
+                                {t("Female")}
                               </label>
                             </div>
                             <div className="containGender">
@@ -382,7 +386,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 onChange={handleChange}
                               />
                               <label className="ps-1" htmlFor="other">
-                                Other
+                                {t("Other")}
                               </label>
                             </div>
                           </span>
@@ -397,13 +401,13 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             className="custom-form-label"
                           >
                             {" "}
-                            Address
+                            {t("Address")}
                           </label>
                           <textarea
                             type="text"
                             className="custom-input-field"
                             id="address"
-                            placeholder="Enter Address"
+                            placeholder={t("Enter Address")}
                             rows="6"
                             value={studentData.address}
                             name='address'
@@ -418,7 +422,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                            onClick={handleSubmit}
                             className="custom-btn col-md-4"
                           >
-                            Update
+                            {t("Update")}
                           </button>
                         </div>
                       </form>

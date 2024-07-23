@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
+import { useTranslation } from "react-i18next";
 
 function Add_Students({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
@@ -21,13 +22,14 @@ function Add_Students({ isOpen, setIsOpen }) {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
   const [errors, setErrors] = useState({});
+  const {t} = useTranslation();
 
   const [ profileImage, setProfileImage] = useState("");
 
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
   }
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("handle submit fun of add student called");
@@ -44,36 +46,40 @@ function Add_Students({ isOpen, setIsOpen }) {
      console.log(profileImage);
     let formErrors = {};
     if(!profileImage){
-        formErrors.profileImage = "please upload image"
+        formErrors.profileImage = t("please upload image");
     }
-    if (!rollNumber) formErrors.rollNumber = "Roll Number is required";
+    if (!rollNumber) formErrors.rollNumber = t("Roll Number is required");
 
-    if (!studentName) formErrors.studentName = "Full name is required";
+    if (!studentName) formErrors.studentName = t("Full name is required");
 
-    if (!fatherName) formErrors.fatherName = "Father name is required";
+    if (!fatherName) formErrors.fatherName = t("Father name is required");
 
-    if (!motherName) formErrors.motherName = "Mother name is required";
+    if (!motherName) formErrors.motherName = t("Mother name is required");
 
     const Pattern = /^\d{10}$/;
 
     if (!phoneNumber) {
-      formErrors.phoneNumber = "Phone number is required";
+      formErrors.phoneNumber = t("Phone number is required");
     } else if (!Pattern.test(phoneNumber)) {
-      formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
+      formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
     }
 
-    if (!classname) formErrors.classname = "Class is required";
+    if (!classname) formErrors.classname = t("Class is required");
 
     if (!dateOfBirth)
-      formErrors.dateOfBirth = "Register date of birth is required";
+      formErrors.dateOfBirth = t("Register date of birth is required");
 
-    if (!section) formErrors.section = "Section is required";
+    if (!section) formErrors.section = t("Section is required");
 
-    if (!gender) formErrors.gender = "Gender is required";
+    if (!gender) formErrors.gender = t("Gender is required");
 
-    if (!address) formErrors.address = "Address is required";
+    if (!address) formErrors.address = t("Address is required");
 
     setErrors(formErrors);
+
+  if (Object.keys(formErrors).length > 0) {
+    return; // Stop submission if there are errors
+  }
 
     const formData = new FormData();
     formData.append("rollNumber", rollNumber)
@@ -143,18 +149,18 @@ function Add_Students({ isOpen, setIsOpen }) {
                                 }}
                               >
                                 {" "}
-                                Student
+                                {t("Student")}
                               </button>
                             </li>
                             <li
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              Add Student
+                              {t("Add Student")}
                             </li>
                           </ol>
                         </nav>
-                        <h3>Student</h3>
+                        <h3>{t("Student")}</h3>
                       </div>
                     </div>
                   </div>
@@ -180,21 +186,21 @@ function Add_Students({ isOpen, setIsOpen }) {
                           />
                         </div>
                       </div>
-                      <h6>Profile Image</h6>
+                      <h6>{t("Profile Image")}</h6>
                     </div>
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
                     <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          Roll Number{" "}
+                          {t("Roll Number")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="rollnumber"
-                          placeholder="Enter Roll Number"
+                          placeholder={t("Enter Roll Number")}
                           value={rollNumber}
                           onChange={(e) =>setRollNumber(e.target.value)}
                         />
@@ -205,15 +211,15 @@ function Add_Students({ isOpen, setIsOpen }) {
                         )}
                       </div>
                       <div className="col-md-4">
-                        <label htmlFor="fullname" className="custom-form-label">
-                          Student Name{" "}
+                        <label htmlFor="studentname" className="custom-form-label">
+                          {t("Student Name")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
-                          id="fullname"
-                          placeholder="Enter Name"
+                          id="studentname"
+                          placeholder={t("Enter Name")}
                           value={studentName}
                           onChange={(e) => setStudentName(e.target.value)}
                         />
@@ -228,14 +234,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="fathername"
                           className="custom-form-label"
                         >
-                          Father Name{" "}
+                         {t("Father Name")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fathername"
-                          placeholder="Enter Fahter's  Name"
+                          placeholder={t("Enter Father Name")}
                           value={fatherName}
                           onChange={(e) => setFatherName(e.target.value)}
                         />
@@ -250,14 +256,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="mothername"
                           className="custom-form-label"
                         >
-                          Mother Name{" "}
+                          {t("Mother Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="mothername"
-                          placeholder="Enter Mother's Name"
+                          placeholder={t("Enter Mother Name")}
                           value={motherName}
                           onChange={(e) => setMotherName(e.target.value)}
                         />
@@ -272,7 +278,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="dateOfBirth"
                           className="custom-form-label"
                         >
-                          Date Of Birth{" "}
+                          {t("Date Of Birth")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -293,14 +299,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="phonenumber"
                           className="custom-form-label"
                         >
-                          Phone Number{" "}
+                          {t("Phone Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="phonenumber"
-                          placeholder="Enter Number"
+                          placeholder={t("Enter Number")}
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
                         />
@@ -315,20 +321,20 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="school-class"
                           className="custom-form-label"
                         >
-                          Class <span className="required-validation">*</span>
+                          {t("Class")} <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="school-class"
-                          placeholder="Enter Class"
+                          placeholder={t("Enter Class")}
                           name="classname"
                           value={classname}
                           onChange={(e) => setClassname(e.target.value)}
                         />
-                        {errors.className && (
+                        {errors.classname && (
                           <p className="required-validation">
-                            {errors.className}
+                            {errors.classname}
                           </p>
                         )}
                       </div>
@@ -337,14 +343,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="class-section"
                           className="custom-form-label"
                         >
-                          Section
+                          {t("Section")} <span className="required-validation">*</span>
                         </label>
                         <select
                           className="custom-input-field"
                           value={section}
                           onChange={(e) => setSection(e.target.value)}
                         >
-                          <option>Section</option>
+                          <option>{t("Section")}</option>
                           <option value="A">A</option>
                           <option value="B">B</option>
                           <option value="C">C</option>
@@ -358,7 +364,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-8">
                         <label htmlFor="gender" className="custom-form-label">
-                          Gender <span className="required-validation">*</span>
+                          {t("Gender")} <span className="required-validation">*</span>
                         </label>
                         <span className="d-flex">
                           <div className="containGender">
@@ -371,7 +377,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                               onChange={(e) => setGender(e.target.value)}
                             />
                             <label className="ps-1" htmlFor="male">
-                              Male
+                              {t("Male")}
                             </label>
                           </div>
                           <div className="containGender">
@@ -384,7 +390,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                               onChange={(e) => setGender(e.target.value)}
                             />
                             <label className="ps-1" htmlFor="female">
-                              Female
+                              {t("Female")}
                             </label>
                           </div>
                           <div className="containGender">
@@ -397,7 +403,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                               onChange={(e) => setGender(e.target.value)}
                             />
                             <label className="ps-1" htmlFor="other">
-                              Other
+                              {t("Other")}
                             </label>
                           </div>
                         </span>
@@ -409,13 +415,13 @@ function Add_Students({ isOpen, setIsOpen }) {
                       <div className="col-md-8">
                         <label htmlFor="address" className="custom-form-label">
                           {" "}
-                          Address
+                          {t("Address")}
                         </label>
                         <textarea
                           type="text"
                           className="custom-input-field"
                           id="address"
-                          placeholder="Enter Address"
+                          placeholder={t("Enter Address")}
                           rows="5"
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
@@ -431,7 +437,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                           onClick={handleSubmit}
                           className="custom-btn col-md-4"
                         >
-                          Add Student
+                          {t("Add Student")}
                         </button>
                       </div>
                     </form>

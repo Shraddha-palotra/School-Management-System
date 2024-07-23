@@ -4,6 +4,7 @@ import HeaderDash from '../Dashboard/HeaderDash'
 import dummyprofile from '../assets/images/dummyProfile.png'
 import camera from "../assets/images/camera.png";
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 
 function ViewStudents({isOpen,setIsOpen}) {
@@ -12,6 +13,7 @@ function ViewStudents({isOpen,setIsOpen}) {
      const location = useLocation(); 
 
      const [studentData, setStudentData] = useState(location.state.items);
+     const {t} = useTranslation();
      console.log(studentData)
   return (
     <>
@@ -35,18 +37,18 @@ function ViewStudents({isOpen,setIsOpen}) {
                                   }}
                                 >
                                   {" "}
-                                  Student
+                                  {t("Student")}
                                 </button>
                               </li>
                               <li
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                   View Student
+                                   {t("View Student")}
                               </li>
                             </ol>
                           </nav>
-                          <h3>Student</h3>
+                          <h3>{t("Student")}</h3>
                         </div>
                       </div>
                     </div>
@@ -55,7 +57,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                         <div className="upload-img-box">
                           <div className="circle">
                             {/* <img src={dummyProfile} alt="" /> */}
-                            <img  src={studentData.profileImage ? `http://localhost:8080${studentData.profileImage}` : dummyprofile } />
+                            <img  src={studentData.profileImage ? `http://localhost:8080${studentData.profileImage}` : dummyprofile } alt=''/> 
                           </div>
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">
@@ -72,14 +74,14 @@ function ViewStudents({isOpen,setIsOpen}) {
                             />
                           </div>
                         </div>
-                        <h6>Profile Image</h6>
+                        <h6>{t("Profile Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
                       <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          Roll Number{" "}
+                          {t("Roll Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -97,7 +99,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="fullname"
                             className="custom-form-label"
                           >
-                            Student Name{" "}
+                            {t("Student Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -116,7 +118,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="fathername"
                             className="custom-form-label"
                           >
-                            Father's Name{" "}
+                            {t("Father Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -134,7 +136,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="mothername"
                             className="custom-form-label"
                           >
-                            Mother's Name{" "}
+                            {t("Mother Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -149,7 +151,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="dateofbirth" className="custom-form-label">
-                            Date Of Birth
+                            {t("Date Of Birth")}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -163,7 +165,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="phonenumber" className="custom-form-label">
-                            Phone Number
+                            {t("Phone Number")}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -181,7 +183,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="school-class"
                             className="custom-form-label"
                           >
-                            Class <span className="required-validation">*</span>
+                            {t("Class")} <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
@@ -198,7 +200,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="class-section"
                             className="custom-form-label"
                           >
-                            Section
+                            {t("Section")}
                           </label>
                           <select className="custom-input-field"
                           name='section'
@@ -206,7 +208,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                           disabled
                           >
                             <option value="">
-                              Section
+                            {t("Section")}
                             </option>
                             <option value="">A</option>
                             <option value="">B</option>
@@ -216,7 +218,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                         </div>
                         <div className="col-md-8">
                           <label htmlFor="gender" className="custom-form-label">
-                            Gender{" "}
+                            {t("Gender")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <span className="d-flex">
@@ -230,7 +232,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 disabled
                               />
                               <label className="ps-1" htmlFor="male">
-                                Male
+                                {t("Male")}
                               </label>
                             </div>
                             <div className="containGender">
@@ -243,7 +245,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 disabled
                               />
                               <label className="ps-1" htmlFor="female">
-                                Female
+                                {t("Female")}
                               </label>
                             </div>
                             <div className="containGender">
@@ -256,7 +258,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 disabled
                               />
                               <label className="ps-1" htmlFor="other">
-                                Other
+                                {t("Other")}
                               </label>
                             </div>
                           </span>
@@ -268,7 +270,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             className="custom-form-label"
                           >
                             {" "}
-                            Address
+                            {t("Address")}
                           </label>
                           <textarea
                             type="text"

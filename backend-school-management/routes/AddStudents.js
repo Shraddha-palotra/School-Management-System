@@ -49,6 +49,25 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
     
     console.log(req.body);
 
+     // Log each field to ensure they are correctly extracted
+    //  console.log('rollNumber:', rollNumber);
+    //  console.log('studentName:', studentName);
+    //  console.log('fatherName:', fatherName);
+    //  console.log('motherName:', motherName);
+    //  console.log('classname:', classname);
+    //  console.log('phoneNumber:', phoneNumber);
+    //  console.log('dateOfBirth:', dateOfBirth);
+    //  console.log('section:', section);
+    //  console.log('gender:', gender);
+    //  console.log('address:', address);
+    //  console.log('profileImage:', profileImage);
+
+    const roll = await AddStudentModel.findOne({ rollNumber });
+    // Check if roll number  already exists
+    if (roll) {
+      return res.json({field: "rollNumber",message: "Roll Number already exsited" });
+    }
+
     const newStudent = new AddStudentModel({
       rollNumber,
       studentName,
@@ -64,11 +83,6 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
     });
     console.log(newStudent);
 
-    const roll = await AddStudentModel.findOne({ rollNumber });
-  // Check if roll number  already exists
-  if (roll) {
-    return res.json({field: "rollNumber",message: "Roll Number already exsited" });
-  }
 
    const savedStudent =  await newStudent.save();
    console.log("saved student is",savedStudent);

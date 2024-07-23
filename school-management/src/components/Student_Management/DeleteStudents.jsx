@@ -1,8 +1,11 @@
 import React from "react";
 import deleteModal_icon from "../assets/images/deleteModal_icon.png";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function DeleteStudents({ data }) {
+
+  const {t} =useTranslation();
   //  console.log("delete student component rendered");
   //  console.log("data in the delete student",data);
   const { isDeleteClick, deleteHandle } = data;
@@ -65,8 +68,8 @@ function DeleteStudents({ data }) {
             </div>
             <div className="modal-body">
               <img src={deleteModal_icon} alt="" className="mainIconModal" />
-              <h2>Delete Student</h2>
-              <p>Are you sure you want to Delete {eachStudent?.studentName}?</p>
+              <h2>{t("Delete Student")}</h2>
+              <p>{t("Are you sure you want to Delete")}  {eachStudent?.studentName}?</p>
               <div className="footbutton">
                 <button
                   type="button"
@@ -76,7 +79,7 @@ function DeleteStudents({ data }) {
                     deleteHandle(false, eachStudent);
                   }}
                 >
-                  Cancel
+                  {t("Cancel")}
                 </button>
                 <button
                   type="button"
@@ -85,7 +88,7 @@ function DeleteStudents({ data }) {
                     deleteStudent(eachStudent);
                   }}
                 >
-                  Confirm
+                  {t("Confirm")}
                 </button>
               </div>
             </div>
