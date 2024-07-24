@@ -58,17 +58,15 @@ function Login() {
       .then((response) => {
       console.log(response);
       
-      window.localStorage.setItem("isLoggin", JSON.stringify(true));
-
       if (response.data.status) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("token", response.data.token);
 
         if (isChecked) {
-          localStorage.setItem("credentials", JSON.stringify({email, password})
-        );
+          localStorage.setItem("credentials", JSON.stringify({ email, password }));
         } else {
           localStorage.removeItem("credentials");
-        }
+        } 
         toast.success("Successfully Login")
         setTimeout(() => {
          navigate("/dashboard");
@@ -138,7 +136,7 @@ function Login() {
                         <input
                           className="custom-input-field"
                           type={passwordToggle ? "text" : "password"}
-                          id="lastname"
+                          id="password"
                           placeholder="Enter Password"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}

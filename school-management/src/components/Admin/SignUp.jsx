@@ -14,7 +14,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [otpSent, setOtpSent] = useState(true)
+  const [otpSent, setOtpSent] = useState(false)
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -79,6 +79,8 @@ const SignUp = () => {
         if (response.data.status) {
           toast.success("Successfully SignUp", {autoClose:1000});
           setOtpSent(true);
+          localStorage.setItem("token", response.data.token);
+          // localStorage.setItem("credentials", JSON.stringify({email,phoneNumber,name,password}))
         } else {
           setErrors({ email: response.data.message });
         }

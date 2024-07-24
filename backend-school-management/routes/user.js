@@ -12,6 +12,13 @@ import { fileURLToPath } from "url";
 
 const router = express.Router();
 
+const generateToken = (user) => {
+  return jwt.sign(
+    {id: user._id, name:user.name, email:user.email, phoneNumber:user.phoneNumber},
+    process.env.KEY, {expiresIn:"7d"}
+  );
+};
+
 // this is for signup authentication
 router.post("/signup", async (req, res) => {
   console.log("signup API called");
@@ -111,9 +118,11 @@ router.post("/verify-otp", async (req, res) => {
   
     // Check if OTP has expired
     if (otpRecord.expiresAt < new Date()) {
-      console.error("Error: OTP has expired"); // Log the specific error
+      console.error("Error: OTP has expired");
       return res.status(400).json({ status: false, message: "OTP has expired" });
     }
+
+
 
     const {name, phoneNumber, password } = req.body;
     const hashPassword = await bcrypt.hash(password, 8);
@@ -128,29 +137,55 @@ router.post("/verify-otp", async (req, res) => {
     await newUser.save();
     await Otp.deleteOne({ email, otp });
 
+    const token = generateToken(newUser);
+    // return res.json({ status: true, message: "Registered successfully", token });
+
     const savedUser = newUser;
-    return res.json({ status: true, message: "Registered successfully", savedUser });
+    return res.json({ status: true, message: "Registered successfully",token});
   } catch (error) {
     console.error("Error in verify-otp API:", error);
     return res.status(500).json({ status: false, message: "Internal Server Error" });
   }
 });
 
-//   const hashpassword = await bcrypt.hash(password, 10);
+// User route to get user data
 
-//   // create new user
-//   const newUser = AnotherModel({
-//     name,
-//     phoneNumber,
-//     email,
-//     password: hashpassword,
-//   });
+router.get("/user", async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Authorization header missing or invalid format" });
+    }
+    
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.KEY);
+    const user = await AnotherModel.findById(decoded.id);
+    
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json(user);
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ message: "Token has expired, please log in again" });
+    } else if (error.name === 'JsonWebTokenError') {
+      return res.status(401).json({ message: "Malformed token" });
+    }
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
-//   // save the user
-//   await newUser.save();
-//   const savedUser = newUser
-//   return res.json({ status: true, message: "record register",savedUser });
-// });
+
+router.post('/refresh-token', async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    const decoded = jwt.verify(refreshToken, process.env.REFRESH_KEY); // Use a different key for refresh tokens
+    const newToken = jwt.sign({ id: decoded.id }, process.env.KEY, { expiresIn: '7d' }); // Short-lived access token
+    res.json({ token: newToken });
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    res.status(401).json({ message: "Invalid refresh token" });
+  }
+});
 
 //this is for login authentication
 
@@ -170,11 +205,12 @@ router.post("/login", async (req, res) => {
   }
 
   const token = jwt.sign({ name: user.name }, process.env.KEY, {
-    expiresIn: "1h",
+    expiresIn: "7d",
   });
   res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
 
-  return res.json({ status: true, msg: "login successful", user });
+  return res.json({ status: true, msg: "login successful", user, token });
+  
 });
 
 

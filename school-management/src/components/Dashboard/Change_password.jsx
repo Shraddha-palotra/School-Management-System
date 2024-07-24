@@ -35,7 +35,7 @@ function Change_password({ isOpen, setIsOpen }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     let formErrors = {}; 
@@ -60,21 +60,32 @@ function Change_password({ isOpen, setIsOpen }) {
     setErrors(formErrors);
     setBackendError("");
 
-    const data = {
-      oldPassword,
-      newPassword,
-      confirmPassword,
-    };
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
-    console.log("id", userId);
+    if (Object.keys(formErrors).length > 0) {
+      return; 
+    }
 
-    const fun = async (req, res) => {
+     // Check if user is in localStorage
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) {
+          toast.error("User not found. Please log in again.");
+          return;
+     }
+    
+
+     const userId = user._id;
+     const data = {
+       oldPassword,
+       newPassword,
+       confirmPassword,
+     };
+ 
+   
       try {
         const res = await axios.put(
           `http://localhost:8080/auth/changepassword/${userId}`,
           data
         );
-        console.log(res.data.status);
+        // console.log(res.data.status);
         if (res.data.status) {
           toast.success('Successfully update password');
           setTimeout(() => {
@@ -96,8 +107,6 @@ function Change_password({ isOpen, setIsOpen }) {
           console.log(err);
         }
       }
-    };
-    fun();
   };
 
   return (

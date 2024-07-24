@@ -22,7 +22,8 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
       .then((response) => {
         if (response.data.status) {
           localStorage.removeItem("credentials");
-          localStorage.setItem("user", JSON.stringify(response.data.savedUser));
+          // localStorage.setItem("user", JSON.stringify(response.data.savedUser));
+          localStorage.setItem("token",response.data.token)
           toast.success("Verify OTP successfully");
           setTimeout(() => {
             navigate("/dashboard");

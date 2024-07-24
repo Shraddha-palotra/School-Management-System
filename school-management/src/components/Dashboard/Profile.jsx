@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import profileImg from "../assets/images/profileImg.png";
 import camera from "../assets/images/camera.png";
@@ -11,10 +11,18 @@ import HeaderDash from "./HeaderDash";
 function Profile({ items, isOpen, setIsOpen }) {
   const [profileImage, setProfileImage] = useState("");
 
-   const [loggedAdmin, setLoggedAdmin] = useState(JSON.parse(localStorage.getItem('user')))
-  console.log(loggedAdmin);
-
+   const [loggedAdmin, setLoggedAdmin] = useState(null)
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setLoggedAdmin(user);
+    } else {
+      // Handle the case where user is not found
+      console.error("No user data found in localStorage");
+    }
+  }, []);
 
   const handleChange = (e) => {
     console.log(handleChange);
@@ -26,13 +34,18 @@ function Profile({ items, isOpen, setIsOpen }) {
       [name]: value,
     }));
   };
+
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("logged admin int handle submit profile", loggedAdmin);
+    
+    if (!loggedAdmin) {
+      toast.error("User data is missing.");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("fullname", loggedAdmin.name);
@@ -42,11 +55,12 @@ function Profile({ items, isOpen, setIsOpen }) {
     if (profileImage) formData.append("profileImage", profileImage);
     console.log("fromdata is ", formData);
 
-    const id = loggedAdmin._id;
-    console.log("id in profile handle submit", id);
+    
 
     const fun = async (req, res) => {
       try {
+        const id = loggedAdmin._id;
+          console.log("id in profile handle submit", id);
         const res = await axios.put(
           `http://localhost:8080/auth/updateprofile/${id}`,
           formData,
@@ -56,7 +70,7 @@ function Profile({ items, isOpen, setIsOpen }) {
             },
           }
         );
-        console.log("response is", res.data);
+        // console.log("response is", res.data);
         if (res.data.status) {
           localStorage.setItem(
             "user",
@@ -103,7 +117,12 @@ function Profile({ items, isOpen, setIsOpen }) {
                           <div className="addProjectlogo">
                             <div className="upload-img-box">
                               <div className="circle">
-                                <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${loggedAdmin.profileImage}`} alt="" />
+                                {/* <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${loggedAdmin.profileImage}`} alt="" /> */}
+
+                                <img
+                                  src={profileImage ? URL.createObjectURL(profileImage) : (loggedAdmin ? `http://localhost:8080${loggedAdmin.profileImage}` : profileImg)}
+                                  alt=""
+                                />
                               </div>
                               <div className="p-image ml-auto">
                                 <label htmlFor="logoSelect">
@@ -136,7 +155,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            value={loggedAdmin.name}                          
+                            value={loggedAdmin.name || ""}                          
                             name="name"
                             onChange={handleChange}
                           />
