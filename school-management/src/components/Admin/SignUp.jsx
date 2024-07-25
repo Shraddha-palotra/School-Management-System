@@ -25,9 +25,9 @@ const SignUp = () => {
 
   const handlePasswordToggle = (e, key, value) => {
     e.preventDefault();
-    console.log("e", e);
-    console.log("key", key);
-    console.log("value", value);
+    // console.log("e", e);
+    // console.log("key", key);
+    // console.log("value", value);
     setPasswordToggle((prevData) => ({
       ...prevData,
       [key]: value,
@@ -80,7 +80,7 @@ const SignUp = () => {
           toast.success("Successfully SignUp", {autoClose:1000});
           setOtpSent(true);
           localStorage.setItem("token", response.data.token);
-          // localStorage.setItem("credentials", JSON.stringify({email,phoneNumber,name,password}))
+          localStorage.setItem("credentials", JSON.stringify({email,phoneNumber,name,password}))
         } else {
           setErrors({ email: response.data.message });
         }

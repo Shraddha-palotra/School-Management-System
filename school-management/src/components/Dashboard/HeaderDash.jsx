@@ -8,23 +8,39 @@ import Axios from "axios";
 function HeaderDash({ isOpen, setIsOpen }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [loggedUser, setLoggedUser] = useState(null);
+  console.log("logged user", loggedUser);
   const [languageDropdwonOpen, setLanguageDropdwonOpen] = useState(false);
-
+  const [error, setError] = useState(null);
   const { i18n, t } = useTranslation();
 
   useEffect(() => {
-    const userString = localStorage.getItem("user");
-    if (userString) {
-      try {
-        const user = JSON.parse(userString);
-        setLoggedUser(user);
-      } catch (error) {
-        console.error("Error parsing user data: ", error);
-      }
+    const token = localStorage.getItem("token");
+    if (token) {
+      Axios.get("http://localhost:8080/auth/user", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then((response) => {
+          setLoggedUser({...loggedUser,user:response.data?.data});
+        })
+        .catch((err) => {
+          setError(err.response?.data?.message || "An error occurred");
+          console.log("Error fetching user data: ", err);
+        });
     } else {
-      console.log("No user data found in localStorage");
+      const userString = localStorage.getItem("user");
+      if (userString) {
+        try {
+          const user = JSON.parse(userString);
+          setLoggedUser(user);
+        } catch (error) {
+          console.error("Error parsing user data: ", error);
+        }
+      }
     }
   }, []);
+
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -48,57 +64,10 @@ function HeaderDash({ isOpen, setIsOpen }) {
     };
   }, []);
 
-  const fetchUserData = async () => {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        console.error("No token found in local storage");
-        return;
-      }
-
-      const response = await Axios.get("http://localhost:8080/auth/user", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.data) {
-        setLoggedUser(response.data);
-      }
-      
-    } catch (error) {
-      console.error(
-        "Error fetching user data:",
-        error.response ? error.response.data : error.message
-      );
-      if (error.response && error.response.status === 401) {
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  const refreshToken = async () => {
-    try {
-      const response = await Axios.post(
-        "http://localhost:8080/auth/refresh-token",
-        {
-          refreshToken: localStorage.getItem("refreshToken"),
-        }
-      );
-      localStorage.setItem("token", response.data.token);
-    } catch (error) {
-      console.error("Error refreshing token:", error);
-      console.error("Session expired. Please log in again.");
-    }
-  };
 
   const logOut = () => {
     window.localStorage.removeItem("user");
-    window.localStorage.removeItem("token");
-    window.localStorage.removeItem("refreshToken");
+    window.localStorage.removeItem('token');
     setLoggedUser(null);
   };
 
@@ -188,7 +157,7 @@ function HeaderDash({ isOpen, setIsOpen }) {
                           />
                           <h6>
                             {/* {loggedUser ? loggedUser.name : " "} */}
-                            {loggedUser?.name}
+                            {loggedUser?.user?.name}
                             <span>{t("Admin")}</span>
                           </h6>
                         </button>

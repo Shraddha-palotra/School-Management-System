@@ -7,23 +7,41 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "./HeaderDash";
+import {jwtDecode} from 'jwt-decode';
 
-function Profile({ items, isOpen, setIsOpen }) {
+function Profile({ items, isOpen, setIsOpen }) { 
   const [profileImage, setProfileImage] = useState("");
-
-   const [loggedAdmin, setLoggedAdmin] = useState(null)
+  const [loggedAdmin, setLoggedAdmin] = useState({});
+  console.log('userData',loggedAdmin);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-      setLoggedAdmin(user);
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchUserData();
     } else {
-      // Handle the case where user is not found
       console.error("No user data found in localStorage");
     }
   }, []);
-
+  
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(`http://localhost:8080/auth/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (response.status === 200 && response.data) {
+        setLoggedAdmin({...loggedAdmin,user:response.data});
+      } else {
+        console.error("Failed to fetch user data");
+      }
+    } catch (error) {
+      console.error(error);
+    } 
+  };
+  
   const handleChange = (e) => {
     console.log(handleChange);
     const { name, value } = e.target;
@@ -41,26 +59,25 @@ function Profile({ items, isOpen, setIsOpen }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!loggedAdmin) {
+
+    if (!loggedAdmin || !loggedAdmin._id) { 
       toast.error("User data is missing.");
+      console.log("user data is missing.")
       return;
     }
 
     const formData = new FormData();
-    formData.append("fullname", loggedAdmin.name);
-    formData.append("email", loggedAdmin.email);
-    formData.append("phoneNum", loggedAdmin.phoneNumber);
+    formData.append("fullname", loggedAdmin.name || "");
+    formData.append("email", loggedAdmin.email || "");
+    formData.append("phoneNum", loggedAdmin.phoneNumber || "");
 
     if (profileImage) formData.append("profileImage", profileImage);
     console.log("fromdata is ", formData);
 
-    
-
     const fun = async (req, res) => {
       try {
         const id = loggedAdmin._id;
-          console.log("id in profile handle submit", id);
+        // console.log("id in profile handle submit", id);
         const res = await axios.put(
           `http://localhost:8080/auth/updateprofile/${id}`,
           formData,
@@ -117,10 +134,14 @@ function Profile({ items, isOpen, setIsOpen }) {
                           <div className="addProjectlogo">
                             <div className="upload-img-box">
                               <div className="circle">
-                                {/* <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${loggedAdmin.profileImage}`} alt="" /> */}
-
-                                <img
-                                  src={profileImage ? URL.createObjectURL(profileImage) : (loggedAdmin ? `http://localhost:8080${loggedAdmin.profileImage}` : profileImg)}
+                                 <img
+                                  src={
+                                    profileImage
+                                      ? URL.createObjectURL(profileImage)
+                                      : loggedAdmin?.profileImage
+                                      ? `http://localhost:8080${loggedAdmin.profileImage}`
+                                      : profileImg
+                                  }
                                   alt=""
                                 />
                               </div>
@@ -155,7 +176,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            value={loggedAdmin.name || ""}                          
+                            value={loggedAdmin?.name || ""}
                             name="name"
                             onChange={handleChange}
                           />
@@ -171,7 +192,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             type="email"
                             className="custom-input-field"
                             id="email"
-                            value={loggedAdmin.email}
+                            value={loggedAdmin?.email || ""}
                             name="email"
                             onChange={handleChange}
                           />
@@ -188,7 +209,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="contact-number"
-                            value={loggedAdmin.phoneNumber}
+                            value={loggedAdmin?.phoneNumber || ""}
                             name="phoneNumber"
                             onChange={handleChange}
                           />

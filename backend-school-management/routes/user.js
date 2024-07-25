@@ -119,7 +119,7 @@ router.post("/verify-otp", async (req, res) => {
     // Check if OTP has expired
     if (otpRecord.expiresAt < new Date()) {
       console.error("Error: OTP has expired");
-      return res.status(400).json({ status: false, message: "OTP has expired" });
+      return res.status(400).json({ status: false, message: "OTP has expired",data:null });
     }
 
 
@@ -148,54 +148,50 @@ router.post("/verify-otp", async (req, res) => {
   }
 });
 
-// User route to get user data
+// user API headDash 
+const authenticateToken = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "No token provided" });
+
+  jwt.verify(token, process.env.KEY, (err, user) => {
+    if (err) return res.status(403).json({ message: "Token is not valid" });
+    req.user = user;
+    next();
+  });
+};
+
+
 
 router.get("/user", async (req, res) => {
+  const token = req.headers.authorization.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ msg: "No token provided" });
+  }
+
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Authorization header missing or invalid format" });
-    }
-    
-    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.KEY);
-    const user = await AnotherModel.findById(decoded.id);
-    
-    if (!user) return res.status(404).json({ message: "User not found" });
-    res.json(user);
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ message: "Token has expired, please log in again" });
-    } else if (error.name === 'JsonWebTokenError') {
-      return res.status(401).json({ message: "Malformed token" });
+    console.log('decoded',decoded);
+    const user = await AnotherModel.findOne({ name: decoded.name });
+    if (!user) {
+      return res.status(404).json({ msg: "User not found" });
     }
-    console.error("Error fetching user data:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
-
-
-router.post('/refresh-token', async (req, res) => {
-  try {
-    const { refreshToken } = req.body;
-    const decoded = jwt.verify(refreshToken, process.env.REFRESH_KEY); // Use a different key for refresh tokens
-    const newToken = jwt.sign({ id: decoded.id }, process.env.KEY, { expiresIn: '7d' }); // Short-lived access token
-    res.json({ token: newToken });
+    res.json({data:user,message:"Details fetched successfully."});
   } catch (error) {
-    console.error("Error refreshing token:", error);
-    res.status(401).json({ message: "Invalid refresh token" });
+    res.status(400).json({ msg: "Invalid token" });
   }
 });
+
+
 
 //this is for login authentication
 
 router.post("/login", async (req, res) => {
-  //  console.log("Login API called");
+   console.log("Login API called");
   const { email, password } = req.body;
   
   const user = await AnotherModel.findOne({ email });
+
   if (!user) {
-    console.log("inside user check");
     return res.json({field: "email", msg: "user is not registered" });
   }
 
@@ -207,7 +203,7 @@ router.post("/login", async (req, res) => {
   const token = jwt.sign({ name: user.name }, process.env.KEY, {
     expiresIn: "7d",
   });
-  res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
+  res.cookie("token", token, { httpOnly: true, maxAge: 3600000 * 24 * 7 });
 
   return res.json({ status: true, msg: "login successful", user, token });
   
@@ -350,7 +346,7 @@ router.put("/changepassword/:id", async (req, res) => {
 
 // this is for profile
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath( import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
@@ -378,7 +374,7 @@ router.put("/updateprofile/:id", upload.single('profileImage'), async (req, res)
   }
   try {
     const updatedProfileUser = await AnotherModel.findByIdAndUpdate(
-      { _id: id },
+      id,
       { $set: data },
       { new: true }
     );

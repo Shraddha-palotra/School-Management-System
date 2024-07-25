@@ -12,9 +12,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({})
   const navigate = useNavigate();
-
   const [isChecked, setIsChecked] = useState(false);
- 
   const [passwordToggle, setPasswordToggle] = useState(false)
    
   useEffect(() => {
