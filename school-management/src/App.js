@@ -13,13 +13,13 @@ import AddStaff from "./components/Staff_Management/AddStaff";
 import AddFee  from "./components/Fee_Management/AddFee";
 import Fee from "./components/Fee_Management/Fee";
 import Profile from "./components/Dashboard/Profile";
-import Change_password from "./components/Dashboard/Change_password";
 import EditStudents from "./components/Student_Management/EditStudents";
 import ViewStudents from "./components/Student_Management/ViewStudents";
 import EditStaff from "./components/Staff_Management/EditStaff";
 import ViewStaff from "./components/Staff_Management/ViewStaff";
 import EditFee from "./components/Fee_Management/EditFee";
 import ViewFee from "./components/Fee_Management/ViewFee";
+import ChangePassword from "./components/Dashboard/ChangePassword";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false); 
@@ -56,10 +56,9 @@ function App() {
         <Route path="/edit-fee" element={<EditFee isOpen={isOpen} setIsOpen={setIsOpen}/>} />
         <Route path="/view-fee" element={<ViewFee isOpen={isOpen} setIsOpen={setIsOpen} />} />
         <Route path="/profile" element={<Profile isOpen={isOpen} setIsOpen={setIsOpen}/>} />
-       <Route path="/change-password" element={<Change_password isOpen={isOpen} setIsOpen={setIsOpen} 
+       <Route path="/change-password" element={<ChangePassword isOpen={isOpen} setIsOpen={setIsOpen} 
        />} />
       </Routes>
-   
     </>
   );
 }

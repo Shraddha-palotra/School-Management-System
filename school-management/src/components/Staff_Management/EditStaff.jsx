@@ -6,12 +6,13 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function EditStaff({ items, isOpen, setIsOpen }) {
   const navigate = useNavigate();
-
+  const {t} = useTranslation();
   const location = useLocation();
-  // console.log("location in edit student",location.state.items);
+  // console.log("location in edit staff",location.state.items);
 
   const [staffData, setStaffData] = useState(location.state.items || {});
   console.log("staffData", staffData);
@@ -44,30 +45,30 @@ function EditStaff({ items, isOpen, setIsOpen }) {
   const validateForm = () => {
     let formErrors = {};
 
-    if (!staffData.staffName) formErrors.staffName = "Staff name is required";
+    if (!staffData.staffName) formErrors.staffName = t("Staff name is required");
     if (!staffData.staffPosition)
-      formErrors.staffPosition = "Staff position is required";
+      formErrors.staffPosition = t("Staff position is required");
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!staffData.email) {
-      formErrors.email = "Email is required";
+      formErrors.email = t("Email is required");
     } else if (!emailPattern.test(staffData.email)) {
-      formErrors.email = "Please enter a valid email address";
+      formErrors.email = t("Please enter a valid email address");
     }
 
     const pattern = /^\d{10}$/;
     if (!staffData.phoneNumber) {
-      formErrors.phoneNumber = "Phone number is required";
+      formErrors.phoneNumber = t("Phone number is required");
     } else if (!pattern.test(staffData.phoneNumber)) {
-      formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
+      formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
     }
 
     if (!staffData.joinDate)
-      formErrors.joinDate = "Staff joining date is required";
-    if (!staffData.salary) formErrors.salary = "salary is required";
-    if (!staffData.gender) formErrors.gender = "Gender is required";
+      formErrors.joinDate = t("Staff joining date is required");
+    if (!staffData.salary) formErrors.salary = t("salary is required");
+    if (!staffData.gender) formErrors.gender = t("Gender is required");
     if (!staffData.description)
-      formErrors.description = "Description is required";
+      formErrors.description = t("Description is required");
 
     return formErrors;
   };
@@ -131,18 +132,18 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                                   navigate("/staff");
                                 }}
                               >
-                                Staff
+                                {t("Staff")}
                               </button>
                             </li>
                             <li
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              Edit Staff
+                              {t("Edit Staff")}
                             </li>
                           </ol>
                         </nav>
-                        <h3>Staff</h3>
+                        <h3>{t("Staff")}</h3>
                       </div>
                     </div>
                   </div>
@@ -157,6 +158,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                                 ? URL.createObjectURL(selectImage)
                                 : `http://localhost:8080${staffData.profileImage}`
                             }
+                            alt=""
                           />
                         </div>
                         <div className="p-image ml-auto">
@@ -175,14 +177,14 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           />
                         </div>
                       </div>
-                      <h6>Profile Image</h6>
+                      <h6>{t("Profile Image")}</h6>
                     </div>
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
-                          Full Name{" "}
+                        {t("Full Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -202,7 +204,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="role" className="custom-form-label">
-                          Staff Position{" "}
+                        {t("Staff Position")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <select
@@ -211,13 +213,13 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           value={staffData.staffPosition}
                           onChange={handleChange}
                         >
-                          <option value="Principle">Principle</option>
-                          <option value="Vice principle">Vice princeple</option>
-                          <option value="Accountent">Accountent</option>
-                          <option value="Senior Teacher">Senior Teacher</option>
-                          <option value="Teacher">Teacher</option>
-                          <option value="Other Staff">Other Staff</option>
-                          <option value="Security">Security</option>
+                          <option value="Principle">{t("Principle")}</option>
+                          <option value="Vice principle">{t("Vice princeple")}</option>
+                          <option value="Accountent">{t("Accountent")}</option>
+                          <option value="Senior Teacher">{t("Senior Teacher")}</option>
+                          <option value="Teacher">{t("Teacher")}</option>
+                          <option value="Other Staff">{t("Other Staff")}</option>
+                          <option value="Security">{t("Security")}</option>
                         </select>
                         {errors.staffPosition && (
                           <p className="required-validation">
@@ -227,7 +229,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="email" className="custom-form-label">
-                          Email <span className="required-validation">*</span>
+                        {t("Email")} <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
@@ -247,7 +249,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           htmlFor="contact-number"
                           className="custom-form-label"
                         >
-                          Phone Number{" "}
+                          {t("Phone Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -268,7 +270,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       <div className="col-md-4">
                         <label htmlFor="joindate" className="custom-form-label">
                           {" "}
-                          Join Date
+                          {t("Join Date")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -287,7 +289,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="salary" className="custom-form-label">
-                          Salary <span className="required-validation">*</span>
+                        {t("Salary")} <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
@@ -304,7 +306,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-8">
                         <label htmlFor="gender" className="custom-form-label">
-                          Gender <span className="required-validation">*</span>
+                        {t("Gender")} <span className="required-validation">*</span>
                         </label>
                         <span className="d-flex">
                           <div className="containGender">
@@ -317,7 +319,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                               onChange={handleChange}
                             />
                             <label className="ps-1" htmlFor="male">
-                              Male
+                            {t("Male")}
                             </label>
                           </div>
                           <div className="containGender">
@@ -330,7 +332,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                               onChange={handleChange}
                             />
                             <label className="ps-1" htmlFor="female">
-                              Female
+                            {t("Female")}
                             </label>
                           </div>
                           <div className="containGender">
@@ -343,7 +345,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                               onChange={handleChange}
                             />
                             <label className="ps-1" htmlFor="other">
-                              Other
+                            {t("Other")}
                             </label>
                           </div>
                         </span>
@@ -357,7 +359,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           htmlFor="description"
                           className="custom-form-label"
                         >
-                          Description
+                          {t("Description")}
                         </label>
                         <textarea
                           type="text"
@@ -380,7 +382,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           onClick={handleSubmit}
                           className="custom-btn col-md-4"
                         >
-                          Update
+                          {t("Update")}
                         </button>
                       </div>
                     </form>

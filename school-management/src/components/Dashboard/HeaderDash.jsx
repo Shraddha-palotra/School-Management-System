@@ -7,7 +7,7 @@ import Axios from "axios";
 
 function HeaderDash({ isOpen, setIsOpen }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [loggedUser, setLoggedUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useState({});
   console.log("logged user", loggedUser);
   const [languageDropdwonOpen, setLanguageDropdwonOpen] = useState(false);
   const [error, setError] = useState(null);
@@ -22,12 +22,17 @@ function HeaderDash({ isOpen, setIsOpen }) {
         }
       })
         .then((response) => {
-          setLoggedUser({...loggedUser,user:response.data?.data});
+          setLoggedUser(response.data?.data);
+          console.log("User data fetched:", response.data);
         })
         .catch((err) => {
+          if (err.response?.status === 401) {
+            console.error("Token expired or invalid. Redirecting to login.");
+          }
           setError(err.response?.data?.message || "An error occurred");
           console.log("Error fetching user data: ", err);
         });
+        
     } else {
       const userString = localStorage.getItem("user");
       if (userString) {
@@ -157,7 +162,7 @@ function HeaderDash({ isOpen, setIsOpen }) {
                           />
                           <h6>
                             {/* {loggedUser ? loggedUser.name : " "} */}
-                            {loggedUser?.user?.name}
+                            {loggedUser?.name}
                             <span>{t("Admin")}</span>
                           </h6>
                         </button>
@@ -184,7 +189,6 @@ function HeaderDash({ isOpen, setIsOpen }) {
                           >
                             {t("Log Out")}
                           </Link>
-                          {/* <LogoutButton/> */}
                         </li>
                       </ul>
                     </div>

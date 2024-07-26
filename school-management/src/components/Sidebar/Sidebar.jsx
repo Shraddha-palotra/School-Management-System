@@ -6,9 +6,11 @@ import fee from "../assets/icons/fee.png";
 import staff from "../assets/icons/staff.svg";
 import small_logo from "../assets/images/small_logo.png";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Sidebar({ isOpen }) {
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   return (
     <>
@@ -27,7 +29,7 @@ function Sidebar({ isOpen }) {
           >
             <button>
               <img src={dashboard} alt="" />
-              <span>Dashboard</span>
+              <span>{t("Dashboard")}</span>
             </button>
           </div>
           <div
@@ -45,7 +47,7 @@ function Sidebar({ isOpen }) {
           >
             <button>
               <img src={student} alt="" />
-              <span>Student's </span>
+              <span>{t("Student's")} </span>
             </button>
           </div>
           <div
@@ -63,7 +65,7 @@ function Sidebar({ isOpen }) {
           >
             <button>
               <img src={staff} alt="" />
-              <span>Staff </span>
+              <span>{t("Staff")}</span>
             </button>
           </div>
           <div
@@ -81,7 +83,7 @@ function Sidebar({ isOpen }) {
           >
             <button>
               <img src={fee} alt="" />
-              <span>Fee </span>
+              <span>{t("Fee")}</span>
             </button>
           </div>
         </div>

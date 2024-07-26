@@ -9,9 +9,12 @@ import view from "../assets/icons/view.svg";
 import { useNavigate } from "react-router-dom";
 import Axios  from "axios";
 import DeleteStaff from "./DeleteStaff";
+import { useTranslation } from "react-i18next";
 
 function Staff({isOpen, setIsOpen}) {
   const navigate = useNavigate();
+  const {t} = useTranslation();
+
 
   const [staff, setStaff] = useState([]);
   const [ searchStaff , setSearchStaff ] = useState("");
@@ -65,7 +68,7 @@ function Staff({isOpen, setIsOpen}) {
                   <div className="col-lg-4">
                     <div className="greetingsText">
                       <div className="greetingsText-heading">
-                        <h3>Staff</h3>
+                        <h3>{t("Staff")}</h3>
                       </div>
                     </div>
                   </div>
@@ -81,7 +84,7 @@ function Staff({isOpen, setIsOpen}) {
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder="Search Staff"
+                      placeholder={t("Search Staff")}
                       value={searchStaff}
                       onChange={(e) => setSearchStaff(e.target.value)}
                     />
@@ -93,14 +96,14 @@ function Staff({isOpen, setIsOpen}) {
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Staff Name</th>
-                            <th scope="col">Staff Position</th>
-                            <th scope="col">Join Date</th>
-                            <th scope="col">Gender</th>
-                            <th scope="col">Salary</th>
-                            <th scope="col">Contact</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">{t("Id")}</th>
+                            <th scope="col">{t("Staff Name")}</th>
+                            <th scope="col">{t("Staff Position")}</th>
+                            <th scope="col">{t("Join Date")}</th>
+                            <th scope="col">{t("Gender")}</th>
+                            <th scope="col">{t("Salary")}</th>
+                            <th scope="col">{t("Contact")}</th>
+                            <th scope="col">{t("Action")}</th>
                           </tr>
                         </thead>
                         <tbody>

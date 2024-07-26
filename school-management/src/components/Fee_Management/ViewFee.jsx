@@ -6,11 +6,13 @@ import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import dummyprofile from '../assets/images/dummyProfile.png'
 import camera from "../assets/images/camera.png";
+import { useTranslation } from 'react-i18next';
 
 function ViewFee({isOpen,setIsOpen}) {
 
      const navigate = useNavigate();
      const location = useLocation();
+     const {t} = useTranslation();
 
      const [ feeData, setFeeData] = useState(location.state.items);
      console.log(feeData);
@@ -36,18 +38,18 @@ function ViewFee({isOpen,setIsOpen}) {
                                   navigate("/fee");
                                 }}
                               >
-                                Fee's
+                                {t("Fee")}
                               </button>
                             </li>
                             <li
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              View Fee
+                              {t("View Fee")}
                             </li>
                           </ol>
                         </nav>
-                        <h3>Fee's</h3>
+                        <h3>{t("Fee")}</h3>
                       </div>
                     </div>
                   </div>
@@ -74,14 +76,14 @@ function ViewFee({isOpen,setIsOpen}) {
                           />
                         </div>
                       </div>
-                      <h6>Profile Image</h6>
+                      <h6>{t("Profile Image")}</h6>
                     </div>
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
                     <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          Roll Number{" "}
+                          {t("Roll Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -95,7 +97,7 @@ function ViewFee({isOpen,setIsOpen}) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
-                          Student Name{" "}
+                          {t("Student Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -115,7 +117,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="fathername"
                           className="custom-form-label"
                         >
-                          Father Name{" "}
+                          {t("Father Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -135,7 +137,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="school-class"
                           className="custom-form-label"
                         >
-                          Class <span className="required-validation">*</span>
+                          {t("Class")} <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
@@ -152,7 +154,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="class-section"
                           className="custom-form-label"
                         >
-                          Section <span className="required-validation">*</span>
+                           {t("Section")}<span className="required-validation">*</span>
                         </label>
                         <select
                           className="custom-input-field"
@@ -160,7 +162,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           value={feeData.section}
                           disabled
                         >
-                          <option>Section</option>
+                          <option>{t("Section")}</option>
                           <option value="A">A</option>
                           <option value="B">B</option>
                           <option value="C">C</option>
@@ -172,7 +174,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="quarterly"
                           className="custom-form-label"
                         >
-                          Enter Quarterly Fee{" "}
+                          {t("Quarterly fee")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -187,7 +189,7 @@ function ViewFee({isOpen,setIsOpen}) {
                       </div>
                       <div className="col-md-12">
                         <label htmlFor="status" className="custom-form-label">
-                          Status <span className="required-validation">*</span>
+                          {t("Status")} <span className="required-validation">*</span>
                         </label>
                         <span className="d-flex">
                           <div className="containGender">
@@ -200,7 +202,7 @@ function ViewFee({isOpen,setIsOpen}) {
                               disabled
                             />
                             <label className="ps-1" htmlFor="paid">
-                              Paid
+                              {t("Paid")}
                             </label>
                           </div>
                           <div className="containGender">
@@ -213,7 +215,7 @@ function ViewFee({isOpen,setIsOpen}) {
                               disabled
                             />
                             <label className="ps-1" htmlFor="due">
-                              Due
+                            {t("Due")}
                             </label>
                           </div>
                         </span>
@@ -224,7 +226,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="description"
                           className="custom-form-label"
                         >
-                          Description <span className="required-validation">*</span>
+                          {t("Description")} <span className="required-validation">*</span>
                         </label>
                         <textarea
                           type="text"

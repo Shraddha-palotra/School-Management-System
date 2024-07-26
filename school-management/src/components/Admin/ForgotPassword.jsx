@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
+  const {t} = useTranslation();
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({})
   const navigate = useNavigate();
@@ -15,9 +17,9 @@ function ForgotPassword() {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = "Email is required";
+      formErrors.email = t("Email is required");
     } else if (!emailPattern.test(email)) {
-      formErrors.email = "Please enter a valid email address";
+      formErrors.email = t("Please enter a valid email address");
     }
 
     if (Object.keys(formErrors).length > 0) {
@@ -61,8 +63,8 @@ function ForgotPassword() {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3>Forgot Password</h3>
-                  <p>Enter the email address associated with your account.</p>
+                  <h3>{t("Forgot Password")}</h3>
+                  <p>{t("Enter the email address associated with your account.")}</p>
                 </div>
                 <div className="form">
                   <form
@@ -71,7 +73,7 @@ function ForgotPassword() {
                   >
                     <div className="col-md-12">
                       <label htmlFor="email" className="custom-form-label">
-                        Email
+                        {t("Email")}
                       </label>
                       <input
                         className="custom-input-field"
@@ -91,7 +93,7 @@ function ForgotPassword() {
                     
                         className="custom-btn"
                       >
-                        Continue
+                        {t("Continue")}
                       </button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
@@ -102,7 +104,7 @@ function ForgotPassword() {
                         }}
                         className="text-primary"
                       >
-                        Back
+                        {t("Back")}
                       </span>
                     </p>
                   </form>

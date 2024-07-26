@@ -9,7 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
-function Change_password({ isOpen, setIsOpen }) {
+function ChangePassword({ isOpen, setIsOpen }) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -63,13 +63,25 @@ function Change_password({ isOpen, setIsOpen }) {
     if (Object.keys(formErrors).length > 0) {
       return; 
     }
+     
+    const userJson = localStorage.getItem("user");
+    if (!userJson) {
+      toast.error("User not found. Please log in again.");
+      return;
+    }
 
-     // Check if user is in localStorage
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (!user) {
-          toast.error("User not found. Please log in again.");
-          return;
-     }
+    let user;
+    try {
+      user = JSON.parse(userJson);
+    } catch (error) {
+      toast.error("User data is corrupted. Please log in again.");
+      return;
+    }
+
+    if (!user || !user._id) {
+      toast.error("Invalid user data. Please log in again.");
+      return;
+    }
     
 
      const userId = user._id;
@@ -274,4 +286,4 @@ function Change_password({ isOpen, setIsOpen }) {
   );
 }
 
-export default Change_password;
+export default ChangePassword;

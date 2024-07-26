@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "./HeaderDash";
-import {jwtDecode} from 'jwt-decode';
+
 
 function Profile({ items, isOpen, setIsOpen }) { 
   const [profileImage, setProfileImage] = useState("");
@@ -33,19 +33,21 @@ function Profile({ items, isOpen, setIsOpen }) {
         }
       });
       if (response.status === 200 && response.data) {
-        setLoggedAdmin({...loggedAdmin,user:response.data});
+        setLoggedAdmin(response.data.data);
+        console.log("User data fetched:", response.data.data);
+          // ...loggedAdmin,user:response.datas
       } else {
         console.error("Failed to fetch user data");
       }
     } catch (error) {
       console.error(error);
     } 
-  };
+  }; 
   
   const handleChange = (e) => {
-    console.log(handleChange);
+    // console.log(handleChange);
     const { name, value } = e.target;
-    console.log("name is", name);
+    console.log("name is", name);  
     console.log("value is", value);
     setLoggedAdmin((prevData) => ({
       ...prevData,
@@ -94,12 +96,14 @@ function Profile({ items, isOpen, setIsOpen }) {
             JSON.stringify(res.data.updatedProfileUser)
           );
           toast.success("Successfully update prodile");
+          setLoggedAdmin(res.data.updatedProfileUser); 
           setTimeout(() => {
             navigate("/dashboard", { state: { items } });
           }, 1000);
         }
       } catch (error) {
         console.log(error);
+        toast.error("Failed to update profile");
       }
     };
     fun();

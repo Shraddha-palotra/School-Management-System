@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Sidebar from '../Sidebar/Sidebar'
 import HeaderDash from './HeaderDash'
 import  Axios  from 'axios';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -10,6 +11,7 @@ function Dashboard({isOpen, setIsOpen}) {
   const [totalStudent, setTotalStudent ] = useState([]);
   const [totalStaff, setTotalStaff ] = useState([]);
   const [totalFee, setTotalFee] = useState([]);
+  const {t} = useTranslation();
   useEffect( () => {
     const fetchStudent = async (req, res) => {
       try {
@@ -82,7 +84,7 @@ fetchStudent();
               <div className="col-xxl-12">
                 <div className="greetingsText">
                   <div className="greetingsText-heading">
-                    <h3>Dashboard</h3>
+                    <h3>{t("Dashboard")}</h3>
                   </div>
                 </div>
               </div>
@@ -94,8 +96,8 @@ fetchStudent();
                     <div className="custom-card offlineEmployee">
                       <div className="left-data">
                         <div className="heading">
-                          <h2 className="count">Welcome</h2>
-                          <span>High school</span>
+                          <h2 className="count">{t("Welcome")}</h2>
+                          <span>{t("High school")}</span>
                         </div>
                       </div>
                     </div>
@@ -105,7 +107,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{totalStudent.length}</h2>
-                          <span>Total Student's</span>
+                          <span>{t("Total Student's")}</span>
                         </div>
                       </div>                     
                     </div>
@@ -115,7 +117,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{totalStaff.length}</h2>
-                          <span>Total Staff</span>
+                          <span>{t("Total Staff")}</span>
                         </div>
                       </div>
                     </div>
@@ -125,7 +127,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{totalFee.length}</h2>
-                          <span>Due Fee Amount's</span>
+                          <span>{t("Due Amount's")}</span>
                         </div>
                       </div>
                     </div>

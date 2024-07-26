@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import camera from "../assets/images/camera.png";
-import { ToastContainer,toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import Axios  from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Axios from "axios";
+import { useTranslation } from "react-i18next";
 
-function AddStaff({isOpen,setIsOpen}) {
-  
-
+function AddStaff({ isOpen, setIsOpen }) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [staffName, setStaffName] = useState("");
@@ -26,105 +26,110 @@ function AddStaff({isOpen,setIsOpen}) {
 
   const handleImageChange = (e) => {
     setProfileImage(e.target.files[0]);
-  }
-   
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
 
     console.log(handleSubmit);
     console.log(staffName);
     console.log(staffPosition);
-    console.log(email)
+    console.log(email);
     console.log(phoneNumber);
     console.log(joinDate);
     console.log(salary);
     console.log(description);
     console.log(gender);
 
-
     let formErrors = {};
-    if (!profileImage) formErrors.profileImage = "Please upload image";
-  
-    if (!staffName) formErrors.staffName = "Staff name is required";
+    if (!profileImage) formErrors.profileImage = t("Please upload image");
 
-   if (!staffPosition) formErrors.staffPosition = "Staff position  is required";
+    if (!staffName) formErrors.staffName = t("Staff name is required");
 
-   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!staffPosition)
+      formErrors.staffPosition = t("Staff position  is required");
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = "Email is required"
-    }else if (!emailPattern.test(email)) {
-      formErrors.email = "Please enter a valid email address";
+      formErrors.email = t("Email is required");
+    } else if (!emailPattern.test(email)) {
+      formErrors.email = t("Please enter a valid email address");
     }
 
-   const Pattern = /^\d{10}$/;
+    const Pattern = /^\d{10}$/;
 
-   if (!phoneNumber) {
-     formErrors.phoneNumber = "Phone number is required";
-   } else if (!Pattern.test(phoneNumber)) {
-     formErrors.phoneNumber = "Phone number should contain exactly 10 digits";
-   }
-   
-
-   if (!joinDate) formErrors.joinDate = "Register join of date  is required";
-
-   if (!salary) formErrors.salary = "Salary is required";
-
-   if (!gender) formErrors.gender = "Gender is required";
-
-   if (!description) formErrors.description = "Description is required";
-
-   setErrors(formErrors);  
-   
-   const formData = new FormData();
-   formData.append("staffName", staffName);
-   formData.append("staffPosition", staffPosition);
-   formData.append("email",email);
-   formData.append("phoneNumber", phoneNumber);
-   formData.append("joinDate", joinDate);
-   formData.append("salary", salary);
-   formData.append("gender", gender);
-   formData.append("description", description);
-   
-   if (profileImage) formData.append('profileImage', profileImage);
-   console.log("fromdata is ",formData)
-
-  Axios.post("http://localhost:8080/staff/addstaff", formData,{
-       
-    // staffName,
-    // staffPosition,
-    // phoneNumber,
-    // joinDate,
-    // salary,
-    // gender,
-    // description
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
-  })
-  .then((response) => {
-    console.log(response);
-    console.log("response is",response.data);
-    if (response.data.status) {
-      console.log("insdie whne status true");
-      toast.success("Successfully added new staff")
-      setTimeout(()=>{
-        navigate('/staff')
-      },1000)
+    if (!phoneNumber) {
+      formErrors.phoneNumber = t("Phone number is required");
+    } else if (!Pattern.test(phoneNumber)) {
+      formErrors.phoneNumber = t(
+        "Phone number should contain exactly 10 digits"
+      );
     }
-  })
-  .catch((err) => {
-    console.log(err);
-    setErrors({[err.response.data.field] : err.response.data.msg})
-  });
 
-};
+    if (!joinDate)
+      formErrors.joinDate = t("Register join of date  is required");
+
+    if (!salary) formErrors.salary = t("Salary is required");
+
+    if (!gender) formErrors.gender = t("Gender is required");
+
+    if (!description) formErrors.description = t("Description is required");
+
+    setErrors(formErrors);
+
+    if (Object.keys(formErrors).length === 0) {
+      const formData = new FormData();
+      formData.append("staffName", staffName);
+      formData.append("staffPosition", staffPosition);
+      formData.append("email", email);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("joinDate", joinDate);
+      formData.append("salary", salary);
+      formData.append("gender", gender);
+      formData.append("description", description);
+
+      if (profileImage) formData.append("profileImage", profileImage);
+      console.log("fromdata is ", formData);
+
+      try {
+        const response = Axios.post(
+          "http://localhost:8080/staff/addstaff",
+          formData,
+          {
+            // staffName,
+            // staffPosition,
+            // phoneNumber,
+            // joinDate,
+            // salary,
+            // gender,
+            // description
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.data.status) {
+          toast.success("Successfully added new staff");
+          setTimeout(() => {
+            navigate("/staff");
+          }, 1000);
+        }
+      } catch (err) {
+        console.error(err);
+        if (err.response && err.response.data) {
+          setErrors({ [err.response.data.field]: err.response.data.msg });
+        } else {
+          toast.error("An unexpected error occurred");
+        }
+      }
+    }
+  };
 
   return (
     <>
-    <ToastContainer/>
+      <ToastContainer />
       <div className="wapper">
-      <Sidebar isOpen={isOpen} />
+        <Sidebar isOpen={isOpen} />
         <div className={`main-container ${isOpen && "main-content_large"}`}>
           <HeaderDash isOpen={isOpen} setIsOpen={setIsOpen} />
           <div className="content">
@@ -143,18 +148,18 @@ function AddStaff({isOpen,setIsOpen}) {
                                     navigate("/staff");
                                   }}
                                 >
-                                  Staff
+                                  {t("Staff")}
                                 </button>
                               </li>
                               <li
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                Add Staff
+                                {t("Add Staff")}
                               </li>
                             </ol>
                           </nav>
-                          <h3>Staff</h3>
+                          <h3>{t("Staff")}</h3>
                         </div>
                       </div>
                     </div>
@@ -162,7 +167,14 @@ function AddStaff({isOpen,setIsOpen}) {
                       <div className="addProjectlogo">
                         <div className="upload-img-box">
                           <div className="circle">
-                          <img src={profileImage ? URL.createObjectURL(profileImage) : `http://localhost:8080${profileImage}`} alt="" />
+                            <img
+                              src={
+                                profileImage
+                                  ? URL.createObjectURL(profileImage)
+                                  : `http://localhost:8080${profileImage}`
+                              }
+                              alt=""
+                            />
                           </div>
                           <div className="p-image ml-auto">
                             <label htmlFor="logoSelect">
@@ -181,68 +193,87 @@ function AddStaff({isOpen,setIsOpen}) {
                           </div>
                         </div>
                         {errors.profileImage && (
-                          <p className="required-validation"> 
-                          {errors.profileImage}</p>
+                          <p className="required-validation">
+                            {errors.profileImage}
+                          </p>
                         )}
-                        <h6>Profile Image</h6>
+                        <h6>{t("Profile Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
                         <div className="col-md-4">
-                          <label htmlFor="fullname" className="custom-form-label">
-                            Full Name{" "}
+                          <label
+                            htmlFor="fullname"
+                            className="custom-form-label"
+                          >
+                            {t("Full Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            placeholder="Enter Name"
+                            placeholder={t("Enter Name")}
                             value={staffName}
                             onChange={(e) => setStaffName(e.target.value)}
                           />
-                           {errors.staffName && (
-                            <p className="required-validation">{errors.staffName}</p>
+                          {errors.staffName && (
+                            <p className="required-validation">
+                              {errors.staffName}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="role" className="custom-form-label">
-                            Staff Position{" "}
+                            {t("Staff Position")}{" "}
                             <span className="required-validation">*</span>
                           </label>
-                          <select className="custom-input-field"
+                          <select
+                            className="custom-input-field"
                             value={staffPosition}
                             onChange={(e) => setStaffPosition(e.target.value)}
                           >
-                            <option value="">Position</option>
-                            <option value="Principle">Principle</option>
-                            <option value="Vice principle">Vice princeple</option>
-                            <option value="Accountent">Accountent</option>
-                            <option value="Senior Teacher">Senior Teacher</option>
-                            <option value="Teacher">Teacher</option>
-                            <option value="Other Staff">Other Staff</option>
-                            <option value="Security">Security</option>
+                            <option value="">{t("Position")}</option>
+                            <option value="Principle">{t("Principle")}</option>
+                            <option value="Vice principle">
+                              {t("Vice princeple")}
+                            </option>
+                            <option value="Accountent">
+                              {t("Accountent")}
+                            </option>
+                            <option value="Senior Teacher">
+                              {t("Senior Teacher")}
+                            </option>
+                            <option value="Teacher">{t("Teacher")}</option>
+                            <option value="Other Staff">
+                              {t("Other Staff")}
+                            </option>
+                            <option value="Security">{t("Security")}</option>
                           </select>
                           {errors.staffPosition && (
-                            <p className="required-validation">{errors.staffPosition}</p>
+                            <p className="required-validation">
+                              {errors.staffPosition}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="email" className="custom-form-label">
-                            Email {" "}
+                            {t("Email")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="email"
-                            placeholder="Enter Email"
+                            placeholder={t("Enter Email")}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                           />
-                           {errors.email && (
-                            <p className="required-validation">{errors.email}</p>
+                          {errors.email && (
+                            <p className="required-validation">
+                              {errors.email}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-4">
@@ -250,25 +281,30 @@ function AddStaff({isOpen,setIsOpen}) {
                             htmlFor="contact-number"
                             className="custom-form-label"
                           >
-                            Phone Number{" "}
+                            {t("Phone Number")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="contact-number"
-                            placeholder="Enter Contect Nubmer"
+                            placeholder={t("Enter Contact Nubmer")}
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                           />
-                           {errors.phoneNumber && (
-                            <p className="required-validation">{errors.phoneNumber}</p>
+                          {errors.phoneNumber && (
+                            <p className="required-validation">
+                              {errors.phoneNumber}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-4">
-                          <label htmlFor="joindate" className="custom-form-label">
+                          <label
+                            htmlFor="joindate"
+                            className="custom-form-label"
+                          >
                             {" "}
-                            Join Date
+                            {t("Join Date")}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -278,30 +314,34 @@ function AddStaff({isOpen,setIsOpen}) {
                             value={joinDate}
                             onChange={(e) => setJoinDate(e.target.value)}
                           />
-                           {errors.joinDate && (
-                            <p className="required-validation">{errors.joinDate}</p>
+                          {errors.joinDate && (
+                            <p className="required-validation">
+                              {errors.joinDate}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="salary" className="custom-form-label">
-                            Salary{" "}
+                            {t("Salary")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="salary"
-                            placeholder="Enetr Salary"
+                            placeholder={t("Enetr Salary")}
                             value={salary}
                             onChange={(e) => setSalary(e.target.value)}
                           />
-                           {errors.salary && (
-                            <p className="required-validation">{errors.salary}</p>
+                          {errors.salary && (
+                            <p className="required-validation">
+                              {errors.salary}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-8">
                           <label htmlFor="gender" className="custom-form-label">
-                            Gender{" "}
+                            {t("Gender")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <span className="d-flex">
@@ -315,7 +355,7 @@ function AddStaff({isOpen,setIsOpen}) {
                                 onChange={(e) => setGender(e.target.value)}
                               />
                               <label className="ps-1" htmlFor="male">
-                                Male
+                                {t("Male")}
                               </label>
                             </div>
                             <div className="containGender">
@@ -328,7 +368,7 @@ function AddStaff({isOpen,setIsOpen}) {
                                 onChange={(e) => setGender(e.target.value)}
                               />
                               <label className="ps-1" htmlFor="female">
-                                Female
+                                {t("Female")}
                               </label>
                             </div>
                             <div className="containGender">
@@ -341,12 +381,14 @@ function AddStaff({isOpen,setIsOpen}) {
                                 onChange={(e) => setGender(e.target.value)}
                               />
                               <label className="ps-1" htmlFor="other">
-                                Other
+                                {t("Other")}
                               </label>
                             </div>
                           </span>
                           {errors.gender && (
-                            <p className="required-validation">{errors.gender}</p>
+                            <p className="required-validation">
+                              {errors.gender}
+                            </p>
                           )}
                         </div>
 
@@ -355,28 +397,29 @@ function AddStaff({isOpen,setIsOpen}) {
                             htmlFor="description"
                             className="custom-form-label"
                           >
-                            Description
+                            {t("Description")}
                           </label>
                           <textarea
                             type="text"
                             className="custom-input-field"
                             id="description"
-                            placeholder="Enter Description"
+                            placeholder={t("Enter Description")}
                             rows="6"
                             value={description}
                             onChange={(e) => setDiscription(e.target.value)}
                           ></textarea>
-                           {errors.description && (
-                            <p className="required-validation">{errors.description}</p>
+                          {errors.description && (
+                            <p className="required-validation">
+                              {errors.description}
+                            </p>
                           )}
                         </div>
                         <div className="col-md-12 mt-4">
                           <button
-                          onClick={handleSubmit}
-                          className="custom-btn col-md-4"
-                          
+                            onClick={handleSubmit}
+                            className="custom-btn col-md-4"
                           >
-                            Add Staff
+                            {t("Add Staff")}
                           </button>
                         </div>
                       </form>

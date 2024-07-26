@@ -6,8 +6,10 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function Login() {
+  const {t} = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({})
@@ -33,15 +35,15 @@ function Login() {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = "Email is required"
+      formErrors.email = t("Email is required");
     }else if (!emailPattern.test(email)) {
-      formErrors.email = "Please enter a valid email address";
+      formErrors.email = t("Please enter a valid email address");
     }
 
     if (!password) {
-      formErrors.password = "Password is required";
+      formErrors.password = t("Password is required");
     }else if (password.length < 8) {
-      formErrors.password = "Password should be at least 8 characters";
+      formErrors.password = t("Password should be at least 8 characters");
     }
 
     setErrors(formErrors);
@@ -97,20 +99,20 @@ function Login() {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3>Login</h3>
-                  <p>Hey, Enter your details to get sign in to your account</p>
+                  <h3>{t("Login")}</h3>
+                  <p>{t("Hey, Enter your details to get sign in to your account")}</p>
                 </div>
                 <div className="form">
                   <form className="row g-2" onSubmit={handleLoginSubmit}>
                     <div className="col-md-12">
                       <label htmlFor="email" className="custom-form-label">
-                        Email
+                        {t("Email")}
                       </label>
                       <input
                         className="custom-input-field"
                         type="email"
                         id="email"
-                        placeholder="Enter Email"
+                        placeholder={t("Enter Email")}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}  
                       />
@@ -120,7 +122,7 @@ function Login() {
                     </div>
                     <div className="col-md-12">
                       <label htmlFor="password" className="custom-form-label">
-                        Password
+                        {t("Password")}
                       </label>
 
                       <div className="possionIconInput">
@@ -135,7 +137,7 @@ function Login() {
                           className="custom-input-field"
                           type={passwordToggle ? "text" : "password"}
                           id="password"
-                          placeholder="Enter Password"
+                          placeholder={t("Enter Password")}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                         />
@@ -162,7 +164,7 @@ function Login() {
                           htmlFor="flexCheckChecked"
                           
                         >
-                          Remember Me
+                          {t("Remember Me")}
                         </label>
                       </div>
                       <span
@@ -171,24 +173,24 @@ function Login() {
                         }}
                         className="password-btn"
                       >
-                        Forgot Password?
+                        {t("Forgot Password?")}
                       </span>
                     </div>
                     <div className="col-md-12 mt-4">
                       <button
                         className="custom-btn">
-                        Login
+                        {t("Login")}
                       </button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
-                      Don't have an Account ? &nbsp;
+                      {t("Don't have an Account ?")} &nbsp;
                       <span
                         onClick={() => {
                           navigate("/");
                         }}
                         className="text-primary"
                       >
-                        SignUp
+                        {t("SignUp")}
                       </span>
                     </p>
                   </form>

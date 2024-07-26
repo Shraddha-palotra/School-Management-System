@@ -9,9 +9,11 @@ import view from "../assets/icons/view.svg";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
 import DeleteFee from "./DeleteFee";
+import { useTranslation } from "react-i18next";
 
 function Fee({isOpen, setIsOpen}) {
   
+  const{t} = useTranslation();
   const navigate = useNavigate();
   const [ fee, setFee] = useState([]);
 
@@ -71,7 +73,7 @@ const filteredFeeData = fee.filter(
                   <div className="col-lg-4">
                     <div className="greetingsText">
                       <div className="greetingsText-heading">
-                        <h3>Fee</h3>
+                        <h3>{t("Fee")}</h3>
                       </div>
                     </div>
                   </div>
@@ -87,7 +89,7 @@ const filteredFeeData = fee.filter(
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder="Search Fee's Student"
+                      placeholder={t("Search Student")}
                       value={searchFeeData}
                       onChange={(e) => setSearchFeeData(e.target.value)}
                     />
@@ -99,13 +101,13 @@ const filteredFeeData = fee.filter(
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">Roll Number</th>
-                            <th scope="col">Student Name</th>
-                            <th scope="col">Father's Name</th>
-                            <th scope="col">Class</th>
-                            <th scope="col">Quaterly Fee</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">{t("Roll Number")}</th>
+                            <th scope="col">{t("Student Name")}</th>
+                            <th scope="col">{t("Father Name")}</th>
+                            <th scope="col">{t("Class")}</th>
+                            <th scope="col">{t("Quaterly Fee")}</th>
+                            <th scope="col">{t("Status")}</th>
+                            <th scope="col">{t("Action")}</th>
                           </tr>
                         </thead>
                         <tbody>

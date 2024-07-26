@@ -119,7 +119,7 @@ router.post("/verify-otp", async (req, res) => {
     // Check if OTP has expired
     if (otpRecord.expiresAt < new Date()) {
       console.error("Error: OTP has expired");
-      return res.status(400).json({ status: false, message: "OTP has expired",data:null });
+      return res.status(400).json({ status: false, message: "OTP has expired",data:null});
     }
 
 
@@ -374,13 +374,13 @@ router.put("/updateprofile/:id", upload.single('profileImage'), async (req, res)
   }
   try {
     const updatedProfileUser = await AnotherModel.findByIdAndUpdate(
-      id,
+     id,
       { $set: data },
       { new: true }
     );
     return res.json({
       status: true,
-      message: "Password changed successfully",
+      message: "Profile changed successfully",
       updatedProfileUser,
     });
   } catch (error) {

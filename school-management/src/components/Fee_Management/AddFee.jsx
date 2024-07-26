@@ -4,10 +4,11 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import camera from "../assets/images/camera.png";
 import Axios from "axios";
+import { useTranslation } from "react-i18next";
 
 function AddFee({ isOpen, setIsOpen }) {
+  const {t} = useTranslation();
   const navigate = useNavigate();
   const [rollNumber, setRollNumber] = useState("");
   const [studentName, setStudentName] = useState("");
@@ -38,21 +39,21 @@ function AddFee({ isOpen, setIsOpen }) {
 
     let formErrors = {};
 
-    if (!rollNumber) formErrors.rollNumber = "Roll Number is required";
+    if (!rollNumber) formErrors.rollNumber = t("Roll Number is required");
 
-    if (!studentName) formErrors.studentName = "Full name is required";
+    if (!studentName) formErrors.studentName = t("Full name is required");
 
-    if (!fatherName) formErrors.fatherName = "Full name is required";
+    if (!fatherName) formErrors.fatherName = t("Full name is required");
 
-    if (!classname) formErrors.classname = "Class is required";
+    if (!classname) formErrors.classname = t("Class is required");
 
-    if (!quaterlyFee) formErrors.quaterlyFee = "QuaterlyFee is required";
+    if (!quaterlyFee) formErrors.quaterlyFee = t("Quaterly Fee is required");
 
-    if (!feeStatus) formErrors.feeStatus = "Fee status is required";
+    if (!feeStatus) formErrors.feeStatus = t("Fee status is required");
 
-    if (!section) formErrors.section = "Section is required";
+    if (!section) formErrors.section = t("Section is required");
 
-    if (!description) formErrors.description = "Description is required";
+    if (!description) formErrors.description = t("Description is required");
 
     setErrors(formErrors);
 
@@ -109,18 +110,18 @@ function AddFee({ isOpen, setIsOpen }) {
                                   navigate("/fee");
                                 }}
                               >
-                                Fee's
+                               {t("Fee")}
                               </button>
                             </li>
                             <li
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              Add Fee
+                              {t("Add Fee")}
                             </li>
                           </ol>
                         </nav>
-                        <h3>Fee's</h3>
+                        <h3>{t("Fee")}</h3>
                       </div>
                     </div>
                   </div>
@@ -155,14 +156,14 @@ function AddFee({ isOpen, setIsOpen }) {
                     <form className="row g-3">
                     <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          Roll Number{" "}
+                        {t("Roll Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="rollnumber"
-                          placeholder="Enter Roll Number"
+                          placeholder={t("Enter Roll Number")}
                           value={rollNumber}
                           onChange={(e) =>setRollNumber(e.target.value)}
                         />
@@ -174,14 +175,14 @@ function AddFee({ isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
-                          Student Name{" "}
+                        {t("Student Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fullname"
-                          placeholder="Enter Name"
+                          placeholder={t("Enter Name")}
                           value={studentName}
                           onChange={(e) => setStudentName(e.target.value)}
                         />
@@ -197,14 +198,14 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="fathername"
                           className="custom-form-label"
                         >
-                          Father Name{" "}
+                          {t("Father Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fathername"
-                          placeholder="Enter Fahter's  Name"
+                          placeholder={t("Enter Father Name")}
                           value={fatherName}
                           onChange={(e) => setFatherName(e.target.value)}
                         />
@@ -220,13 +221,13 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="school-class"
                           className="custom-form-label"
                         >
-                          Class <span className="required-validation">*</span>
+                         {t("Class")}  <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="school-class"
-                          placeholder="Enter Class"
+                          placeholder={t("Enter Class")}
                           name="classname"
                           value={classname}
                           onChange={(e) => setClassname(e.target.value)}
@@ -242,14 +243,14 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="class-section"
                           className="custom-form-label"
                         >
-                          Section <span className="required-validation">*</span>
+                          {t("Section ")}<span className="required-validation">*</span>
                         </label>
                         <select
                           className="custom-input-field"
                           value={section}
                           onChange={(e) => setSection(e.target.value)}
                         >
-                          <option>Section</option>
+                          <option>{t("Section")}</option>
                           <option value="A">A</option>
                           <option value="B">B</option>
                           <option value="C">C</option>
@@ -266,14 +267,14 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="quarterly"
                           className="custom-form-label"
                         >
-                          Enter Quarterly Fee{" "}
+                          {t("Quarterly fee")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="quarterly"
-                          placeholder="Enter Quarterly fee"
+                          placeholder={t("Enter Quarterly fee")}
                           name="quaterlyFee"
                           value={quaterlyFee}
                           onChange={(e) => setQuaterlyFee(e.target.value)}
@@ -286,7 +287,7 @@ function AddFee({ isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-12">
                         <label htmlFor="status" className="custom-form-label">
-                          Status <span className="required-validation">*</span>
+                        {t("Status")} <span className="required-validation">*</span>
                         </label>
                         <span className="d-flex">
                           <div className="containGender">
@@ -299,7 +300,7 @@ function AddFee({ isOpen, setIsOpen }) {
                               onChange={(e) => setFeeStatus(e.target.value)}
                             />
                             <label className="ps-1" htmlFor="paid">
-                              Paid
+                            {t("Paid")}
                             </label>
                           </div>
                           <div className="containGender">
@@ -312,7 +313,7 @@ function AddFee({ isOpen, setIsOpen }) {
                               onChange={(e) => setFeeStatus(e.target.value)}
                             />
                             <label className="ps-1" htmlFor="due">
-                              Due
+                              {t("Due")}
                             </label>
                           </div>
                         </span>
@@ -328,13 +329,13 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="description"
                           className="custom-form-label"
                         >
-                          Description <span className="required-validation">*</span>
+                          {t("Description")} <span className="required-validation">*</span>
                         </label>
                         <textarea
                           type="text"
                           className="custom-input-field"
                           id="description"
-                          placeholder="Enter Description"
+                          placeholder={t("Enter Description")}
                           rows="6"
                           name="description"
                           value={description}
@@ -356,7 +357,7 @@ function AddFee({ isOpen, setIsOpen }) {
                           onClick={handleSubmit}
                           className="custom-btn col-md-4"
                         >
-                          Add Fee
+                          {t("Add Fee")}
                         </button>
                       </div>
                     </form>
