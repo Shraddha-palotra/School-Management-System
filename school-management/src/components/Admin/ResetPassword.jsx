@@ -4,13 +4,14 @@ import eye from "../assets/images/eye.png"
 import offEye from "../assets/images/offEye.png"
 import { useNavigate, useParams } from "react-router-dom";
 import  Axios   from "axios";
- 
+import { useTranslation } from "react-i18next";
+
 
 function ResetPassword() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState("")
-  
+  const {t} = useTranslation();
   const {token} = useParams()
   const navigate = useNavigate() 
 
@@ -37,15 +38,15 @@ function ResetPassword() {
     let formErrors = {};
 
     if (!password) {
-      formErrors.password = "Password is required";
+      formErrors.password = t("Password is required");
     }else if (password.length < 8) {
-      formErrors.password = "Password should be at least 8 characters";
+      formErrors.password = t("Password should be at least 8 characters");
     }
 
     if (!confirmPassword){
-      formErrors.confirmPassword = "Confirm password is required";
+      formErrors.confirmPassword = t("Confirm password is required");
     }else if (password !== confirmPassword) {
-      formErrors.confirmPassword = "Passwords do not match";
+      formErrors.confirmPassword = t("Passwords do not match");
     }
      setErrors(formErrors)
 
@@ -76,8 +77,8 @@ function ResetPassword() {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3>Reset Password</h3>
-                  <p>Please give some details to help fill out your account.</p>
+                  <h3>{t("Reset Password")}</h3>
+                  <p>{t("Please give some details to help fill out your account.")}</p>
                 </div>
                 <div className="form">
                   <form
@@ -89,7 +90,7 @@ function ResetPassword() {
                         htmlFor="newPassword"
                         className="custom-form-label"
                       >
-                        New Password
+                        {t("New Password")}
                       </label>
                       <div className="possionIconInput" >
                         <img 
@@ -104,7 +105,7 @@ function ResetPassword() {
                         className="custom-input-field"
                         type={passwordToggle.password ? "text" : "password"}
                         id="newPassword"
-                        placeholder="Enter New Password"
+                        placeholder={t("Enter New Password")}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}  
                       />
@@ -118,7 +119,7 @@ function ResetPassword() {
                         htmlFor="confirmPassword"
                         className="custom-form-label"
                       >
-                        Confirm Password
+                        {t("Confirm Password")}
                       </label>
                       <div className="possionIconInput" >
                         <img 
@@ -133,7 +134,7 @@ function ResetPassword() {
                         className="custom-input-field"
                         type={passwordToggle.confirmPassword ? "text" : "con"}
                         id="confirmPassword"
-                        placeholder="Enter Confirm Password"
+                        placeholder={t("Enter Confirm Password")}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                       />
@@ -143,7 +144,7 @@ function ResetPassword() {
                       )}
                     </div>
                     <div className="col-md-12 mt-4">
-                      <button className="custom-btn">Reset Password</button>
+                      <button className="custom-btn">{t("Reset Password")}</button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
                       {/* <Link to="/forgot_password">Back</Link> */}
@@ -153,7 +154,7 @@ function ResetPassword() {
                         }}
                         className="text-primary"
                       >
-                        Back
+                        {t("Back")}
                       </span>
                     </p>
                   </form>

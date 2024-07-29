@@ -28,8 +28,8 @@ function App() {
   const [isLogIn, setIsLogIn] = useState(false);
 
   useEffect(() => {
-    const loggedUder = localStorage.getItem("user");
-    if (loggedUder) {
+    const loggedUser = localStorage.getItem("user");
+    if (loggedUser) {
       setIsLogIn(true);
     } else {
       setIsLogIn(false);
@@ -38,7 +38,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={isLogIn ? (<Navigate to="/dashboard"/>) : ( <SignUp /> )  } />
+        <Route path="/" element={isLogIn ? <Navigate to="/dashboard"/> :  <SignUp />   } />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot_password" element={<ForgotPassword/>} />
         <Route path="/resetpassword/:token" element={<ResetPassword /> } />

@@ -7,11 +7,12 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useValidation } from "../../utils/validations";
 
 function AddStaff({ isOpen, setIsOpen }) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
+  const {StaffValidation } = useValidation();
   const [staffName, setStaffName] = useState("");
   const [staffPosition, setStaffPosition] = useState("");
   const [email, setEmail] = useState("");
@@ -31,64 +32,46 @@ function AddStaff({ isOpen, setIsOpen }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(handleSubmit);
-    console.log(staffName);
-    console.log(staffPosition);
-    console.log(email);
-    console.log(phoneNumber);
-    console.log(joinDate);
-    console.log(salary);
-    console.log(description);
-    console.log(gender);
+    // console.log(handleSubmit);
+    // console.log(staffName);
+    // console.log(staffPosition);
+    // console.log(email);
+    // console.log(phoneNumber);
+    // console.log(joinDate);
+    // console.log(salary);
+    // console.log(description);
+    // console.log(gender);
 
-    let formErrors = {};
-    if (!profileImage) formErrors.profileImage = t("Please upload image");
+    const formData = {
+      staffName,
+      staffPosition,
+      email,
+      phoneNumber,
+      joinDate,
+      salary,
+      gender,
+      description,
+      profileImage,
+    };
 
-    if (!staffName) formErrors.staffName = t("Staff name is required");
-
-    if (!staffPosition)
-      formErrors.staffPosition = t("Staff position  is required");
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email) {
-      formErrors.email = t("Email is required");
-    } else if (!emailPattern.test(email)) {
-      formErrors.email = t("Please enter a valid email address");
-    }
-
-    const Pattern = /^\d{10}$/;
-
-    if (!phoneNumber) {
-      formErrors.phoneNumber = t("Phone number is required");
-    } else if (!Pattern.test(phoneNumber)) {
-      formErrors.phoneNumber = t(
-        "Phone number should contain exactly 10 digits"
-      );
-    }
-
-    if (!joinDate)
-      formErrors.joinDate = t("Register join of date  is required");
-
-    if (!salary) formErrors.salary = t("Salary is required");
-
-    if (!gender) formErrors.gender = t("Gender is required");
-
-    if (!description) formErrors.description = t("Description is required");
-
+    // Validate form data
+    const formErrors = StaffValidation(formData);
     setErrors(formErrors);
 
-    if (Object.keys(formErrors).length === 0) {
-      const formData = new FormData();
-      formData.append("staffName", staffName);
-      formData.append("staffPosition", staffPosition);
-      formData.append("email", email);
-      formData.append("phoneNumber", phoneNumber);
-      formData.append("joinDate", joinDate);
-      formData.append("salary", salary);
-      formData.append("gender", gender);
-      formData.append("description", description);
+   
 
-      if (profileImage) formData.append("profileImage", profileImage);
+    if (Object.keys(formErrors).length === 0) {
+      const formDataToSend = new FormData();
+      formDataToSend.append("staffName", staffName);
+      formDataToSend.append("staffPosition", staffPosition);
+      formDataToSend.append("email", email);
+      formDataToSend.append("phoneNumber", phoneNumber);
+      formDataToSend.append("joinDate", joinDate);
+      formDataToSend.append("salary", salary);
+      formDataToSend.append("gender", gender);
+      formDataToSend.append("description", description);
+
+      if (profileImage) formDataToSend.append("profileImage", profileImage);
       console.log("fromdata is ", formData);
 
       try {

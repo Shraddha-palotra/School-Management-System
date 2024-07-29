@@ -8,6 +8,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from "path";
 import { fileURLToPath } from "url";
+import validationErrors from "../ERRORS/Validations.js";
 
 
 const router = express.Router();
@@ -28,19 +29,19 @@ router.post("/signup", async (req, res) => {
 
   // Validate required fields
   if (!name || !email || !phoneNumber || !password || !confirmPassword) {
-    return res.status(400).json({ msg: "Please enter all the fields" });
+    return res.status(400).json({ message: validationErrors.INVALID_EMAIL });
   }
 
   // Validate phone number length
   if (phoneNumber.length < 10 || phoneNumber.length > 10) {
-    return res.status(400).json({ msg: "Phone Number should be 10 digits" });
+    return res.status(400).json({ message: validationErrors.PHONENUMBER_TOO_SHORT });
   }
 
   // Validate password length
   if (password.length < 8) {
     return res
       .status(400)
-      .json({ msg: "Password should be atleast 8 characters" });
+      .json({ message: validationErrors.PASSWORD_TOO_SHORT });
   }
 
   //  Validate password match
@@ -48,7 +49,7 @@ router.post("/signup", async (req, res) => {
     console.log("password and confirmpassword do not match");
     return res.json({
       status: false,
-      message: "Password and ConsirmPassword do not match",
+      message: validationErrors.PASSWORD_MISMATCH,
     });
   }
 
@@ -56,13 +57,13 @@ router.post("/signup", async (req, res) => {
   const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!emailPattern.test(email)) {
-    return res.status(400).json({ msg: "Please enter a valid email address" });
+    return res.status(400).json({ message: validationErrors.INVALID_EMAIL });
   }
 
   const user = await AnotherModel.findOne({ email });
   // Check if user already exists
   if (user) {
-    return res.json({field:"email", message: "user already exsited" });
+    return res.json({field:"email", message: validationErrors.USER_ALREADY_REGISTERED });
   }
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -89,10 +90,10 @@ router.post("/signup", async (req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
-      return res.json({ message: "Error sending email" });
+      return res.json({ message: validationErrors.OTP_ERROR });
     } else {
       console.log("Email sent: " + info.response);
-      return res.json({ status: true, message: "OTP sent to your email" });
+      return res.json({ status: true, message: validationErrors.OTP_SENT });
     }
   });
 
@@ -100,7 +101,7 @@ router.post("/signup", async (req, res) => {
   console.error("Error in signup API:", error);
   return res
     .status(500)
-    .json({ status: false, message: "Internal Server Error" });
+    .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR });
 }
 });
 
@@ -112,14 +113,14 @@ router.post("/verify-otp", async (req, res) => {
 
     const otpRecord = await Otp.findOne({ email, otp });
     if (!otpRecord) {
-      return res.status(400).json({ status: false, message: "Invalid OTP" });
+      return res.status(400).json({ status: false, message: validationErrors.INVALID_OTP});
     }
 
   
     // Check if OTP has expired
     if (otpRecord.expiresAt < new Date()) {
       console.error("Error: OTP has expired");
-      return res.status(400).json({ status: false, message: "OTP has expired",data:null});
+      return res.status(400).json({ status: false, message: validationErrors.OTP_EXPIRED,data:null});
     }
 
 
@@ -141,20 +142,21 @@ router.post("/verify-otp", async (req, res) => {
     // return res.json({ status: true, message: "Registered successfully", token });
 
     const savedUser = newUser;
-    return res.json({ status: true, message: "Registered successfully",token});
+    return res.json({ status: true, message: validationErrors.REGISTERED_SUCCESSFULLY,token});
   } catch (error) {
     console.error("Error in verify-otp API:", error);
-    return res.status(500).json({ status: false, message: "Internal Server Error" });
+    return res.status(500).json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR });
   }
 });
+
 
 // user API headDash 
 const authenticateToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "No token provided" });
+  if (!token) return res.status(401).json({ message: validationErrors.NO_TOKEN_PROVIDED});
 
   jwt.verify(token, process.env.KEY, (err, user) => {
-    if (err) return res.status(403).json({ message: "Token is not valid" });
+    if (err) return res.status(403).json({ message: validationErrors.INVALID_TOKEN });
     req.user = user;
     next();
   });
@@ -165,19 +167,19 @@ const authenticateToken = (req, res, next) => {
 router.get("/user", async (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ msg: "No token provided" });
+    return res.status(401).json({ message: validationErrors.NO_TOKEN_PROVIDED });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.KEY);
-    console.log('decoded',decoded);
+    // console.log('decoded',decoded);
     const user = await AnotherModel.findOne({ name: decoded.name });
     if (!user) {
-      return res.status(404).json({ msg: "User not found" });
+      return res.status(404).json({ message: validationErrors.USER_NOT_FOUND });
     }
-    res.json({data:user,message:"Details fetched successfully."});
+    res.json({data:user, message: validationErrors.ACCESS_DATA_SUCCESSFULLY});
   } catch (error) {
-    res.status(400).json({ msg: "Invalid token" });
+    res.status(400).json({ message: validationErrors.INVALID_TOKEN });
   }
 });
 
@@ -192,12 +194,12 @@ router.post("/login", async (req, res) => {
   const user = await AnotherModel.findOne({ email });
 
   if (!user) {
-    return res.json({field: "email", msg: "user is not registered" });
+    return res.json({field: "email", message: validationErrors.USER_NOT_REGISTERED });
   }
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
-    return res.status(400).json({ field: "password", msg: "password is incorrect" });
+    return res.status(400).json({ field: "password", message: validationErrors.INCORRECT_PASSWORD });
   }
 
   const token = jwt.sign({ name: user.name }, process.env.KEY, {
@@ -205,7 +207,7 @@ router.post("/login", async (req, res) => {
   });
   res.cookie("token", token, { httpOnly: true, maxAge: 3600000 * 24 * 7 });
 
-  return res.json({ status: true, msg: "login successful", user, token });
+  return res.json({ status: true, message: validationErrors.LOGIN_SUCCESSFULLY, user, token });
   
 });
 
@@ -218,7 +220,7 @@ router.post("/forgot_password", async (req, res) => {
   try {
     const user = await AnotherModel.findOne({ email });
     if (!user) {
-      return res.json({field: "email", msg: "user is not registered" });
+      return res.json({field: "email", message: validationErrors.USER_NOT_REGISTERED });
     }
     const token = jwt.sign({ id: user._id }, process.env.KEY, {
       expiresIn: "5m",
@@ -240,9 +242,9 @@ router.post("/forgot_password", async (req, res) => {
 
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        return res.json({ message: " error sending email !" });
+        return res.json({ message: validationErrors.OTP_ERROR });
       } else {
-        return res.json({ status: true, message: "email sent !" });
+        return res.json({ status: true, message: validationErrors.OTP_SENT});
       }
     });
   } catch (err) {
@@ -258,13 +260,13 @@ router.post("/resetpassword/:token", async (req, res) => {
 
   // Validate required fields
   if (!password || !confirmPassword) {
-    return res.status(400).json({ msg: "Please enter all the fields" });
+    return res.status(400).json({ message: validationErrors.PLEASE_ENTER_ALL_FIELD });
   }
   // Validate password length
   if (password.length < 8) {
     return res
       .status(400)
-      .json({ msg: "Password should be atleast 8 characters" });
+      .json({ message: validationErrors.PASSWORD_TOO_SHORT });
   }
 
   //  Validate password match
@@ -272,7 +274,7 @@ router.post("/resetpassword/:token", async (req, res) => {
     console.log("password and confirmpassword do not match");
     return res.json({
       status: false,
-      message: "Password and ConsirmPassword do not match",
+      message: validationErrors.PASSWORD_MISMATCH,
     });
   }
 
@@ -285,9 +287,9 @@ router.post("/resetpassword/:token", async (req, res) => {
       { password: hashpassword }
       
     );
-    return res.json({ status: true, message: "updated record" });
+    return res.json({ status: true, message: validationErrors.UPDATED_RECORD });
   } catch (err) {
-    return res.json("invalid token");
+    return res.json({message: validationErrors.INVALID_TOKEN});
   }
 });
 
@@ -306,19 +308,19 @@ router.put("/changepassword/:id", async (req, res) => {
   try {
     const user = await AnotherModel.findById({_id:id});
     if (!user) {
-      return res.status(400).json({ field: "id" ,msg: "user not found" });
+      return res.status(400).json({ field: "id" ,message: validationErrors.USER_NOT_FOUND});
     }
 
     const passwordValid = await bcrypt.compare(oldPassword, user.password);
     if (!passwordValid) {
-      return res.status(400).json({field: "oldPassword", msg: "password is incorrect" });
+      return res.status(400).json({field: "oldPassword", message: validationErrors.INCORRECT_PASSWORD });
     }
 
     if (newPassword !== confirmPassword) {
       console.log("password and confirmpassword do not match");
       return res.status(400).json({
         field: "confirmPassword",
-        msg: "Password and ConfirmPassword do not match",
+        message: validationErrors.PASSWORD_MISMATCH,
       });
     }
      
@@ -333,14 +335,14 @@ router.put("/changepassword/:id", async (req, res) => {
     );
     return res.json({
       status: true,
-      msg: "Password changed successfully",
+      message: validationErrors.PASSWORD_CHANGE,
       updatedLoggedUser,
     });
   } catch (error) {
     console.log(error);
     return res
       .status(500)
-      .json({ status: true, msg: "An error occurred while changing the password" });
+      .json({ status: true, message: validationErrors.ERROR});
   }
 });
 
@@ -380,7 +382,7 @@ router.put("/updateprofile/:id", upload.single('profileImage'), async (req, res)
     );
     return res.json({
       status: true,
-      message: "Profile changed successfully",
+      message: validationErrors.PROFILE_UPDATED,
       updatedProfileUser,
     });
   } catch (error) {

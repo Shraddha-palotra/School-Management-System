@@ -168,6 +168,39 @@ const resources = {
       "Password is required": "Password is required",
       "Password should be at least 8 characters":
         "Password should be at least 8 characters",
+
+      // signup 
+      
+        "Signup": "Signup",
+        "Hey, Enter your details to get sign up to your account": "Hey, Enter your details to get sign up to your account",
+        "Confirm Password": "Confirm Password",
+        "Already Have an Account?": "Already Have an Account?",
+        "Successfully SignUp": "Successfully SignUp",
+        "Confirm password is required": "Confirm password is required",
+        "Passwords do not match": "Passwords do not match",
+      
+      // verify otp
+      
+        "Verify OTP": "Verify OTP",
+        "Enter the OTP sent to your email !": "Enter the OTP sent to your email !",
+        "OTP": "OTP",
+        "Enter otp": "Enter OTP",
+        "Verify OTP successfully": "Verify OTP successfully",
+      
+      // reset password
+      
+        "Reset Password": "Reset Password",
+        "Please give some details to help fill out your account.": "Please give some details to help fill out your account.",
+        "New Password": "New Password",
+        "Enter New Password": "Enter New Password",
+        "Enter Confirm Password": "Enter Confirm Password",
+        "Reset Password successfully": "Reset Password successfully",
+      
+      
+      
+       
+      
+      
     },
   },
   es: {
@@ -332,6 +365,35 @@ const resources = {
       "Password is required": "La contraseña es obligatoria",
       "Password should be at least 8 characters":
         "La contraseña debe tener al menos 8 caracteres",
+
+      // signup
+      
+        "Signup": "Registrarse",
+        "Hey, Enter your details to get sign up to your account": "Hola, ingresa tus detalles para registrarte en tu cuenta",
+        "Confirm Password": "Confirmar contraseña",
+        "Already Have an Account?": "Ya tienes una cuenta?",
+        "Successfully SignUp": "Registro exitoso",
+        "Confirm password is required": "Se requiere confirmar la contraseña",
+        "Passwords do not match": "Las contraseñas no coinciden",
+      
+        // verify otp
+        
+          "Verify OTP": "Verificar OTP",
+          "Enter the OTP sent to your email !": "Ingrese el OTP enviado a su correo electrónico!",
+          "OTP": "OTP",
+          "Enter otp": "Ingrese OTP",
+          "Verify OTP successfully": "OTP verificado con éxito",
+        
+        // reset password
+        
+          "Reset Password": "Restablecer la contraseña",
+          "Please give some details to help fill out your account.": "Por favor, proporcione algunos detalles para ayudar a completar su cuenta.",
+          "New Password": "Nueva contraseña",
+          "Enter New Password": "Ingrese nueva contraseña",
+          "Enter Confirm Password": "Ingrese la contraseña de confirmación",
+          "Reset Password successfully": "Restablecimiento de contraseña exitoso",
+        
+              
     },
   },
 };

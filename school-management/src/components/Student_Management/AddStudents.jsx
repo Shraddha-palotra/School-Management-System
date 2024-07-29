@@ -7,10 +7,12 @@ import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import { useTranslation } from "react-i18next";
+import {useValidation} from "../../utils/validations"
 
 function Add_Students({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
-   
+  
+  const {StudentValidation} = useValidation();
   const [rollNumber, setRollNumber] = useState("");
   const [studentName, setStudentName] = useState("");
   const [fatherName, setFatherName] = useState("");
@@ -44,44 +46,8 @@ function Add_Students({ isOpen, setIsOpen }) {
     console.log(gender);
     console.log(address);
      console.log(profileImage);
-    let formErrors = {};
-    if(!profileImage){
-        formErrors.profileImage = t("please upload image");
-    }
-    if (!rollNumber) formErrors.rollNumber = t("Roll Number is required");
-
-    if (!studentName) formErrors.studentName = t("Full name is required");
-
-    if (!fatherName) formErrors.fatherName = t("Father name is required");
-
-    if (!motherName) formErrors.motherName = t("Mother name is required");
-
-    const Pattern = /^\d{10}$/;
-
-    if (!phoneNumber) {
-      formErrors.phoneNumber = t("Phone number is required");
-    } else if (!Pattern.test(phoneNumber)) {
-      formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
-    }
-
-    if (!classname) formErrors.classname = t("Class is required");
-
-    if (!dateOfBirth)
-      formErrors.dateOfBirth = t("Register date of birth is required");
-
-    if (!section) formErrors.section = t("Section is required");
-
-    if (!gender) formErrors.gender = t("Gender is required");
-
-    if (!address) formErrors.address = t("Address is required");
-
-    setErrors(formErrors);
-
-  if (Object.keys(formErrors).length > 0) {
-    return; // Stop submission if there are errors
-  }
-
-    const formData = new FormData();
+    
+     const formData = new FormData();
     formData.append("rollNumber", rollNumber)
     formData.append("studentName", studentName);
     formData.append("fatherName", fatherName);
@@ -95,7 +61,13 @@ function Add_Students({ isOpen, setIsOpen }) {
     
     if (profileImage) formData.append('profileImage', profileImage);
     console.log("fromdata is ",formData)
+   
+    const formErrors = StudentValidation({ formData, t });
+    setErrors(formErrors);
 
+  if (Object.keys(formErrors).length > 0) {
+    return; // Stop submission if there are errors
+  }
 
     Axios.post("http://localhost:8080/student/addstudent",formData ,{
       // studentName,

@@ -7,11 +7,12 @@ import {toast,ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import  Axios from 'axios';
 import { useTranslation } from 'react-i18next';
+import { useValidation } from '../../utils/validations';
 
 function EditStudents({ items, isOpen, setIsOpen }) {
 
   const navigate = useNavigate();
-  
+  const {StudentValidation} = useValidation();
   const location = useLocation();
 // console.log("location in edit student",location.state.items);
 
@@ -46,30 +47,28 @@ function EditStudents({ items, isOpen, setIsOpen }) {
     
   }; 
 
+  // const validateForm = () => {
+  //   let formErrors = {};
+  //   if (!studentData.rollNumber) formErrors.rollNumber = t("Roll Number is required");
+  //   if (!studentData.studentName) formErrors.studentName = t("Full name is required");
+  //   if (!studentData.fatherName) formErrors.fatherName = t("Father name is required");
+  //   if (!studentData.motherName) formErrors.motherName = t("Mother name is required");
 
+  //   const pattern = /^\d{10}$/;
+  //   if (!studentData.phoneNumber) {
+  //     formErrors.phoneNumber = t("Phone number is required");
+  //   } else if (!pattern.test(studentData.phoneNumber)) {
+  //     formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
+  //   }
 
-  const validateForm = () => {
-    let formErrors = {};
-    if (!studentData.rollNumber) formErrors.rollNumber = t("Roll Number is required");
-    if (!studentData.studentName) formErrors.studentName = t("Full name is required");
-    if (!studentData.fatherName) formErrors.fatherName = t("Father name is required");
-    if (!studentData.motherName) formErrors.motherName = t("Mother name is required");
+  //   if (!studentData.classname) formErrors.classname = t("Class is required");
+  //   if (!studentData.dateOfBirth) formErrors.dateOfBirth = t("Register date of birth is required");
+  //   if (!studentData.section) formErrors.section = t("Section is required");
+  //   if (!studentData.gender) formErrors.gender = t("Gender is required");
+  //   if (!studentData.address) formErrors.address = t("Address is required");
 
-    const pattern = /^\d{10}$/;
-    if (!studentData.phoneNumber) {
-      formErrors.phoneNumber = t("Phone number is required");
-    } else if (!pattern.test(studentData.phoneNumber)) {
-      formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
-    }
-
-    if (!studentData.classname) formErrors.classname = t("Class is required");
-    if (!studentData.dateOfBirth) formErrors.dateOfBirth = t("Register date of birth is required");
-    if (!studentData.section) formErrors.section = t("Section is required");
-    if (!studentData.gender) formErrors.gender = t("Gender is required");
-    if (!studentData.address) formErrors.address = t("Address is required");
-
-    return formErrors;
-  };
+  //   return formErrors;
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -83,11 +82,9 @@ function EditStudents({ items, isOpen, setIsOpen }) {
       formData.append("profileImage", selectImage);
     }
    
-    const formErrors = validateForm();
+    const formErrors = StudentValidation(studentData);
     setErrors(formErrors);
-    console.log("student data on submit",studentData);
-
-   
+    console.log("student data on submit", studentData);
 
     if (Object.keys(formErrors).length === 0) {
       const id = studentData._id;

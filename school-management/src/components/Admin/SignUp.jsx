@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
 import VerifyOtp from "./VerifyOtp";
+import { useTranslation } from "react-i18next";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -17,6 +18,7 @@ const SignUp = () => {
   const [otpSent, setOtpSent] = useState(false)
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   const [passwordToggle, setPasswordToggle] = useState({
     password: false,
@@ -39,30 +41,30 @@ const SignUp = () => {
 
     let formErrors = {};
 
-    if (!name) formErrors.name = "Full name is required";
+    if (!name) formErrors.name = t("Full name is required");
     // console.log(formErrors.name);
 
     if (!phoneNumber) {
-      formErrors.phoneNumber = "Phone number is required";
+      formErrors.phoneNumber = t("Phone number is required");
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = "Email is required";
+      formErrors.email = t("Email is required");
     } else if (!emailPattern.test(email)) {
-      formErrors.email = "Please enter a valid email address";
+      formErrors.email = t("Please enter a valid email address");
     }
 
     if (!password) {
-      formErrors.password = "Password is required";
+      formErrors.password = t("Password is required");
     } else if (password.length < 8) {
-      formErrors.password = "Password should be at least 8 characters";
+      formErrors.password = t("Password should be at least 8 characters");
     }
 
     if (!confirmPassword) {
-      formErrors.confirmPassword = "Confirm password is required";
+      formErrors.confirmPassword = t("Confirm password is required");
     } else if (password !== confirmPassword) {
-      formErrors.confirmPassword = "Passwords do not match";
+      formErrors.confirmPassword = t("Passwords do not match");
     }
 
     setErrors(formErrors);
@@ -104,20 +106,20 @@ const SignUp = () => {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3>Signup</h3>
-                  <p>Hey, Enter your details to get sign up to your account</p>
+                  <h3>{t("Signup")}</h3>
+                  <p>{t("Hey, Enter your details to get sign up to your account")}</p>
                 </div>
                 <div className="form">
                   <form className="row g-2" onSubmit={handleSubmit}>
                     <div className="col-md-12">
                       <label htmlFor="name" className="custom-form-label">
-                        Full Name
+                        {t("Full Name")}
                       </label>
                       <input
                         type="text"
                         className="custom-input-field"
                         id="Name"
-                        placeholder="Enter Name"
+                        placeholder={t("Enter Name")}
                         value={name}
                         onChange={(e) => {
                           setName(e.target.value);
@@ -129,13 +131,13 @@ const SignUp = () => {
                     </div>
                     <div className="col-md-12">
                       <label htmlFor="phoneNuber" className="custom-form-label">
-                        Phone Number
+                        {t("Phone Number")}
                       </label>
                       <input
                         type="text"
                         className="custom-input-field"
                         id="phoneNuber"
-                        placeholder="Enter Number"
+                        placeholder={t("Enter Number")}
                         value={phoneNumber}
                         onChange={(e) => {
                           setPhoneNumber(e.target.value);
@@ -149,13 +151,13 @@ const SignUp = () => {
                     </div>
                     <div className="col-md-12">
                       <label htmlFor="email" className="custom-form-label">
-                        Email
+                        {t("Email")}
                       </label>
                       <input
                         type="email"
                         className="custom-input-field"
                         id="email"
-                        placeholder="Enter Email"
+                        placeholder={t("Enter Email")}
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
@@ -167,7 +169,7 @@ const SignUp = () => {
                     </div>
                     <div className="col-md-6">
                       <label htmlFor="password" className="custom-form-label">
-                        Password
+                        {t("Password")}
                       </label>
                       <div className="possionIconInput">
                         <img
@@ -186,7 +188,7 @@ const SignUp = () => {
                           type={passwordToggle.password ? "text" : "password"}
                           className="custom-input-field"
                           id="lastname"
-                          placeholder="Enter Password"
+                          placeholder={t("Enter Password")}
                           value={password}
                           onChange={(e) => {
                             setPassword(e.target.value);
@@ -199,7 +201,7 @@ const SignUp = () => {
                     </div>
                     <div className="col-md-6">
                       <label htmlFor="password" className="custom-form-label">
-                        Confirm Password
+                       {t("Confirm Password")}
                       </label>
                       <div className="possionIconInput">
                         <img
@@ -221,7 +223,7 @@ const SignUp = () => {
                           }
                           className="custom-input-field"
                           id="lastname"
-                          placeholder="Enter Password"
+                          placeholder={t("Enter Password")}
                           value={confirmPassword}
                           onChange={(e) => {
                             setConfirmPassword(e.target.value);
@@ -235,10 +237,10 @@ const SignUp = () => {
                       )}
                     </div>
                     <div className="col-md-12 mt-4">
-                      <button className="custom-btn">Signup</button>
+                      <button className="custom-btn">{t("Signup")}</button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
-                      Already Have an Account? &nbsp;
+                    {t("Already Have an Account?")}  &nbsp;
                       {/* <Link to="/login">Login</Link> */}
                       <span
                         onClick={() => {
@@ -246,7 +248,7 @@ const SignUp = () => {
                         }}
                         className="text-primary"
                       >
-                        Login
+                        {t("Login")}
                       </span>
                     </p>
                   </form>

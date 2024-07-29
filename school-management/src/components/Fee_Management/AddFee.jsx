@@ -6,10 +6,12 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useValidation } from "../../utils/validations";
 
 function AddFee({ isOpen, setIsOpen }) {
   const {t} = useTranslation();
   const navigate = useNavigate();
+  const {FeeStudentValidation} = useValidation();
   const [rollNumber, setRollNumber] = useState("");
   const [studentName, setStudentName] = useState("");
   const [fatherName, setFatherName] = useState("");
@@ -19,8 +21,6 @@ function AddFee({ isOpen, setIsOpen }) {
   const [section, setSection] = useState("");
   const [description, setDescription] = useState("");
   const [errors, setErrors] = useState({});
-
-  
 
   
 
@@ -37,24 +37,7 @@ function AddFee({ isOpen, setIsOpen }) {
     console.log(section);
     console.log(description);
 
-    let formErrors = {};
-
-    if (!rollNumber) formErrors.rollNumber = t("Roll Number is required");
-
-    if (!studentName) formErrors.studentName = t("Full name is required");
-
-    if (!fatherName) formErrors.fatherName = t("Full name is required");
-
-    if (!classname) formErrors.classname = t("Class is required");
-
-    if (!quaterlyFee) formErrors.quaterlyFee = t("Quaterly Fee is required");
-
-    if (!feeStatus) formErrors.feeStatus = t("Fee status is required");
-
-    if (!section) formErrors.section = t("Section is required");
-
-    if (!description) formErrors.description = t("Description is required");
-
+   const formErrors = FeeStudentValidation();
     setErrors(formErrors);
 
     if (Object.keys(formErrors).length === 0) {

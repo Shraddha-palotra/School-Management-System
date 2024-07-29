@@ -7,13 +7,14 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Axios from "axios";
 import { useTranslation } from "react-i18next";
+import { useValidation } from "../../utils/validations";
 
 function EditStaff({ items, isOpen, setIsOpen }) {
   const navigate = useNavigate();
   const {t} = useTranslation();
   const location = useLocation();
   // console.log("location in edit staff",location.state.items);
-
+  const {StaffValidation} = useValidation();
   const [staffData, setStaffData] = useState(location.state.items || {});
   console.log("staffData", staffData);
 
@@ -42,41 +43,11 @@ function EditStaff({ items, isOpen, setIsOpen }) {
     }
   };
 
-  const validateForm = () => {
-    let formErrors = {};
-
-    if (!staffData.staffName) formErrors.staffName = t("Staff name is required");
-    if (!staffData.staffPosition)
-      formErrors.staffPosition = t("Staff position is required");
-
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!staffData.email) {
-      formErrors.email = t("Email is required");
-    } else if (!emailPattern.test(staffData.email)) {
-      formErrors.email = t("Please enter a valid email address");
-    }
-
-    const pattern = /^\d{10}$/;
-    if (!staffData.phoneNumber) {
-      formErrors.phoneNumber = t("Phone number is required");
-    } else if (!pattern.test(staffData.phoneNumber)) {
-      formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
-    }
-
-    if (!staffData.joinDate)
-      formErrors.joinDate = t("Staff joining date is required");
-    if (!staffData.salary) formErrors.salary = t("salary is required");
-    if (!staffData.gender) formErrors.gender = t("Gender is required");
-    if (!staffData.description)
-      formErrors.description = t("Description is required");
-
-    return formErrors;
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formError = validateForm();
+    const formError =StaffValidation(staffData);
     setErrors(formError);
     console.log("staff data on submit ", staffData);
 
