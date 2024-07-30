@@ -1,6 +1,7 @@
 import express from "express";
 import AddFeeModel from "../models/Fee.js";
 import AddStudentModel from '../models/Students.js'
+import validationErrors from "../ERRORS/Validations.js";
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.post("/addfees", async (req, res) => {
     console.log("Student found", user);
 
     if (!user) {
-         return res.json({ msg: "Student is not register or status not match"})
+         return res.json({ message: validationErrors.STATUS_NOT_MATCH})
     }
 
 
@@ -37,12 +38,12 @@ router.post("/addfees", async (req, res) => {
     const newAllFee = await newFee.save();
     return res
       .status(200)
-      .json({ status: true, msg: "Register successfully", newAllFee });
+      .json({ status: true, message: validationErrors.REGISTERED_SUCCESSFULLY, newAllFee });
   } catch (error) {
      console.log("Error in Fee API",error)
      return res
       .status(500)
-      .json({ status: false, message: "Internal Server Error" });
+      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR });
   }
 });
 
@@ -52,11 +53,11 @@ router.get("/showfees", async (req, res) => {
        console.log("show fee API called");
 
        const AllFee = await AddFeeModel.find();
-       return res.status(200).json({ msg: "access all fees", AllFee });
+       return res.status(200).json({ message: validationErrors.ACCESS_DATA_SUCCESSFULLY, AllFee });
 
      } catch (error) {
        console.error("Error fetching students:", error);
-       return res.json({ status: false, message: "Internal Server Error"});
+       return res.json({ status: false, message:validationErrors.INTERNAL_SERVER_ERROR});
      }
    });
 
@@ -78,7 +79,7 @@ router.put("/editfees/:id", async (req,res) => {
       {new: true}
      );
      console.log(updateFee);
-     return res.json({status: true, msg: "update data successfully", updateFee});
+     return res.json({status: true, message: validationErrors.DATA_UPDATE_SUCCESSFULLY, updateFee});
 
   } catch (error) {
     console.log(error)
@@ -96,10 +97,10 @@ router.delete("/deletefees/:id", async (req,res) => {
  try {
   console.log(`Deleting fee data with ID: ${id}`);
   const deleteFeeData =  await AddFeeModel.findByIdAndDelete({_id:id});
-  return res.status(200).json({status:true, msg: "Fee data deleted successfully", deleteFeeData});
+  return res.status(200).json({status:true, message: validationErrors.DELETED_SUCCESSFULLY, deleteFeeData});
  } catch (error) {
   console.log(`Error deleting fee data with ID: ${id}`, error);
-  return res.status(500).json({msg: "Internal server Error"});
+  return res.status(500).json({message:validationErrors.INTERNAL_SERVER_ERROR});
  }
 });
 

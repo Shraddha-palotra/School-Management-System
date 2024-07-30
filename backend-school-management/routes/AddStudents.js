@@ -4,6 +4,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from "path";
 import { fileURLToPath } from "url";
+import validationErrors from "../ERRORS/Validations.js";
 
 const router = express.Router();
 
@@ -49,19 +50,6 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
     
     console.log(req.body);
 
-     // Log each field to ensure they are correctly extracted
-    //  console.log('rollNumber:', rollNumber);
-    //  console.log('studentName:', studentName);
-    //  console.log('fatherName:', fatherName);
-    //  console.log('motherName:', motherName);
-    //  console.log('classname:', classname);
-    //  console.log('phoneNumber:', phoneNumber);
-    //  console.log('dateOfBirth:', dateOfBirth);
-    //  console.log('section:', section);
-    //  console.log('gender:', gender);
-    //  console.log('address:', address);
-    //  console.log('profileImage:', profileImage);
-
     const roll = await AddStudentModel.findOne({ rollNumber });
     // Check if roll number  already exists
     if (roll) {
@@ -88,14 +76,14 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
    console.log("saved student is",savedStudent);
     return res.json({
       status: true,
-      message: "Registerd Successfully",
+      message: validationErrors.REGISTERED_SUCCESSFULLY,
       newStudent : savedStudent
     });
   } catch (error) {
     console.error("Error in addstudent API:", error);
     return res
       .status(500)
-      .json({ status: false, message: "Internal Server Error" });
+      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR});
   }
 });
 
@@ -109,7 +97,7 @@ router.get("/showstudents", async (req, res) => {
     console.error("Error fetching students:", error);
     return res
       .status(500)
-      .json({ status: false, message: "Internal Server Error",AllStudents });
+      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR,AllStudents });
   }
 });
 
@@ -145,7 +133,7 @@ router.put("/editstudent/:id", upload.single('profileImage'), async (req, res) =
   const roll = await AddStudentModel.findOne({ rollNumber });
   // Check if roll number  already exists
   if (roll) {
-    return res.json({field: "rollNumber",message: "Roll Number already exsited" });
+    return res.json({field: "rollNumber",message: validationErrors.ROLLNUMBER_ALREADY_EXIST });
   }
     
   try {
@@ -157,7 +145,7 @@ router.put("/editstudent/:id", upload.single('profileImage'), async (req, res) =
     console.log(updatedStudent)
     return res.json({
       status: true,
-      message: "update data successfully",
+      message: validationErrors.DATA_UPDATE_SUCCESSFULLY,
       updatedStudent,
     });
   } catch (error) {
@@ -175,10 +163,10 @@ router.delete("/deletestudents/:id", async (req,res) => {
   try{
     console.log(`Deleting student with ID: ${id}`);
       const deleteStudent = await AddStudentModel.findByIdAndDelete({_id:id});
-     return res.status(200).json({status:true,msg: "Student deleted successfully", deleteStudent});
+     return res.status(200).json({status:true,message: validationErrors.DELETED_SUCCESSFULLY, deleteStudent});
   } catch (error) {
     console.log(`Error deleting student with ID: ${id}`, error);
-    return res.status(500).json({msg: "Internal server Error"});
+    return res.status(500).json({message: validationErrors.INTERNAL_SERVER_ERROR});
 
   }
 })

@@ -100,7 +100,7 @@ function AddStaff({ isOpen, setIsOpen }) {
       } catch (err) {
         console.error(err);
         if (err.response && err.response.data) {
-          setErrors({ [err.response.data.field]: err.response.data.msg });
+          setErrors({ [err.response.data.field]: err.response.data.message});
         } else {
           toast.error("An unexpected error occurred");
         }

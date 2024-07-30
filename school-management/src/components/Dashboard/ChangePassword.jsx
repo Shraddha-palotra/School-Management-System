@@ -105,7 +105,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
         },1000);
         }else {
           if (res.data.field === 'oldPassword') {
-            setBackendError(res.data.msg)
+            setBackendError(res.data.message)
           }
         }
       } catch (err) {
@@ -114,7 +114,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
           err.response.data && 
           err.response.data.field === 'oldPassword'
         ) {
-          setBackendError(err.response.data.msg);
+          setBackendError(err.response.data.message);
         }else {
           console.log(err);
         }

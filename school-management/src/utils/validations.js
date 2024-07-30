@@ -94,27 +94,35 @@ export const useValidation = () => {
     return formErrors;
   };
 
-  // validations for adding/edting fee student 
+  // validations for adding/edting fee student
   const FeeStudentValidation = (feeData = {}) => {
-    let formErrors =  {};
+    let formErrors = {};
 
-          const { studentName, fatherName, classname, quaterlyFee, feeStatus, section, description } = feeData;
-         
-          if (!studentName) formErrors.studentName = t("Full name is required");
+    const {
+      studentName,
+      fatherName,
+      classname,
+      quaterlyFee,
+      feeStatus,
+      section,
+      description,
+    } = feeData;
 
-          if (!fatherName) formErrors.fatherName = t("Full name is required");
-      
-          if (!classname) formErrors.classname = t("Class is required");
-      
-          if (!quaterlyFee) formErrors.quaterlyFee = t("Quaterly Fee is required");
-      
-          if (!feeStatus) formErrors.feeStatus = t("Fee status is required");
-      
-          if (!section) formErrors.section = t("Section is required");
-      
-          if (!description) formErrors.description = t("Description is required");
-      
-         return formErrors;
-      };
-  return { StudentValidation , StaffValidation, FeeStudentValidation};
+    if (!studentName) formErrors.studentName = t("Full name is required");
+
+    if (!fatherName) formErrors.fatherName = t("Full name is required");
+
+    if (!classname) formErrors.classname = t("Class is required");
+
+    if (!quaterlyFee) formErrors.quaterlyFee = t("Quaterly Fee is required");
+
+    if (!feeStatus) formErrors.feeStatus = t("Fee status is required");
+
+    if (!section) formErrors.section = t("Section is required");
+
+    if (!description) formErrors.description = t("Description is required");
+
+    return formErrors;
+  };
+  return { StudentValidation, StaffValidation, FeeStudentValidation };
 };

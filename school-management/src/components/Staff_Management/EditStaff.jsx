@@ -77,7 +77,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
         })
         .catch((err) => {
           console.log(err);
-          setErrors({[err.response.data.field]: err.response.data.msg});
+          setErrors({[err.response.data.field]: err.response.data.message});
         });
     }
   };

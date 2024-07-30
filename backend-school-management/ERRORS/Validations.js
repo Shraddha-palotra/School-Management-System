@@ -18,7 +18,8 @@ const validationErrors = {
      ACCESS_DATA_SUCCESSFULLY: "Successfully access all data",
      DATA_UPDATED: "Data id updated",
      UPDATED_RECORD: "updated record",
-     DELETED_SUCCESSFULLY: "Deleted successfully",
+     DATA_UPDATE_SUCCESSFULLY: "Update data successfully",
+     DELETED_SUCCESSFULLY: "Student deleted successfully",
      LOGIN_SUCCESSFULLY: "Login successfully",
      INVALID_TOKEN: "Invalid token",
      NO_TOKEN_PROVIDED: "No token provided",
@@ -26,6 +27,12 @@ const validationErrors = {
      ERROR: "An error occurred while changing the password",
      PROFILE_UPDATED: "Profile is updated successfully",
      PLEASE_ENTER_ALL_FIELD: "Please enter all the fields",
- };
+     ROLLNUMBER_ALREADY_EXIST : "Roll Number already exsited",
+     STAFF_EMAIL_ALREADY_EXIST : "Staff email already register",
+    STAFF_ALLREADY_REGISTER : "Staff is already register",
+    STAFF_DELETED : "Staff deleted successfully ",
+    STATUS_NOT_MATCH: "Student is not register or status not match",
+   
+ };        
  
  export default validationErrors;

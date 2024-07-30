@@ -4,6 +4,7 @@ import multer from 'multer';
 import fs from 'fs';
 import path from "path";
 import { fileURLToPath } from "url";
+import validationErrors from "../ERRORS/Validations.js";
 
 const router = express.Router();
 
@@ -48,7 +49,7 @@ router.post("/addstaff", upload.single('profileImage'),async (req, res) => {
 
     const isExistingEmail = await AddStaffModel.findOne({email});
     if (isExistingEmail) {
-      return res.status(400).json({status : false, field: "email", msg: "Staff email already register"})
+      return res.status(400).json({status : false, field: "email", message: validationErrors.STAFF_EMAIL_ALREADY_EXIST})
     }
 
     const newStaff = new AddStaffModel({
@@ -64,10 +65,10 @@ router.post("/addstaff", upload.single('profileImage'),async (req, res) => {
     });
     console.log(newStaff);
     await newStaff.save();
-    return res.json({ status: true, msg: "Registered successfully", newStaff });
+    return res.json({ status: true, message: validationErrors.REGISTERED_SUCCESSFULLY, newStaff });
   } catch (error) {
     console.log("Error in addstaff API's", error);
-    return res.status(500).json({ mag: "Internal server errror" });
+    return res.status(500).json({ message: validationErrors.INTERNAL_SERVER_ERROR});
   }
 });
 
@@ -82,7 +83,7 @@ router.get("/showstaffs", async (req,res) => {
           console.error("Error fetching students:", error);
           return res
             .status(500)
-            .json({ status: false, message: "Internal Server Error",AllStaff});
+            .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR,AllStaff});
           
      }
 
@@ -105,7 +106,7 @@ router.put("/editstaffs/:id", upload.single('profileImage'),async (req, res) => 
     _id:{$ne: id},
   })
   if (isExistingStaffEmail.length > 0) {
-    return res.status(400).json({status: false, field: "email", msg:"Staff is already register"});
+    return res.status(400).json({status: false, field: "email", message:validationErrors.STAFF_ALLREADY_REGISTER});
   } 
  
   const data = {
@@ -120,7 +121,7 @@ router.put("/editstaffs/:id", upload.single('profileImage'),async (req, res) => 
       {new: true}
      );
      console.log("update staff",updateStaff)
-     return res.json({status: true, msg: "update data successfully ", updateStaff})
+     return res.json({status: true, message: validationErrors.DATA_UPDATE_SUCCESSFULLY, updateStaff})
    } catch (error) {
      console.log(error)
   };
@@ -135,10 +136,10 @@ router.delete("/deletestaffs/:id", async (req,res) => {
   try {
      console.log(`Deleting staff with ID: ${id}`);
      const deleteStaff = await AddStaffModel.findByIdAndDelete({_id:id});
-     return res.status(200).json({status:true, msg:"Staff deleted successfully ", deleteStaff});
+     return res.status(200).json({status:true, message:validationErrors.STAFF_DELETED, deleteStaff});
   } catch (error) {
     console.log(`Error deleting staff with ID: ${id}`, error);
-    return res.status(500).json({msg: "Internal server Error"});
+    return res.status(500).json({message: validationErrors.INTERNAL_SERVER_ERROR});
   }
 }) 
 

@@ -29,7 +29,7 @@ router.post("/signup", async (req, res) => {
 
   // Validate required fields
   if (!name || !email || !phoneNumber || !password || !confirmPassword) {
-    return res.status(400).json({ message: validationErrors.INVALID_EMAIL });
+    return res.status(400).json({ message: validationErrors.PLEASE_ENTER_ALL_FIELD });
   }
 
   // Validate phone number length

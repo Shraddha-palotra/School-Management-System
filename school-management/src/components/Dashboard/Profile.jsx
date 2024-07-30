@@ -12,7 +12,7 @@ import HeaderDash from "./HeaderDash";
 function Profile({ items, isOpen, setIsOpen }) { 
   const [profileImage, setProfileImage] = useState("");
   const [loggedAdmin, setLoggedAdmin] = useState({});
-  console.log('userData',loggedAdmin);
+  // console.log('userData',loggedAdmin);
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -21,7 +21,7 @@ function Login() {
     const savedCredentials =JSON.parse(localStorage.getItem('credentials'));
     if (savedCredentials) {
       setEmail(savedCredentials.email);
-      setPassword(savedCredentials.password);
+      setPassword(savedCredentials.password); 
       setIsChecked(true);
     }
   }, [])
@@ -59,7 +59,7 @@ function Login() {
       console.log(response);
       
       if (response.data.status) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        // localStorage.setItem("user", JSON.stringify(response.data.user));
         localStorage.setItem("token", response.data.token);
 
         if (isChecked) {
@@ -72,12 +72,12 @@ function Login() {
          navigate("/dashboard");
         }, 1000);
       } else {
-        setErrors({ [response.data.field]: response.data.msg });
+        setErrors({ [response.data.field]: response.data.message });
       }
     })
       .catch((err) => {
-        if (err.response && err.response.data && err.response.data.msg) {
-          setErrors({ [ err.response.data.field]: err.response.data.msg})
+        if (err.response && err.response.data && err.response.data.message) {
+          setErrors({ [ err.response.data.field]: err.response.data.message})
         } else {
            console.log(err)
         }

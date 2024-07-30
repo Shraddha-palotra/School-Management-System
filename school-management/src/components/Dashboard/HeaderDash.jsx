@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import collaps_btn from "../assets/icons/collaps_btn.svg";
+import languageIcon from "../assets/icons/languageIcon.svg"
 import avatar from "../assets/icons/avatar.png";
 import { useTranslation } from "react-i18next";
 import Axios from "axios";
@@ -108,7 +109,7 @@ function HeaderDash({ isOpen, setIsOpen }) {
                         setLanguageDropdwonOpen(!languageDropdwonOpen)
                       }
                     >
-                      <img src={collaps_btn} alt="" />
+                      <img src={languageIcon} alt="" />
                       {/* {i18n.language === "en" ? t("English") : t("Spanish")}   */}
                     </button>
                     <ul
