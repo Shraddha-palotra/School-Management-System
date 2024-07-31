@@ -7,7 +7,7 @@ import Edit from "../assets/icons/Edit.svg";
 import Delete from "../assets/icons/Delete.svg";
 import view from "../assets/icons/view.svg";
 import { useNavigate } from "react-router-dom";
-import Axios  from "axios";
+import { getAllStaff } from "../API's/StaffAPI";
 import DeleteStaff from "./DeleteStaff";
 import { useTranslation } from "react-i18next";
 
@@ -40,21 +40,21 @@ function Staff({isOpen, setIsOpen}) {
       staff.phoneNumber.toLowerCase().includes(searchStaff.toLowerCase()) ||
       staff.gender.toLowerCase().includes(searchStaff.toLowerCase())
   ); 
-  console.log(filteredStaff)
+  // console.log(filteredStaff)
 
+  useEffect(() => {
+    getAllStaff()
+      .then((response) => {
+        console.log(response.data.status);
+        if (response.data.status) {
+          setStaff(response.data.AllStaff);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [isDeleteClick]);
 
-  useEffect( () => {
-    Axios.get("http://localhost:8080/staff/showstaffs")
-    .then((response) => {
-      console.log(response.data.status)
-      if(response.data.status) {
-            setStaff(response.data.AllStaff)
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-  },[isDeleteClick]);
   return (
     <>
       <div className="wapper">

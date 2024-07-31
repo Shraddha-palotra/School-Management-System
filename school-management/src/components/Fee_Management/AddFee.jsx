@@ -4,7 +4,7 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Axios from "axios";
+import { addFee } from "../API's/FeeAPI";
 import { useTranslation } from "react-i18next";
 import { useValidation } from "../../utils/validations";
 
@@ -24,10 +24,10 @@ function AddFee({ isOpen, setIsOpen }) {
 
   
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(handleSubmit);
+    // console.log(handleSubmit);
     console.log(rollNumber);
     console.log(studentName);
     console.log(fatherName);
@@ -37,12 +37,7 @@ function AddFee({ isOpen, setIsOpen }) {
     console.log(section);
     console.log(description);
 
-   const formErrors = FeeStudentValidation();
-    setErrors(formErrors);
-
-    if (Object.keys(formErrors).length === 0) {
-
-    Axios.post("http://localhost:8080/fee/addfees", {
+    const formData = {
       rollNumber,
       studentName,
       fatherName,
@@ -51,26 +46,29 @@ function AddFee({ isOpen, setIsOpen }) {
       feeStatus,
       section,
       description,
-      
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.status) {
+    };
+
+   const formErrors = FeeStudentValidation(formData);
+    setErrors(formErrors);
+
+
+    if (Object.keys(formErrors).length === 0) {
+      try {
+        const response = await addFee(formData);
+
+        if (response.status) {
           toast.success("Successfully added new student");
           setTimeout(() => {
             navigate("/fee");
           }, 1000);
+        } else {
+          setErrors({ general: "Student name, father name, or class are wrong." });
         }
-        else {
-          setErrors({general : "Student name , father name or status are wrong."})
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    };
+      } catch (err) {
+        setErrors({ general: "Failed to add fee, please try again." }); 
+      }
+    }
   };
-
   return (
     <>
  <ToastContainer />

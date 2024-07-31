@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer,toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Axios from "axios";
+import { login } from "../API's/AdminAPI";
 import { useTranslation } from "react-i18next";
 
 function Login() {
@@ -50,43 +51,38 @@ function Login() {
 
     console.log("Login form submitted with:", email, password);
 
+   
     if (Object.keys(formErrors).length === 0) {
-    Axios.post("http://localhost:8080/auth/login", {
-      email,
-      password,
-    })
-      .then((response) => {
-      console.log(response);
-      
-      if (response.data.status) {
-        // localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("token", response.data.token);
+      login(email, password)
+        .then((response) => {
+          console.log(response);
+          
+          if (response.data.status) {
+            localStorage.setItem("token", response.data.token);
 
-        if (isChecked) {
-          localStorage.setItem("credentials", JSON.stringify({ email, password }));
-        } else {
-          localStorage.removeItem("credentials");
-        } 
-        toast.success("Successfully Login")
-        setTimeout(() => {
-         navigate("/dashboard");
-        }, 1000);
-      } else {
-        setErrors({ [response.data.field]: response.data.message });
-      }
-    })
-      .catch((err) => {
-        if (err.response && err.response.data && err.response.data.message) {
-          setErrors({ [ err.response.data.field]: err.response.data.message})
-        } else {
-           console.log(err)
-        }
-       
-      });
-
-    console.log("Login form submitted with:", email, password);
+            if (isChecked) {
+              localStorage.setItem("credentials", JSON.stringify({ email, password }));
+            } else {
+              localStorage.removeItem("credentials");
+            }
+            
+            toast.success("Successfully Logged In");
+            setTimeout(() => {
+              navigate("/dashboard");
+            }, 1000);
+          } else {
+            setErrors({ [response.data.field]: response.data.message });
+          }
+        })
+        .catch((err) => {
+          if (err.response && err.response.data && err.response.data.message) {
+            setErrors({ [err.response.data.field]: err.response.data.message });
+          } else {
+            console.log(err);
+          }
+        });
+    }
   };
-};
   return (
     <>
     <ToastContainer/>

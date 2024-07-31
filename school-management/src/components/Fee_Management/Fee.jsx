@@ -6,7 +6,7 @@ import Ellipse7 from "../assets/images/Ellipse7.png";
 import Edit from "../assets/icons/Edit.svg";
 import Delete from "../assets/icons/Delete.svg";
 import view from "../assets/icons/view.svg";
-import Axios from "axios";
+import { getAllFees } from "../API's/FeeAPI";
 import { useNavigate } from "react-router-dom";
 import DeleteFee from "./DeleteFee";
 import { useTranslation } from "react-i18next";
@@ -44,21 +44,18 @@ const filteredFeeData = fee.filter(
     fee.feeStatus.toLowerCase().includes(searchFeeData.toLowerCase()) 
 );
 
- 
-  useEffect(() => {
-    Axios.get("http://localhost:8080/fee/showfees")
+useEffect(() => {
+  const fetchFees = async () => {
+    try {
+      const allFees = await getAllFees();
+      setFee(allFees);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-      .then((res) => {
-        
-        console.log(res.data.AllFee);
-        if (res.data.AllFee) {
-          setFee(res.data.AllFee);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },[isDeleteClick]);
+  fetchFees();
+}, [isDeleteClick]);
 
   return (
     <>

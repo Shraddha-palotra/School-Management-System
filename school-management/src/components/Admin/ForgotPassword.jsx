@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import dummy_logo from "../assets/images/dummy_logo.png";
 import { useNavigate } from "react-router-dom";
-import Axios from "axios";
+import { forgotPassword } from "../API's/AdminAPI";
 import { useTranslation } from "react-i18next";
 
 function ForgotPassword() {
@@ -29,29 +29,26 @@ function ForgotPassword() {
     
       setErrors(formErrors);
 
-    Axios.post("http://localhost:8080/auth/forgot_password", {
-      email
-    }).then((response) => {
-      if (response.data.status) {
-        
-        alert("check your email Box for password link")
-        navigate("/login");
-      }
-      else{
-        setErrors({ [response.data.field] : response.data.message})
-      }
-     console.log(response.data)
-    })
-    .catch((err) => {
-      if (err.response && err.response.data && err.response.data.message) {
-        setErrors({ [ err.response.data.field]: err.response.data.message})
-      }
-      console.log(err);
-    });
+      forgotPassword(email)
+      .then((response) => {
+        if (response.data.status) {
+          alert("Check your email box for password link");
+          navigate("/login");
+        } else {
+          setErrors({ [response.data.field]: response.data.message });
+        }
+        console.log(response.data);
+      })
+      .catch((err) => {
+        if (err.response && err.response.data && err.response.data.message) {
+          setErrors({ [err.response.data.field]: err.response.data.message });
+        }
+        console.log(err);
+      });
 
-  console.log("forgotpassword form submitted with:", email);
-
+    console.log("Forgot password form submitted with:", email);
   };
+
   return (
     <>
       <div className="login">

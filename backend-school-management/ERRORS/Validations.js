@@ -32,6 +32,9 @@ const validationErrors = {
     STAFF_ALLREADY_REGISTER : "Staff is already register",
     STAFF_DELETED : "Staff deleted successfully ",
     STATUS_NOT_MATCH: "Student is not register or status not match",
+    STUDENT_NOT_FOUND : "Student not found",
+    FATHER_NAME_WRONG :"Father name is wrong",
+    CLASSNAME_WRONG: "Class name is wrong",
    
  };        
  

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import { toast } from "react-toastify";
 import dummy_logo from "../assets/images/dummy_logo.png"
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { verifyOtp } from "../API's/AdminAPI";
 
 
 function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
@@ -14,37 +14,27 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
   const handleVerifyOtp = (e) => {
     e.preventDefault();
 
-    Axios.post("http://localhost:8080/auth/verify-otp", {
-      email,
-      otp,
-      name,
-      phoneNumber,
-      password,
+    verifyOtp(email, otp, name, phoneNumber, password)
+    .then((response) => {
+      if (response.data.status) {
+        localStorage.removeItem("credentials");
+        localStorage.setItem("token", response.data.token);
+        toast.success("Verify OTP successfully");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1000);
+      }
     })
-      .then((response) => {
-        if (response.data.status) {
-          localStorage.removeItem("credentials");
-          // localStorage.setItem("user", JSON.stringify(response.data.savedUser));
-          localStorage.setItem("token",response.data.token)
-          toast.success("Verify OTP successfully");
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 1000);
-        }
-      })
-      .catch((err) => {
-        console.log("Internal server error",err);
-        if (err.response && err.response.data) {
-          setErrors(err.response.data.message)
-        }
-        
-      });
-  };
+    .catch((err) => {
+      console.log("Internal server error", err);
+      if (err.response && err.response.data) {
+        setErrors(err.response.data.message);
+      }
+    });
+};
 
   const handleBack = () => {
      console.log("Back button clicked");
-     // navigate("/");
-     // window.location.reload()
      setOtpSent && setOtpSent(false)
    };
 

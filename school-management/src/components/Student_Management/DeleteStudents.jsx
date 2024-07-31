@@ -1,7 +1,7 @@
 import React from "react";
 import deleteModal_icon from "../assets/images/deleteModal_icon.png";
-import axios from "axios";
 import { useTranslation } from "react-i18next";
+import { deleteStudentAPI } from "../API's/StudentAPI";
 
 function DeleteStudents({ data }) {
 
@@ -17,27 +17,18 @@ function DeleteStudents({ data }) {
     display: flag ? "block" : "none",
   };
 
-  const deleteStudent = (items) => {
-    // console.log("delete student fun called");
-    // console.log("del student",items);
+  const deleteStudent = async (items) => {
     const id = items._id;
-    // console.log("id of the student to be deleted",id);
-    const fun = async (req, res) => {
-      try {
-        const res = await axios.delete(
-          `http://localhost:8080/student/deletestudents/${id}`
-        );
-        console.log("res is", res.data);
-        if (res.data.status) {
-          console.log("successfully deleted");
-          deleteHandle(false, res.data.deleteStudent);
-        }
-        // deleteHandle(false,res.data)
-      } catch (error) {
-        console.log(error);
+    try {
+      const res = await deleteStudentAPI(id);
+      console.log("Response:", res);
+      if (res.status) {
+        console.log("Successfully deleted");
+        deleteHandle(false, res.deleteStudent);
       }
-    };
-    fun();
+    } catch (error) {
+      console.log("Delete student error:", error);
+    }
   };
 
   return (

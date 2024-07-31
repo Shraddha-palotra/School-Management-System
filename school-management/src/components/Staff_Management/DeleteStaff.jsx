@@ -1,7 +1,7 @@
-import axios from "axios";
 import React from "react";
 import deleteModal_icon from "../assets/images/deleteModal_icon.png";
 import { useTranslation } from "react-i18next";
+import { deleteStaffById } from "../API's/StaffAPI";
 
 function DeleteStaff({ data }) {
 
@@ -19,29 +19,18 @@ function DeleteStaff({ data }) {
      display: flag ? "block" : "none",
    };
 
-   const deleteStaff = (items) => {
-     // console.log("delete student fun called");
-    // console.log("del student",items);
-   
-    const id = items._id;
-    // console.log("id of the student to be deleted",id);
-
-    const fun = async (req,res) => {
-     try {
-          const res = await axios.delete(
-               `http://localhost:8080/staff/deletestaffs/${id}`
-          );
-          console.log("res is ",res.data);
-          if(res.data.status){
-               console.log("Delete successfully")
-               deleteHandle(false, res.data.deleteStaff)
-          }
-     } catch (error) {
-         console.log(error)  
-     }
+   const handleDeleteStaff = async (staff) => {
+    try {
+      const result = await deleteStaffById(staff._id);
+      if (result.status) {
+        console.log('Delete successfully');
+        deleteHandle(false, result.deleteStaff);
+      }
+    } catch (error) {
+      console.error(error);
     }
-    fun();
-   }
+  };
+
 
   return (
     <>
@@ -88,7 +77,7 @@ function DeleteStaff({ data }) {
                   type="button"
                   className="custom-btn custom-btnCus"
                   onClick={() => {
-                    deleteStaff(eachStaff);
+                    handleDeleteStaff(eachStaff);
                   }}
                 >
                   {t("Confirm")}

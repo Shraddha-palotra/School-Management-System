@@ -5,9 +5,9 @@ import offEye from "../assets/images/offEye.png";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Axios from "axios";
 import VerifyOtp from "./VerifyOtp";
 import { useTranslation } from "react-i18next";
+import { signup } from "../API's/AdminAPI";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -68,29 +68,30 @@ const SignUp = () => {
     }
 
     setErrors(formErrors);
-
-    Axios.post("http://localhost:8080/auth/signup", {
-      name,
-      phoneNumber,
-      email,
-      password,
-      confirmPassword,
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.status) {
-          toast.success("Successfully SignUp", {autoClose:1000});
-          setOtpSent(true);
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("credentials", JSON.stringify({email,phoneNumber,name,password}))
-        } else {
-          setErrors({ email: response.data.message });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (Object.keys(formErrors).length === 0) {
+      signup(name, phoneNumber, email, password, confirmPassword)
+        .then((response) => {
+          console.log(response);
+          if (response.data.status) {
+            toast.success("Successfully Signed Up", { autoClose: 1000 });
+            setOtpSent(true);
+            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("credentials", JSON.stringify({ email, phoneNumber, name, password }));
+          } else {
+            setErrors({ email: response.data.message });
+          }
+        })
+        .catch((err) => {
+          console.error("Error details:", err.response ? err.response.data : err.message);
+          if (err.response && err.response.data) {
+            console.error(err.response.data.message || "An error occurred");
+          } else {
+            console.error("An error occurred");
+          }
+        });
+    }
   };
+
   return (
     <>
     <ToastContainer/>

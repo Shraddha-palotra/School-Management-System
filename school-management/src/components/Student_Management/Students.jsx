@@ -7,8 +7,8 @@ import Delete from "../assets/icons/Delete.svg";
 import view from "../assets/icons/view.svg";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
-import  Axios  from "axios";
 import DeleteStudents from "../Student_Management/DeleteStudents";
+import { getStudents } from "../API's/StudentAPI";
 import { useTranslation } from "react-i18next";
 
 function Students({isOpen, setIsOpen}) {
@@ -46,18 +46,19 @@ function Students({isOpen, setIsOpen}) {
 
  
   useEffect(() => {
-    Axios.get("http://localhost:8080/student/showstudents")
-      .then((response) => {
-        console.log(response.data.AllStudents);
-        console.log(response.data.status);
-        if (response.data.status) {
-          setStudent(response.data.AllStudents);
+    const fetchStudents = async () => {
+      try {
+        const data = await getStudents();
+        if (data.status) {
+          setStudent(data.AllStudents);
         }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  },[isDeleteClick]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchStudents();
+  }, [isDeleteClick]);
 
   return (
     <>

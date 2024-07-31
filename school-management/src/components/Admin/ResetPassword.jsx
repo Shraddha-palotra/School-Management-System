@@ -3,7 +3,7 @@ import dummy_logo from "../assets/images/dummy_logo.png";
 import eye from "../assets/images/eye.png"
 import offEye from "../assets/images/offEye.png"
 import { useNavigate, useParams } from "react-router-dom";
-import  Axios   from "axios";
+import { resetPassword } from "../API's/AdminAPI";
 import { useTranslation } from "react-i18next";
 
 
@@ -49,23 +49,19 @@ function ResetPassword() {
       formErrors.confirmPassword = t("Passwords do not match");
     }
      setErrors(formErrors)
-
-    Axios.post(`http://localhost:8080/auth/resetpassword/${token}`, {
-      password,
-      confirmPassword,
-
-    }).then((response) => {
-         if(response.data.status) {
-          console.log(response.data.status)
-          alert('update password !')
-          navigate('/login');
-         }
-         console.log(response.data)
-    }).catch((err) => {
-      console.log(err)
-    });
-    
-  }
+     if (Object.keys(formErrors).length === 0) {
+      resetPassword(token, password, confirmPassword)
+        .then((response) => {
+          if (response.data.status) {
+            alert('Password updated!');
+            navigate('/login');
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  };
   return (
     <>
       <div className="login">

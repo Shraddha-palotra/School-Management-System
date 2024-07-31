@@ -5,9 +5,9 @@ import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import {toast,ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import  Axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { useValidation } from '../../utils/validations';
+import { updateStudent } from '../API\'s/StudentAPI';
 
 function EditStudents({ items, isOpen, setIsOpen }) {
 
@@ -47,30 +47,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
     
   }; 
 
-  // const validateForm = () => {
-  //   let formErrors = {};
-  //   if (!studentData.rollNumber) formErrors.rollNumber = t("Roll Number is required");
-  //   if (!studentData.studentName) formErrors.studentName = t("Full name is required");
-  //   if (!studentData.fatherName) formErrors.fatherName = t("Father name is required");
-  //   if (!studentData.motherName) formErrors.motherName = t("Mother name is required");
-
-  //   const pattern = /^\d{10}$/;
-  //   if (!studentData.phoneNumber) {
-  //     formErrors.phoneNumber = t("Phone number is required");
-  //   } else if (!pattern.test(studentData.phoneNumber)) {
-  //     formErrors.phoneNumber = t("Phone number should contain exactly 10 digits");
-  //   }
-
-  //   if (!studentData.classname) formErrors.classname = t("Class is required");
-  //   if (!studentData.dateOfBirth) formErrors.dateOfBirth = t("Register date of birth is required");
-  //   if (!studentData.section) formErrors.section = t("Section is required");
-  //   if (!studentData.gender) formErrors.gender = t("Gender is required");
-  //   if (!studentData.address) formErrors.address = t("Address is required");
-
-  //   return formErrors;
-  // };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
 
@@ -87,28 +64,19 @@ function EditStudents({ items, isOpen, setIsOpen }) {
     console.log("student data on submit", studentData);
 
     if (Object.keys(formErrors).length === 0) {
-      const id = studentData._id;
-      
-      Axios.put(`http://localhost:8080/student/editstudent/${id}`, formData,{
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      try {
+        const response = await updateStudent(studentData._id, formData);
+        if (response.status) {
+          toast.success('Successfully updated student');
+          setTimeout(() => {
+            navigate('/student');
+          }, 1000);
+        } else {
+          setErrors({ rollNumber: response.message });
+        }
+      } catch (err) {
+        console.error(err);
       }
-      )
-      .then((response) => {
-        if (response.data.status) {
-          toast.success("Successfully added new student")
-          setTimeout(()=>{
-           navigate('/student');
-          },1000)   
-        }
-        else {
-          setErrors ({rollNumber : response.data.message})
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
     }
   };
   return (

@@ -1,7 +1,7 @@
 import express from "express";
-import AddStudentModel from '../models/Students.js'
-import multer from 'multer';
-import fs from 'fs';
+import AddStudentModel from "../models/Students.js";
+import multer from "multer";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import validationErrors from "../ERRORS/Validations.js";
@@ -13,24 +13,27 @@ const __dirname = path.dirname(__filename);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, '../uploads/profiles');
+    const uploadPath = path.join(__dirname, "../uploads/profiles");
     fs.mkdirSync(uploadPath, { recursive: true });
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+    cb(
+      null,
+      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
+    );
   },
 });
 
 const upload = multer({ storage });
 
-router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
+router.post("/addstudent", upload.single("profileImage"), async (req, res) => {
   console.log("addstudent API called");
 
   if (req.file) {
     req.body.profileImage = `/uploads/profiles/${req.file.filename}`;
   }
-   console.log("after adding profile image req body is",req.body);
+  console.log("after adding profile image req body is", req.body);
   try {
     console.log("addstudent API called");
 
@@ -47,13 +50,16 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
       address,
       profileImage,
     } = req.body;
-    
+
     console.log(req.body);
 
     const roll = await AddStudentModel.findOne({ rollNumber });
     // Check if roll number  already exists
     if (roll) {
-      return res.json({field: "rollNumber",message: "Roll Number already exsited" });
+      return res.json({
+        field: "rollNumber",
+        message: "Roll Number already exsited",
+      });
     }
 
     const newStudent = new AddStudentModel({
@@ -71,19 +77,18 @@ router.post("/addstudent", upload.single('profileImage'), async (req, res) => {
     });
     console.log(newStudent);
 
-
-   const savedStudent =  await newStudent.save();
-   console.log("saved student is",savedStudent);
+    const savedStudent = await newStudent.save();
+    console.log("saved student is", savedStudent);
     return res.json({
       status: true,
       message: validationErrors.REGISTERED_SUCCESSFULLY,
-      newStudent : savedStudent
+      newStudent: savedStudent,
     });
   } catch (error) {
     console.error("Error in addstudent API:", error);
     return res
       .status(500)
-      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR});
+      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR });
   }
 });
 
@@ -97,78 +102,111 @@ router.get("/showstudents", async (req, res) => {
     console.error("Error fetching students:", error);
     return res
       .status(500)
-      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR,AllStudents });
+      .json({
+        status: false,
+        message: validationErrors.INTERNAL_SERVER_ERROR,
+        AllStudents,
+      });
   }
 });
-
 
 //  edit student API'S
 
-router.put("/editstudent/:id", upload.single('profileImage'), async (req, res) => {
-  console.log(" edit student  API is called");
-  // console.log("params", req.params);
-  const { id } = req.params;
-  console.log("id is",id);
-  // const data = req.body;
-  // console.log(data)
+router.put(
+  "/editstudent/:id",
+  upload.single("profileImage"),
+  async (req, res) => {
+    console.log(" edit student  API is called");
+    // console.log("params", req.params);
+    const { id } = req.params;
+    console.log("id is", id);
+    // const data = req.body;
+    // console.log(data)
 
-  const { rollNumber, studentName, fatherName, motherName, dateOfBirth, phoneNumber, classname, section, gender, address } = req.body;
+    const {
+      rollNumber,
+      studentName,
+      fatherName,
+      motherName,
+      dateOfBirth,
+      phoneNumber,
+      classname,
+      section,
+      gender,
+      address,
+    } = req.body;
 
-  const data = {
-    rollNumber,
-    studentName,
-    fatherName,
-    motherName,
-    dateOfBirth,
-    phoneNumber,
-    classname,
-    section,
-    gender,
-    address,
-    profileImage: req.file ? `/uploads/profiles/${req.file.filename}` : req.body.profileImage
-  };
+    const data = {
+      rollNumber,
+      studentName,
+      fatherName,
+      motherName,
+      dateOfBirth,
+      phoneNumber,
+      classname,
+      section,
+      gender,
+      address,
+      profileImage: req.file
+        ? `/uploads/profiles/${req.file.filename}`
+        : req.body.profileImage,
+    };
 
-  console.log("data after adding image", data);
+    console.log("data after adding image", data);
 
-  const roll = await AddStudentModel.findOne({ rollNumber });
-  // Check if roll number  already exists
-  if (roll) {
-    return res.json({field: "rollNumber",message: validationErrors.ROLLNUMBER_ALREADY_EXIST });
-  }
-    
-  try {
-    const updatedStudent = await AddStudentModel.findByIdAndUpdate(
-      { _id: id },
-      { $set: data },
-      {new: true}
-    );
-    console.log(updatedStudent)
-    return res.json({
-      status: true,
-      message: validationErrors.DATA_UPDATE_SUCCESSFULLY,
-      updatedStudent,
+    const roll = await AddStudentModel.findOne({
+      $or: [{ rollNumber: data.rollNumber }],
+      _id: { $ne: id },
     });
-  } catch (error) {
-    console.log(error);
-  }
-});
+    
+    // Check if roll number  already exists
+    if (roll) {
+      return res.json({
+        field: "rollNumber",
+        message: validationErrors.ROLLNUMBER_ALREADY_EXIST,
+      });
+    }
 
+    try {
+      const updatedStudent = await AddStudentModel.findByIdAndUpdate(
+        { _id: id },
+        { $set: data },
+        { new: true }
+      );
+      console.log(updatedStudent);
+      return res.json({
+        status: true,
+        message: validationErrors.DATA_UPDATE_SUCCESSFULLY,
+        updatedStudent,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 // delete student API'S
 
-router.delete("/deletestudents/:id", async (req,res) => {
+router.delete("/deletestudents/:id", async (req, res) => {
   console.log("Delete/student  API is called ");
-   const id = req.params.id;
-  console.log("id is",id);
-  try{
+  const id = req.params.id;
+  console.log("id is", id);
+  try {
     console.log(`Deleting student with ID: ${id}`);
-      const deleteStudent = await AddStudentModel.findByIdAndDelete({_id:id});
-     return res.status(200).json({status:true,message: validationErrors.DELETED_SUCCESSFULLY, deleteStudent});
+    const deleteStudent = await AddStudentModel.findByIdAndDelete({ _id: id });
+    return res
+      .status(200)
+      .json({
+        status: true,
+        message: validationErrors.DELETED_SUCCESSFULLY,
+        deleteStudent,
+      });
   } catch (error) {
     console.log(`Error deleting student with ID: ${id}`, error);
-    return res.status(500).json({message: validationErrors.INTERNAL_SERVER_ERROR});
-
+    return res
+      .status(500)
+      .json({ message: validationErrors.INTERNAL_SERVER_ERROR });
   }
-})
+});
 
 export { router as AddStudentRouter };

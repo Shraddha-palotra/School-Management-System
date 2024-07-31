@@ -5,7 +5,7 @@ import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Axios from "axios";
+import { editStaff } from "../API's/StaffAPI";
 import { useTranslation } from "react-i18next";
 import { useValidation } from "../../utils/validations";
 
@@ -46,30 +46,24 @@ function EditStaff({ items, isOpen, setIsOpen }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const formError =StaffValidation(staffData);
+    const formError = StaffValidation(staffData);
     setErrors(formError);
-    console.log("staff data on submit ", staffData);
-
-    const formData = new FormData();
-    Object.keys(staffData).forEach((key) => {
-      formData.append(key, staffData[key]);
-    });
-    if (selectImage) {
-      formData.append("profileImage", selectImage);
-    }
 
     if (Object.keys(formError).length === 0) {
+      const formData = new FormData();
+      Object.keys(staffData).forEach((key) => {
+        formData.append(key, staffData[key]);
+      });
+      if (selectImage) {
+        formData.append("profileImage", selectImage);
+      }
+
       const id = staffData._id;
 
-      Axios.put(`http://localhost:8080/staff/editstaffs/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      editStaff(id, formData)
         .then((response) => {
           if (response.data.status) {
-            toast.success("Successfully added new staff");
+            toast.success("Successfully updated staff");
             setTimeout(() => {
               navigate("/staff", { state: { items } });
             }, 1000);
@@ -77,7 +71,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
         })
         .catch((err) => {
           console.log(err);
-          setErrors({[err.response.data.field]: err.response.data.message});
+          setErrors({ [err.response.data.field]: err.response.data.message });
         });
     }
   };

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +6,8 @@ import camera from "../assets/images/camera.png";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "../Dashboard/HeaderDash";
 import { useTranslation } from "react-i18next";
-import {useValidation} from "../../utils/validations"
+import {useValidation} from "../../utils/validations";
+import { addStudent } from "../API's/StudentAPI";
 
 function Add_Students({ isOpen, setIsOpen }) {
   const navigate = useNavigate();
@@ -28,11 +28,11 @@ function Add_Students({ isOpen, setIsOpen }) {
 
   const [ profileImage, setProfileImage] = useState("");
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     setProfileImage(e.target.files[0]);
   }
   
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("handle submit fun of add student called");
     console.log(rollNumber)
@@ -62,42 +62,43 @@ function Add_Students({ isOpen, setIsOpen }) {
     if (profileImage) formData.append('profileImage', profileImage);
     console.log("fromdata is ",formData)
    
-    const formErrors = StudentValidation({ formData, t });
+    const formErrors = StudentValidation({
+      rollNumber,
+      studentName,
+      fatherName,
+      motherName,
+      phoneNumber,
+      classname,
+      dateOfBirth,
+      section,
+      gender,
+      address,
+      profileImage,
+      t,
+     });
     setErrors(formErrors);
+    console.log("formerrors",formErrors);
 
   if (Object.keys(formErrors).length > 0) {
-    return; // Stop submission if there are errors
+    return; 
   }
 
-    Axios.post("http://localhost:8080/student/addstudent",formData ,{
-      // studentName,
-      // fatherName,
-      // motherName,
-      // phoneNumber,
-      // classname,
-      // dateOfBirth,
-      // section,
-      // gender,
-      // address,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((response) => {
-        console.log(response);
-        if (response.data.status) {
-          toast.success("Successfully added new student");
-          setTimeout(() => {
-            navigate("/student");
-          }, 1000);
-        } else {
-          setErrors({rollNumber: response.data.message})
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  try {
+    const response = await addStudent(formData);
+    console.log(response);
+    if (response.data.status) {
+      toast.success("Successfully added new student");
+      setTimeout(() => {
+        navigate("/student");
+      }, 1000);
+    } else {
+      setErrors({ rollNumber: response.data.message });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
   return (
     <>
       <ToastContainer />

@@ -5,7 +5,7 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import camera from "../assets/images/camera.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Axios from "axios";
+import { addStaff } from "../API's/StaffAPI";
 import { useTranslation } from "react-i18next";
 import { useValidation } from "../../utils/validations";
 
@@ -29,7 +29,7 @@ function AddStaff({ isOpen, setIsOpen }) {
     setProfileImage(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =  async (e) => {
     e.preventDefault();
 
     // console.log(handleSubmit);
@@ -75,23 +75,8 @@ function AddStaff({ isOpen, setIsOpen }) {
       console.log("fromdata is ", formData);
 
       try {
-        const response = Axios.post(
-          "http://localhost:8080/staff/addstaff",
-          formData,
-          {
-            // staffName,
-            // staffPosition,
-            // phoneNumber,
-            // joinDate,
-            // salary,
-            // gender,
-            // description
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response.data.status) {
+        const response = await addStaff(formDataToSend); 
+        if (response.status) {
           toast.success("Successfully added new staff");
           setTimeout(() => {
             navigate("/staff");
@@ -100,7 +85,7 @@ function AddStaff({ isOpen, setIsOpen }) {
       } catch (err) {
         console.error(err);
         if (err.response && err.response.data) {
-          setErrors({ [err.response.data.field]: err.response.data.message});
+          setErrors({ [err.response.data.field]: err.response.data.message });
         } else {
           toast.error("An unexpected error occurred");
         }

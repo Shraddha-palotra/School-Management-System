@@ -9,7 +9,7 @@ import Axios from "axios";
 function HeaderDash({ isOpen, setIsOpen }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [loggedUser, setLoggedUser] = useState({});
-  console.log("logged user", loggedUser);
+  // console.log("logged user", loggedUser);
   const [languageDropdwonOpen, setLanguageDropdwonOpen] = useState(false);
   const [error, setError] = useState(null);
   const { i18n, t } = useTranslation();

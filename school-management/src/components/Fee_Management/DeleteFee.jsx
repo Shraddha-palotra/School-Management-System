@@ -1,6 +1,6 @@
 import React from "react";
 import deleteModal_icon from "../assets/images/deleteModal_icon.png";
-import Axios from "axios";
+import { deleteFee } from "../API's/FeeAPI";
 import { useTranslation } from "react-i18next";
 
 function DeleteFee({ data }) {
@@ -18,29 +18,15 @@ function DeleteFee({ data }) {
     display: flag ? "block" : "none",
   };
 
-  const deleteFeeData = (items) => {
-    // console.log("delete student fun called");
-    // console.log("del student",items);
-
-    const id = items._id;
-    // console.log("id of the student to be deleted",id);
-
-    const fun = async (req, res) => {
-      try {
-        const res = await Axios.delete(
-          `http://localhost:8080/fee/deletefees/${id}`
-        );
-        console.log("res is", res.data);
-        if (res.data.status) {
-          console.log("successfully deleted");
-          deleteHandle(false, res.data.deleteFeeData);
-        }
-        // deleteHandle(false,res.data)
-      } catch (error) {
-        console.log(error);
+  const handleDelete = async (eachFeeData) => {
+    try {
+      const result = await deleteFee(eachFeeData._id);
+      if (result.status) {
+        deleteHandle(false, result.deleteFeeData);
       }
-    };
-    fun();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -88,7 +74,7 @@ function DeleteFee({ data }) {
                   type="button"
                   className="custom-btn custom-btnCus"
                   onClick={() => {
-                    deleteFeeData(eachFeeData);
+                    handleDelete(eachFeeData);
                   }}
                 >
                   {t("Confirm")}

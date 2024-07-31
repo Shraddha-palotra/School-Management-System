@@ -4,7 +4,7 @@ import HeaderDash from "../Dashboard/HeaderDash";
 import { useLocation, useNavigate } from 'react-router-dom';
 import {toast,ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import  Axios  from 'axios';
+import { editFee } from '../API\'s/FeeAPI';
 import { useTranslation } from 'react-i18next';
 import { useValidation } from '../../utils/validations';
 
@@ -29,33 +29,29 @@ function EditFee({ items, isOpen, setIsOpen}) {
           }));
       };
           
-      const handleSubmit = (e) => {
-          e.preventDefault();
-
-          const formErrors = FeeStudentValidation(feeData);
-          setErrors(formErrors);
-          console.log("fee data on submit",feeData);
-
-          if  (Object.keys(formErrors).length === 0) {
-               const id = feeData._id;
-
-               Axios.put(`http://localhost:8080/fee/editfees/${id}`,
-                    feeData
-               )
-               .then((response) => {
-                    if (response.data.status) {
-                         toast.success("Successfully added new data")
-                         setTimeout(()=>{
-                           navigate('/fee', { state: { items } });
-                         },1000)   
-                       }
-               })
-               .catch((err) => {
-                    console.log(err);
-                  });
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        const formErrors = FeeStudentValidation(feeData);
+        setErrors(formErrors);
+    
+        if (Object.keys(formErrors).length === 0) {
+          const id = feeData._id;
+    
+          try {
+            const result = await editFee(id, feeData);
+            if (result.status) {
+              toast.success('Successfully updated data');
+              setTimeout(() => {
+                navigate('/fee', { state: { items } });
+              }, 1000);
+            }
+          } catch (error) {
+            console.log(error);
           }
-      }
-       
+        }
+      };
+    
 
   return (
     <>
