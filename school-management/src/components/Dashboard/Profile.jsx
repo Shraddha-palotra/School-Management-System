@@ -34,8 +34,7 @@ function Profile({ items, isOpen, setIsOpen }) {
       });
       if (response.status === 200 && response.data) {
         setLoggedAdmin(response.data.data);
-        console.log("User data fetched:", response.data.data);
-          // ...loggedAdmin,user:response.datas
+        // console.log("User data fetched:", response.data.data);
       } else {
         console.error("Failed to fetch user data");
       }
@@ -74,7 +73,7 @@ function Profile({ items, isOpen, setIsOpen }) {
     formData.append("phoneNum", loggedAdmin.phoneNumber || "");
 
     if (profileImage) formData.append("profileImage", profileImage);
-    console.log("fromdata is ", formData);
+    // console.log("fromdata is ", formData);
 
     const fun = async (req, res) => {
       try {
