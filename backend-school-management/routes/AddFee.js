@@ -1,7 +1,7 @@
 import express from "express";
 import AddFeeModel from "../models/Fee.js";
 import AddStudentModel from "../models/Students.js";
-import validationErrors from "../ERRORS/Validations.js";
+
 
 const router = express.Router();
 
@@ -9,6 +9,7 @@ const router = express.Router();
 
 router.post("/addfees", async (req, res) => {
   console.log("Fee API's called");
+  const {t} = req;
 
   try {
     const {
@@ -23,9 +24,9 @@ router.post("/addfees", async (req, res) => {
     } = req.body;
     console.log(req.body);
 
-    if (!rollNumber || !studentName || !fatherName || classname) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
+    // if (!rollNumber || !studentName || !fatherName || classname) {
+    //   return res.status(400).json({ message: t("Missing required fields") });
+    // }
 
     const user = await AddStudentModel.findOne({
       rollNumber: rollNumber,
@@ -35,15 +36,19 @@ router.post("/addfees", async (req, res) => {
 
     if (!user) {
       // console.log("Student not found with provided details");
-      return res.json({ message: validationErrors.STUDENT_NOT_FOUND });
+      return res.json({ message: t("STUDENT_NOT_FOUND") });
+    }
+
+    if(user.studentName.toLowerCase() !== studentName.toLowerCase()) {
+      return res.json({status: false, field: "studentName", message: t("STUDENT_NAME_WRONG")})
     }
      
     if(user.fatherName.toLowerCase() !== fatherName.toLowerCase()) {
-      return res.json({status: false, message: validationErrors.FATHER_NAME_WRONG})
+      return res.json({status: false, field: "fatherName", message: t("FATHER_NAME_WRONG")})
     }
 
     if(user.classname.toLowerCase() !== classname.toLowerCase()) {
-      return res.json({status: false, message: validationErrors.CLASSNAME_WRONG})
+      return res.json({status: false, field: "classname", message: t("CLASSNAME_WRONG")})
     }
     const newFee = new AddFeeModel({
       rollNumber,
@@ -62,31 +67,32 @@ router.post("/addfees", async (req, res) => {
       .status(200)
       .json({
         status: true,
-        message: validationErrors.REGISTERED_SUCCESSFULLY,
+        message: t("REGISTERED_SUCCESSFULLY"),
         newAllFee,
       });
   } catch (error) {
     console.log("Error in Fee API", error);
     return res
       .status(500)
-      .json({ status: false, message: validationErrors.INTERNAL_SERVER_ERROR });
+      .json({ status: false, message: t("INTERNAL_SERVER_ERROR") });
   }
 });
 
 // show fee API
 router.get("/showfees", async (req, res) => {
+  const {t} = req;
   try {
     console.log("show fee API called");
 
     const AllFee = await AddFeeModel.find();
     return res
       .status(200)
-      .json({ message: validationErrors.ACCESS_DATA_SUCCESSFULLY, AllFee });
+      .json({ message: t("ACCESS_DATA_SUCCESSFULLY"), AllFee });
   } catch (error) {
     console.error("Error fetching students:", error);
     return res.json({
       status: false,
-      message: validationErrors.INTERNAL_SERVER_ERROR,
+      message: t("INTERNAL_SERVER_ERROR"),
     });
   }
 });
@@ -102,6 +108,8 @@ router.put("/editfees/:id", async (req, res) => {
   const data = req.body;
   console.log(data);
 
+  const {t} = req;
+
   try {
     const updateFee = await AddFeeModel.findByIdAndUpdate(
       { _id: id },
@@ -111,7 +119,7 @@ router.put("/editfees/:id", async (req, res) => {
     console.log(updateFee);
     return res.json({
       status: true,
-      message: validationErrors.DATA_UPDATE_SUCCESSFULLY,
+      message: t("DATA_UPDATE_SUCCESSFULLY"),
       updateFee,
     });
   } catch (error) {
@@ -124,8 +132,9 @@ router.put("/editfees/:id", async (req, res) => {
 router.delete("/deletefees/:id", async (req, res) => {
   console.log("Delete fee API called");
   const id = req.params.id;
-
+  
   console.log("ID is ", id);
+  const {t} = req;
   try {
     console.log(`Deleting fee data with ID: ${id}`);
     const deleteFeeData = await AddFeeModel.findByIdAndDelete({ _id: id });
@@ -133,14 +142,14 @@ router.delete("/deletefees/:id", async (req, res) => {
       .status(200)
       .json({
         status: true,
-        message: validationErrors.DELETED_SUCCESSFULLY,
+        message: t("DELETED_SUCCESSFULLY"),
         deleteFeeData,
       });
   } catch (error) {
     console.log(`Error deleting fee data with ID: ${id}`, error);
     return res
       .status(500)
-      .json({ message: validationErrors.INTERNAL_SERVER_ERROR });
+      .json({ message: t("INTERNAL_SERVER_ERROR")});
   }
 });
 

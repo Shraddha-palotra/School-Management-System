@@ -63,7 +63,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
       editStaff(id, formData)
         .then((response) => {
           if (response.data.status) {
-            toast.success("Successfully updated staff");
+            toast.success(t("Successfully_update_staff"));
             setTimeout(() => {
               navigate("/staff", { state: { items } });
             }, 1000);
@@ -71,7 +71,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
         })
         .catch((err) => {
           console.log(err);
-          setErrors({ [err.response.data.field]: err.response.data.message });
+          setErrors({ [err.response.data.field]: t(err.response.data.message) });
         });
     }
   };
@@ -104,7 +104,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              {t("Edit Staff")}
+                              {t("Edit_Staff")}
                             </li>
                           </ol>
                         </nav>
@@ -142,21 +142,21 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           />
                         </div>
                       </div>
-                      <h6>{t("Profile Image")}</h6>
+                      <h6>{t("Profile_Image")}</h6>
                     </div>
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
-                        {t("Full Name")}{" "}
+                        {t("Full_Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fullname"
-                          placeholder="Enter Name"
+                          placeholder={t("Enter_Name")}
                           name="staffName"
                           value={staffData.staffName}
                           onChange={handleChange}
@@ -169,7 +169,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="role" className="custom-form-label">
-                        {t("Staff Position")}{" "}
+                        {t("Staff_Position")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <select
@@ -179,11 +179,11 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           onChange={handleChange}
                         >
                           <option value="Principle">{t("Principle")}</option>
-                          <option value="Vice principle">{t("Vice princeple")}</option>
+                          <option value="Vice principle">{t("Vice_princeple")}</option>
                           <option value="Accountent">{t("Accountent")}</option>
-                          <option value="Senior Teacher">{t("Senior Teacher")}</option>
+                          <option value="Senior Teacher">{t("Senior_Teacher")}</option>
                           <option value="Teacher">{t("Teacher")}</option>
-                          <option value="Other Staff">{t("Other Staff")}</option>
+                          <option value="Other Staff">{t("Other_Staff")}</option>
                           <option value="Security">{t("Security")}</option>
                         </select>
                         {errors.staffPosition && (
@@ -200,7 +200,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           type="text"
                           className="custom-input-field"
                           id="email"
-                          placeholder="Enter Email"
+                          placeholder={t("Enter_Email")}
                           name="email"
                           value={staffData.email}
                           onChange={handleChange}
@@ -214,14 +214,14 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           htmlFor="contact-number"
                           className="custom-form-label"
                         >
-                          {t("Phone Number")}{" "}
+                          {t("Phone_Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="contact-number"
-                          placeholder="Enter Contect Nubmer"
+                          placeholder={t("Enter_Contect_Nubmer")}
                           name="phoneNumber"
                           value={staffData.phoneNumber}
                           onChange={handleChange}
@@ -235,7 +235,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                       <div className="col-md-4">
                         <label htmlFor="joindate" className="custom-form-label">
                           {" "}
-                          {t("Join Date")}
+                          {t("Join_Date")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -261,7 +261,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           className="custom-input-field"
                           id="salary"
                           name="salary"
-                          placeholder="Enetr Salary"
+                          placeholder={t("Enetr_Salary")}
                           value={staffData.salary}
                           onChange={handleChange}
                         />
@@ -330,7 +330,7 @@ function EditStaff({ items, isOpen, setIsOpen }) {
                           type="text"
                           className="custom-input-field"
                           id="description"
-                          placeholder="Enter Description"
+                          placeholder={t("Enter_Description")}
                           rows="6"
                           name="description"
                           value={staffData.description}

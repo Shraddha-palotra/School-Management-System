@@ -36,15 +36,15 @@ function Login() {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = t("Email is required");
+      formErrors.email = t("Email_required");
     }else if (!emailPattern.test(email)) {
-      formErrors.email = t("Please enter a valid email address");
+      formErrors.email = t("Please_enter_email");
     }
 
     if (!password) {
-      formErrors.password = t("Password is required");
+      formErrors.password = t("Password_required");
     }else if (password.length < 8) {
-      formErrors.password = t("Password should be at least 8 characters");
+      formErrors.password = t("Password_8_characters");
     }
 
     setErrors(formErrors);
@@ -66,17 +66,17 @@ function Login() {
               localStorage.removeItem("credentials");
             }
             
-            toast.success("Successfully Logged In");
+            toast.success(t("Successfully_Loggin"));
             setTimeout(() => {
               navigate("/dashboard");
             }, 1000);
           } else {
-            setErrors({ [response.data.field]: response.data.message });
+            setErrors({ [response.data.field]: t(response.data.message) });
           }
         })
         .catch((err) => {
           if (err.response && err.response.data && err.response.data.message) {
-            setErrors({ [err.response.data.field]: err.response.data.message });
+            setErrors({ [err.response.data.field]: t(err.response.data.message) });
           } else {
             console.log(err);
           }
@@ -96,7 +96,7 @@ function Login() {
                 </div>
                 <div className="heading-text">
                   <h3>{t("Login")}</h3>
-                  <p>{t("Hey, Enter your details to get sign in to your account")}</p>
+                  <p>{t("Enter_your_details")}</p>
                 </div>
                 <div className="form">
                   <form className="row g-2" onSubmit={handleLoginSubmit}>
@@ -108,7 +108,7 @@ function Login() {
                         className="custom-input-field"
                         type="email"
                         id="email"
-                        placeholder={t("Enter Email")}
+                        placeholder={t("Enter_Email")}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}  
                       />
@@ -133,7 +133,7 @@ function Login() {
                           className="custom-input-field"
                           type={passwordToggle ? "text" : "password"}
                           id="password"
-                          placeholder={t("Enter Password")}
+                          placeholder={t("Enter_Password")}
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
                         />
@@ -160,7 +160,7 @@ function Login() {
                           htmlFor="flexCheckChecked"
                           
                         >
-                          {t("Remember Me")}
+                          {t("Remember_Me")}
                         </label>
                       </div>
                       <span
@@ -169,7 +169,7 @@ function Login() {
                         }}
                         className="password-btn"
                       >
-                        {t("Forgot Password?")}
+                        {t("Forgot_Password")}
                       </span>
                     </div>
                     <div className="col-md-12 mt-4">
@@ -179,7 +179,7 @@ function Login() {
                       </button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
-                      {t("Don't have an Account ?")} &nbsp;
+                      {t("Don't_Account")} &nbsp;
                       <span
                         onClick={() => {
                           navigate("/");

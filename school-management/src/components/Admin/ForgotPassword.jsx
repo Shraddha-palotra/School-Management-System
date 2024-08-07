@@ -17,9 +17,9 @@ function ForgotPassword() {
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = t("Email is required");
+      formErrors.email = t("Email_is_required");
     } else if (!emailPattern.test(email)) {
-      formErrors.email = t("Please enter a valid email address");
+      formErrors.email = t("Please_enter_email");
     }
 
     if (Object.keys(formErrors).length > 0) {
@@ -35,13 +35,13 @@ function ForgotPassword() {
           alert("Check your email box for password link");
           navigate("/login");
         } else {
-          setErrors({ [response.data.field]: response.data.message });
+          setErrors({ [response.data.field]: t(response.data.message) });
         }
         console.log(response.data);
       })
       .catch((err) => {
         if (err.response && err.response.data && err.response.data.message) {
-          setErrors({ [err.response.data.field]: err.response.data.message });
+          setErrors({ [err.response.data.field]: t(err.response.data.message) });
         }
         console.log(err);
       });
@@ -60,8 +60,8 @@ function ForgotPassword() {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3>{t("Forgot Password")}</h3>
-                  <p>{t("Enter the email address associated with your account.")}</p>
+                  <h3>{t("Forgot_Password")}</h3>
+                  <p>{t("Enter_email_address")}</p>
                 </div>
                 <div className="form">
                   <form
@@ -76,7 +76,7 @@ function ForgotPassword() {
                         className="custom-input-field"
                         type="test"
                         id="email"
-                        placeholder="Enter Email Address"
+                        placeholder={t("Enter_Email_Address")}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />

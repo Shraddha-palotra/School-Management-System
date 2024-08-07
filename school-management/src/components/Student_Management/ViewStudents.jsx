@@ -44,7 +44,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                   {t("View Student")}
+                                   {t("View_Student")}
                               </li>
                             </ol>
                           </nav>
@@ -74,14 +74,14 @@ function ViewStudents({isOpen,setIsOpen}) {
                             />
                           </div>
                         </div>
-                        <h6>{t("Profile Image")}</h6>
+                        <h6>{t("Profile_Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
                       <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          {t("Roll Number")}{" "}
+                          {t("Roll_Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -99,7 +99,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="fullname"
                             className="custom-form-label"
                           >
-                            {t("Student Name")}{" "}
+                            {t("Student_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -118,7 +118,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="fathername"
                             className="custom-form-label"
                           >
-                            {t("Father Name")}{" "}
+                            {t("Father_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -136,7 +136,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                             htmlFor="mothername"
                             className="custom-form-label"
                           >
-                            {t("Mother Name")}{" "}
+                            {t("Mother_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -151,7 +151,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="dateofbirth" className="custom-form-label">
-                            {t("Date Of Birth")}
+                            {t("Date_Of_Birth")}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -165,7 +165,7 @@ function ViewStudents({isOpen,setIsOpen}) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="phonenumber" className="custom-form-label">
-                            {t("Phone Number")}
+                            {t("Phone_Number")}
                             <span className="required-validation">*</span>
                           </label>
                           <input

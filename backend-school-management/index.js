@@ -8,6 +8,8 @@ import { AddStudentRouter } from './routes/AddStudents.js'
 import { AddStaffRouter } from './routes/AddStaff.js'
 import { AddFeeRouter } from './routes/AddFee.js';
 import bodyParser from 'body-parser';
+import i18n from './i18n/i18n.js'
+import i18nextMiddleware from 'i18next-http-middleware';
 
 dotenv.config()
 
@@ -20,6 +22,8 @@ app.use(cors({
 }))
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
+app.use(i18nextMiddleware.handle(i18n))
+
 app.use('/auth', UserRouter)
 app.use('/student', AddStudentRouter)
 app.use('/staff', AddStaffRouter)

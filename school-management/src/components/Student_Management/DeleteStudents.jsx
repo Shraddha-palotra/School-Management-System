@@ -59,8 +59,8 @@ function DeleteStudents({ data }) {
             </div>
             <div className="modal-body">
               <img src={deleteModal_icon} alt="" className="mainIconModal" />
-              <h2>{t("Delete Student")}</h2>
-              <p>{t("Are you sure you want to Delete")}  {eachStudent?.studentName}?</p>
+              <h2>{t("Delete_Student")}</h2>
+              <p>{t("Want_to_Delete")}  {eachStudent?.studentName}?</p>
               <div className="footbutton">
                 <button
                   type="button"

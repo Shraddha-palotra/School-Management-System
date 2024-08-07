@@ -87,12 +87,12 @@ function Add_Students({ isOpen, setIsOpen }) {
     const response = await addStudent(formData);
     console.log(response);
     if (response.data.status) {
-      toast.success("Successfully added new student");
+      toast.success(t("Successfully_added_student"));
       setTimeout(() => {
         navigate("/student");
       }, 1000);
     } else {
-      setErrors({ rollNumber: response.data.message });
+      setErrors({ rollNumber: t(response.data.message) });
     }
   } catch (err) {
     console.log(err);
@@ -129,7 +129,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              {t("Add Student")}
+                              {t("Add_Student")}
                             </li>
                           </ol>
                         </nav>
@@ -159,21 +159,21 @@ function Add_Students({ isOpen, setIsOpen }) {
                           />
                         </div>
                       </div>
-                      <h6>{t("Profile Image")}</h6>
+                      <h6>{t("Profile_Image")}</h6>
                     </div>
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
                     <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          {t("Roll Number")}
+                          {t("Roll_Number")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="rollnumber"
-                          placeholder={t("Enter Roll Number")}
+                          placeholder={t("Enter_Roll_Number")}
                           value={rollNumber}
                           onChange={(e) =>setRollNumber(e.target.value)}
                         />
@@ -185,14 +185,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="studentname" className="custom-form-label">
-                          {t("Student Name")}
+                          {t("Student_Name")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="studentname"
-                          placeholder={t("Enter Name")}
+                          placeholder={t("Enter_Name")}
                           value={studentName}
                           onChange={(e) => setStudentName(e.target.value)}
                         />
@@ -207,14 +207,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="fathername"
                           className="custom-form-label"
                         >
-                         {t("Father Name")}
+                         {t("Father_Name")}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fathername"
-                          placeholder={t("Enter Father Name")}
+                          placeholder={t("Enter_Father_Name")}
                           value={fatherName}
                           onChange={(e) => setFatherName(e.target.value)}
                         />
@@ -229,14 +229,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="mothername"
                           className="custom-form-label"
                         >
-                          {t("Mother Name")}{" "}
+                          {t("Mother_Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="mothername"
-                          placeholder={t("Enter Mother Name")}
+                          placeholder={t("Enter_Mother_Name")}
                           value={motherName}
                           onChange={(e) => setMotherName(e.target.value)}
                         />
@@ -251,7 +251,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="dateOfBirth"
                           className="custom-form-label"
                         >
-                          {t("Date Of Birth")}{" "}
+                          {t("Date_Of_Birth")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -272,14 +272,14 @@ function Add_Students({ isOpen, setIsOpen }) {
                           htmlFor="phonenumber"
                           className="custom-form-label"
                         >
-                          {t("Phone Number")}{" "}
+                          {t("Phone_Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="phonenumber"
-                          placeholder={t("Enter Number")}
+                          placeholder={t("Enter_Number")}
                           value={phoneNumber}
                           onChange={(e) => setPhoneNumber(e.target.value)}
                         />
@@ -300,7 +300,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                           type="text"
                           className="custom-input-field"
                           id="school-class"
-                          placeholder={t("Enter Class")}
+                          placeholder={t("Enter_Class")}
                           name="classname"
                           value={classname}
                           onChange={(e) => setClassname(e.target.value)}
@@ -394,7 +394,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                           type="text"
                           className="custom-input-field"
                           id="address"
-                          placeholder={t("Enter Address")}
+                          placeholder={t("Enter_Address")}
                           rows="5"
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
@@ -410,7 +410,7 @@ function Add_Students({ isOpen, setIsOpen }) {
                           onClick={handleSubmit}
                           className="custom-btn col-md-4"
                         >
-                          {t("Add Student")}
+                          {t("Add_Student")}
                         </button>
                       </div>
                     </form>

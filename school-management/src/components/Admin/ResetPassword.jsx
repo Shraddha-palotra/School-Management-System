@@ -38,22 +38,22 @@ function ResetPassword() {
     let formErrors = {};
 
     if (!password) {
-      formErrors.password = t("Password is required");
+      formErrors.password = t("Password_required");
     }else if (password.length < 8) {
-      formErrors.password = t("Password should be at least 8 characters");
+      formErrors.password = t("Password_8_characters");
     }
 
     if (!confirmPassword){
-      formErrors.confirmPassword = t("Confirm password is required");
+      formErrors.confirmPassword = t("Confirm_password_required");
     }else if (password !== confirmPassword) {
-      formErrors.confirmPassword = t("Passwords do not match");
+      formErrors.confirmPassword = t("Passwords_no_match");
     }
      setErrors(formErrors)
      if (Object.keys(formErrors).length === 0) {
       resetPassword(token, password, confirmPassword)
         .then((response) => {
           if (response.data.status) {
-            alert('Password updated!');
+            alert(t('Password updated'));
             navigate('/login');
           }
         })
@@ -73,8 +73,8 @@ function ResetPassword() {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3>{t("Reset Password")}</h3>
-                  <p>{t("Please give some details to help fill out your account.")}</p>
+                  <h3>{t("Reset_Password")}</h3>
+                  <p>{t("Please_details_account")}</p>
                 </div>
                 <div className="form">
                   <form
@@ -86,7 +86,7 @@ function ResetPassword() {
                         htmlFor="newPassword"
                         className="custom-form-label"
                       >
-                        {t("New Password")}
+                        {t("New_Password")}
                       </label>
                       <div className="possionIconInput" >
                         <img 
@@ -101,7 +101,7 @@ function ResetPassword() {
                         className="custom-input-field"
                         type={passwordToggle.password ? "text" : "password"}
                         id="newPassword"
-                        placeholder={t("Enter New Password")}
+                        placeholder={t("Enter_New_Password")}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}  
                       />
@@ -115,7 +115,7 @@ function ResetPassword() {
                         htmlFor="confirmPassword"
                         className="custom-form-label"
                       >
-                        {t("Confirm Password")}
+                        {t("Confirm_Password")}
                       </label>
                       <div className="possionIconInput" >
                         <img 
@@ -130,7 +130,7 @@ function ResetPassword() {
                         className="custom-input-field"
                         type={passwordToggle.confirmPassword ? "text" : "con"}
                         id="confirmPassword"
-                        placeholder={t("Enter Confirm Password")}
+                        placeholder={t("Enter_Confirm_Password")}
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                       />

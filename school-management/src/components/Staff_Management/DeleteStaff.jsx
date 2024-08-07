@@ -60,8 +60,8 @@ function DeleteStaff({ data }) {
             </div>
             <div className="modal-body">
               <img src={deleteModal_icon} alt="" className="mainIconModal" />
-              <h2>{t("Delete Staff")}</h2>
-              <p>{t("Are you sure you want to Delete")} {eachStaff?.staffName}?</p>
+              <h2>{t("Delete_Staff")}</h2>
+              <p>{t("Want_to_Delete")} {eachStaff?.staffName}?</p>
               <div className="footbutton">
                 <button
                   type="button"

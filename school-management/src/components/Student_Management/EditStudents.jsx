@@ -67,12 +67,12 @@ function EditStudents({ items, isOpen, setIsOpen }) {
       try {
         const response = await updateStudent(studentData._id, formData);
         if (response.status) {
-          toast.success('Successfully updated student');
+          toast.success(t("Successfully_updated_student"));
           setTimeout(() => {
             navigate('/student');
           }, 1000);
         } else {
-          setErrors({ rollNumber: response.message });
+          setErrors({ rollNumber: t(response.message) });
         }
       } catch (err) {
         console.error(err);
@@ -109,7 +109,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                {t("Edit Student")}
+                                {t("Edit_Student")}
                               </li>
                             </ol>
                           </nav>
@@ -140,21 +140,21 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             />
                           </div>
                         </div>
-                        <h6>{t("Profile Image")}</h6>
+                        <h6>{t("Profile_Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
                       <div className="col-md-4">
                         <label htmlFor="rollNumber" className="custom-form-label">
-                          {t("Roll Number")}{" "}
+                          {t("Roll_Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="rollNumber"
-                          placeholder={t("Enter Roll Number")}
+                          placeholder={t("Enter_Roll_Number")}
                           name='rollNumber'
                           value={studentData.rollNumber}
                           onChange={handleChange}
@@ -170,14 +170,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="fullname"
                             className="custom-form-label"
                           >
-                            {t("Student Name")}{" "}
+                            {t("Student_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            placeholder={t("Enter Name")}
+                            placeholder={t("Enter_Name")}
                             name='studentName'
                             value={studentData.studentName}
                             onChange={handleChange}
@@ -191,14 +191,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="fathername"
                             className="custom-form-label"
                           >
-                            {t("Father Name")}{" "}
+                            {t("Father_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="fathername"
-                            placeholder={t("Enter Father Name")}
+                            placeholder={t("Enter_Father_Name")}
                             name='fatherName'
                             value={studentData.fatherName}
                             onChange={handleChange}
@@ -212,14 +212,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             htmlFor="mothername"
                             className="custom-form-label"
                           >
-                            {t("Mother Name")}{" "}
+                            {t("Mother_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="mothername"
-                            placeholder={t("Enter Mother Name")}
+                            placeholder={t("Enter_Mother_Name")}
                             name='motherName'
                             value={studentData.motherName}
                             onChange={handleChange}
@@ -230,7 +230,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="dateofbirth" className="custom-form-label">
-                            {t("Date Of Birth")}{" "}
+                            {t("Date_Of_Birth")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -247,14 +247,14 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="phonenumber" className="custom-form-label">
-                            {t("Phone Number")}{" "}
+                            {t("Phone_Number")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="phonenumber"
-                            placeholder={t("Enter Number")}
+                            placeholder={t("Enter_Number")}
                             name='phoneNumber'
                             value={studentData.phoneNumber}
                             onChange={handleChange}
@@ -274,7 +274,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="school-class"
-                            placeholder={t("Enter Class")}
+                            placeholder={t("Enter_Class")}
                             name='classname'
                             value={studentData.classname}
                             onChange={handleChange}
@@ -372,7 +372,7 @@ function EditStudents({ items, isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="address"
-                            placeholder={t("Enter Address")}
+                            placeholder={t("Enter_Address")}
                             rows="6"
                             value={studentData.address}
                             name='address'

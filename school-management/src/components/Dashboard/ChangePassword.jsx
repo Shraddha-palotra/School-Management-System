@@ -7,7 +7,8 @@ import offEye from "../assets/images/offEye.png";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import { changeUserPassword } from "../API's/ChangePasswordAPI";
+import { useTranslation } from "react-i18next";
 
 function ChangePassword({ isOpen, setIsOpen }) {
   const [oldPassword, setOldPassword] = useState("");
@@ -15,6 +16,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [backendError, setBackendError] = useState("");
+  const {t} = useTranslation();
 
   const navigate = useNavigate();
 
@@ -26,9 +28,6 @@ function ChangePassword({ isOpen, setIsOpen }) {
 
   const handlePasswordToggle = (e, key, value) => {
     e.preventDefault();
-    console.log("e", e);
-    console.log("key", key);
-    console.log("value", value);
     setPasswordToggle((prevData) => ({
       ...prevData,
       [key]: value,
@@ -37,25 +36,24 @@ function ChangePassword({ isOpen, setIsOpen }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     let formErrors = {}; 
 
     if (!oldPassword) {
-      formErrors.oldPassword = "Password is required";
+      formErrors.oldPassword = t("Password is required");
     } else if (oldPassword.length < 8) {
-      formErrors.oldPassword = "Password should be at least 8 characters";
+      formErrors.oldPassword = t("Password should be at least 8 characters");
     }
 
     if (!newPassword) {
-      formErrors.newPassword = "Password is required";
+      formErrors.newPassword = t("Password is required");
     } else if (newPassword.length < 8) {
-      formErrors.newPassword = "Password should be at least 8 characters";
+      formErrors.newPassword = t("Password should be at least 8 characters");
     }
 
     if (!confirmPassword) {
-      formErrors.confirmPassword = "Confirm password is required";
+      formErrors.confirmPassword = t("Confirm password is required");
     } else if (newPassword !== confirmPassword) {
-      formErrors.confirmPassword = "Passwords do not match";
+      formErrors.confirmPassword = t("Passwords do not match");
     }
     setErrors(formErrors);
     setBackendError("");
@@ -63,7 +61,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
     if (Object.keys(formErrors).length > 0) {
       return; 
     }
-     
+
     const userJson = localStorage.getItem("user");
     if (!userJson) {
       toast.error("User not found. Please log in again.");
@@ -82,43 +80,33 @@ function ChangePassword({ isOpen, setIsOpen }) {
       toast.error("Invalid user data. Please log in again.");
       return;
     }
-    
 
-     const userId = user._id;
-     const data = {
-       oldPassword,
-       newPassword,
-       confirmPassword,
-     };
- 
-   
-      try {
-        const res = await axios.put(
-          `http://localhost:8080/auth/changepassword/${userId}`,
-          data
-        );
-        // console.log(res.data.status);
-        if (res.data.status) {
-          toast.success('Successfully update password');
-          setTimeout(() => {
+    const userId = user._id;
+    const data = {
+      oldPassword,
+      newPassword,
+      confirmPassword,
+    };
+
+    try {
+      const res = await changeUserPassword(userId, data);
+      if (res.status) {
+        toast.success(t("Successfully updated password"));
+        setTimeout(() => {
           navigate("/dashboard");
-        },1000);
-        }else {
-          if (res.data.field === 'oldPassword') {
-            setBackendError(res.data.message)
-          }
-        }
-      } catch (err) {
-        if (
-          err.response && 
-          err.response.data && 
-          err.response.data.field === 'oldPassword'
-        ) {
-          setBackendError(err.response.data.message);
-        }else {
-          console.log(err);
+        }, 1000);
+      } else {
+        if (res.field === 'oldPassword') {
+          setBackendError(t(res.message));
         }
       }
+    } catch (err) {
+      if (err.field === 'oldPassword') {
+        setBackendError(t(err.message));
+      } else {
+        console.error(err);
+      }
+    }
   };
 
   return (
@@ -135,7 +123,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                     <div className="col-xxl-12">
                       <div className="greetingsText mb-3">
                         <div className="greetingsText-heading">
-                          <h3>Change Password</h3>
+                          <h3>{t("Change_Password")}</h3>
                         </div>
                       </div>
                     </div>
@@ -150,7 +138,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                             htmlFor="oldpassword"
                             className="custom-htmlForm-label"
                           >
-                            Old Password{" "}
+                            {t("Old_Password")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <div className="possionIconInput">
@@ -168,7 +156,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                               }
                               className="custom-input-field"
                               id="oldpassword"
-                              placeholder="Enter Old Password"
+                              placeholder={t("Enter_Old_Password")}
                               onChange={(e) => setOldPassword(e.target.value)}
                             />
                           </div>
@@ -189,7 +177,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                             htmlFor="newpassword"
                             className="custom-htmlForm-label"
                           >
-                            New Password{" "}
+                            {t("New Password")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <div className="possionIconInput">
@@ -211,7 +199,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                               }
                               className="custom-input-field"
                               id="newpassword"
-                              placeholder="Enter New Password"
+                              placeholder={t("Enter New Password")}
                               onChange={(e) => setNewPassword(e.target.value)}
                             />
                           </div>
@@ -226,7 +214,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                             htmlFor="confirmpassword"
                             className="custom-htmlForm-label"
                           >
-                            Confirm Password{" "}
+                            {t("Confirm Password")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <div className="possionIconInput">
@@ -252,7 +240,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                               }
                               className="custom-input-field"
                               id="confirmpassword"
-                              placeholder="Enter Confirm Password"
+                              placeholder={t("Enter Confirm Password")}
                               onChange={(e) =>
                                 setConfirmPassword(e.target.value)
                               }
@@ -270,7 +258,7 @@ function ChangePassword({ isOpen, setIsOpen }) {
                             onClick={handleSubmit}
                             className="custom-btn col-md-4"
                           >
-                            Change Password
+                            {t("Change Password")}
                           </button>
                         </div>
                       </form>

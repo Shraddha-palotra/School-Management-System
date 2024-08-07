@@ -19,7 +19,7 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
       if (response.data.status) {
         localStorage.removeItem("credentials");
         localStorage.setItem("token", response.data.token);
-        toast.success("Verify OTP successfully");
+        toast.success(t("Verify_successfully"));
         setTimeout(() => {
           navigate("/dashboard");
         }, 1000);
@@ -28,7 +28,7 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
     .catch((err) => {
       console.log("Internal server error", err);
       if (err.response && err.response.data) {
-        setErrors(err.response.data.message);
+        setErrors(t(err.response.data.message));
       }
     });
 };
@@ -48,8 +48,8 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
                   <img src={dummy_logo} alt="" />
                 </div>
                 <div className="heading-text">
-                  <h3> {t("Verify OTP")}</h3>
-                  <p>{t("Enter the OTP sent to your email !")}</p>
+                  <h3> {t("Verify_OTP")}</h3>
+                  <p>{t("Enter_OTP_email")}</p>
                 </div>
                 <div className="form">
                   <form className="row g-2" onSubmit={handleVerifyOtp}>
@@ -63,7 +63,7 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
                         className="custom-input-field"
                         type="text"
                         id="otp"
-                        placeholder={t("Enter otp")}
+                        placeholder={t("Enter_otp")}
                       />
                       {errors && (
                       <p className="required-validation">{errors}</p>
@@ -74,7 +74,7 @@ function VerifyOtp({ email,name, phoneNumber, password,setOtpSent, navigate}) {
                       <button
                         className="custom-btn" 
                         type="submit" >
-                        {t("Verify OTP")}
+                        {t("Verify_OTP")}
                       </button>
                     </div>
                     <div className="col-md-12 mt-4">

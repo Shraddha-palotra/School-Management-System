@@ -89,7 +89,7 @@ function Students({isOpen, setIsOpen}) {
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder={t("Search Student")}
+                      placeholder={t("Search_Student")}
                       value={searchStudent}
                       onChange={(e) => setSearchStudent(e.target.value)}
                     />
@@ -101,10 +101,9 @@ function Students({isOpen, setIsOpen}) {
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">{t("Roll Number")}</th>
-                            <th scope="col">{t("Student Name")}</th>
-                            <th scope="col">{t("Father Name")} </th>
-                            {/* <th scope="col">Date of Birth</th> */}
+                            <th scope="col">{t("Roll_Number")}</th>
+                            <th scope="col">{t("Student_Name")}</th>
+                            <th scope="col">{t("Father_Name")} </th>
                             <th scope="col">{t("Class")}</th>
                             <th scope="col">{t("Contact")}</th>
                             <th scope="col">{t("Gender")}</th>

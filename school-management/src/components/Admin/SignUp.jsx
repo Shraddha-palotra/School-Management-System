@@ -41,30 +41,30 @@ const SignUp = () => {
 
     let formErrors = {};
 
-    if (!name) formErrors.name = t("Full name is required");
+    if (!name) formErrors.name = t("Full_name_required");
     // console.log(formErrors.name);
 
     if (!phoneNumber) {
-      formErrors.phoneNumber = t("Phone number is required");
+      formErrors.phoneNumber = t("Phone_number_required");
     }
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      formErrors.email = t("Email is required");
+      formErrors.email = t("Email_required");
     } else if (!emailPattern.test(email)) {
-      formErrors.email = t("Please enter a valid email address");
+      formErrors.email = t("Please_enter_email");
     }
 
     if (!password) {
-      formErrors.password = t("Password is required");
+      formErrors.password = t("Password_required");
     } else if (password.length < 8) {
-      formErrors.password = t("Password should be at least 8 characters");
+      formErrors.password = t("Password_8_characters");
     }
 
     if (!confirmPassword) {
-      formErrors.confirmPassword = t("Confirm password is required");
+      formErrors.confirmPassword = t("Confirm_password_required");
     } else if (password !== confirmPassword) {
-      formErrors.confirmPassword = t("Passwords do not match");
+      formErrors.confirmPassword = t("Passwords_not_match");
     }
 
     setErrors(formErrors);
@@ -73,12 +73,12 @@ const SignUp = () => {
         .then((response) => {
           console.log(response);
           if (response.data.status) {
-            toast.success("Successfully Signed Up", { autoClose: 1000 });
+            toast.success(t("Successfully_Signup"), { autoClose: 1000 });
             setOtpSent(true);
             localStorage.setItem("token", response.data.token);
             localStorage.setItem("credentials", JSON.stringify({ email, phoneNumber, name, password }));
           } else {
-            setErrors({ email: response.data.message });
+            setErrors({ email: t(response.data.message) });
           }
         })
         .catch((err) => {
@@ -108,19 +108,19 @@ const SignUp = () => {
                 </div>
                 <div className="heading-text">
                   <h3>{t("Signup")}</h3>
-                  <p>{t("Hey, Enter your details to get sign up to your account")}</p>
+                  <p>{t("Enter_your_details_account")}</p>
                 </div>
                 <div className="form">
                   <form className="row g-2" onSubmit={handleSubmit}>
                     <div className="col-md-12">
                       <label htmlFor="name" className="custom-form-label">
-                        {t("Full Name")}
+                        {t("Full_Name")}
                       </label>
                       <input
                         type="text"
                         className="custom-input-field"
                         id="Name"
-                        placeholder={t("Enter Name")}
+                        placeholder={t("Enter_Name")}
                         value={name}
                         onChange={(e) => {
                           setName(e.target.value);
@@ -132,13 +132,13 @@ const SignUp = () => {
                     </div>
                     <div className="col-md-12">
                       <label htmlFor="phoneNuber" className="custom-form-label">
-                        {t("Phone Number")}
+                        {t("Phone_Number")}
                       </label>
                       <input
                         type="text"
                         className="custom-input-field"
                         id="phoneNuber"
-                        placeholder={t("Enter Number")}
+                        placeholder={t("Enter_Number")}
                         value={phoneNumber}
                         onChange={(e) => {
                           setPhoneNumber(e.target.value);
@@ -158,7 +158,7 @@ const SignUp = () => {
                         type="email"
                         className="custom-input-field"
                         id="email"
-                        placeholder={t("Enter Email")}
+                        placeholder={t("Enter_Email")}
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
@@ -189,7 +189,7 @@ const SignUp = () => {
                           type={passwordToggle.password ? "text" : "password"}
                           className="custom-input-field"
                           id="lastname"
-                          placeholder={t("Enter Password")}
+                          placeholder={t("Enter_Password")}
                           value={password}
                           onChange={(e) => {
                             setPassword(e.target.value);
@@ -202,7 +202,7 @@ const SignUp = () => {
                     </div>
                     <div className="col-md-6">
                       <label htmlFor="password" className="custom-form-label">
-                       {t("Confirm Password")}
+                       {t("Confirm_Password")}
                       </label>
                       <div className="possionIconInput">
                         <img
@@ -224,7 +224,7 @@ const SignUp = () => {
                           }
                           className="custom-input-field"
                           id="lastname"
-                          placeholder={t("Enter Password")}
+                          placeholder={t("Enter_Password")}
                           value={confirmPassword}
                           onChange={(e) => {
                             setConfirmPassword(e.target.value);
@@ -241,7 +241,7 @@ const SignUp = () => {
                       <button className="custom-btn">{t("Signup")}</button>
                     </div>
                     <p className="d-flex mt-4 justify-content-center">
-                    {t("Already Have an Account?")}  &nbsp;
+                    {t("Already_Account")}  &nbsp;
                       {/* <Link to="/login">Login</Link> */}
                       <span
                         onClick={() => {

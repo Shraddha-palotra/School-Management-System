@@ -4,7 +4,7 @@ export const BASE_URL = "http://localhost:8080/fee/";
 export const addFee = async (feeData) => {
   try {
     const response = await Axios.post(`${BASE_URL}addfees`, feeData);
-    console.log("Add Fee Response:", response.data);
+    console.log("Add Fee Response:", response.data.message);
     return response.data;
   } catch (error) {
     console.error("Error adding fee:", error);

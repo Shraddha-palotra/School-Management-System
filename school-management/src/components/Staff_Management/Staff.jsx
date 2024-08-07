@@ -84,7 +84,7 @@ function Staff({isOpen, setIsOpen}) {
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder={t("Search Staff")}
+                      placeholder={t("Search_Staff")}
                       value={searchStaff}
                       onChange={(e) => setSearchStaff(e.target.value)}
                     />
@@ -97,9 +97,9 @@ function Staff({isOpen, setIsOpen}) {
                         <thead>
                           <tr>
                             <th scope="col">{t("Id")}</th>
-                            <th scope="col">{t("Staff Name")}</th>
-                            <th scope="col">{t("Staff Position")}</th>
-                            <th scope="col">{t("Join Date")}</th>
+                            <th scope="col">{t("Staff_Name")}</th>
+                            <th scope="col">{t("Staff_Position")}</th>
+                            <th scope="col">{t("Join_Date")}</th>
                             <th scope="col">{t("Gender")}</th>
                             <th scope="col">{t("Salary")}</th>
                             <th scope="col">{t("Contact")}</th>

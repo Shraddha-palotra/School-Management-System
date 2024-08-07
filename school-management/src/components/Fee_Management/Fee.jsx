@@ -86,7 +86,7 @@ useEffect(() => {
                     <input
                       type="text"
                       className="custom-input-field"
-                      placeholder={t("Search Student")}
+                      placeholder={t("Search_Student")}
                       value={searchFeeData}
                       onChange={(e) => setSearchFeeData(e.target.value)}
                     />
@@ -98,11 +98,11 @@ useEffect(() => {
                       <table className="custom-table">
                         <thead>
                           <tr>
-                            <th scope="col">{t("Roll Number")}</th>
-                            <th scope="col">{t("Student Name")}</th>
-                            <th scope="col">{t("Father Name")}</th>
+                            <th scope="col">{t("Roll_Number")}</th>
+                            <th scope="col">{t("Student_Name")}</th>
+                            <th scope="col">{t("Father_Name")}</th>
                             <th scope="col">{t("Class")}</th>
-                            <th scope="col">{t("Quaterly Fee")}</th>
+                            <th scope="col">{t("Quaterly_Fee")}</th>
                             <th scope="col">{t("Status")}</th>
                             <th scope="col">{t("Action")}</th>
                           </tr>

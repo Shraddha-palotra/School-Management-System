@@ -45,7 +45,7 @@ function ViewFee({isOpen,setIsOpen}) {
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              {t("View Fee")}
+                              {t("View_Fee")}
                             </li>
                           </ol>
                         </nav>
@@ -76,14 +76,14 @@ function ViewFee({isOpen,setIsOpen}) {
                           />
                         </div>
                       </div>
-                      <h6>{t("Profile Image")}</h6>
+                      <h6>{t("Profile_Image")}</h6>
                     </div>
                   </div>
                   <div className="col-xxl-10">
                     <form className="row g-3">
                     <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                          {t("Roll Number")}{" "}
+                          {t("Roll_Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -97,7 +97,7 @@ function ViewFee({isOpen,setIsOpen}) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
-                          {t("Student Name")}{" "}
+                          {t("Student_Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -117,7 +117,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="fathername"
                           className="custom-form-label"
                         >
-                          {t("Father Name")}{" "}
+                          {t("Father_Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
@@ -174,7 +174,7 @@ function ViewFee({isOpen,setIsOpen}) {
                           htmlFor="quarterly"
                           className="custom-form-label"
                         >
-                          {t("Quarterly fee")}{" "}
+                          {t("Quarterly_fee")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input

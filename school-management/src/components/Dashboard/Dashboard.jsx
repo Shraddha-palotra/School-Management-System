@@ -97,7 +97,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{t("Welcome")}</h2>
-                          <span>{t("High school")}</span>
+                          <span>{t("High_school")}</span>
                         </div>
                       </div>
                     </div>
@@ -107,7 +107,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{totalStudent.length}</h2>
-                          <span>{t("Total Student's")}</span>
+                          <span>{t("Total_Student's")}</span>
                         </div>
                       </div>                     
                     </div>
@@ -117,7 +117,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{totalStaff.length}</h2>
-                          <span>{t("Total Staff")}</span>
+                          <span>{t("Total_Staff")}</span>
                         </div>
                       </div>
                     </div>
@@ -127,7 +127,7 @@ fetchStudent();
                       <div className="left-data">
                         <div className="heading">
                           <h2 className="count">{totalFee.length}</h2>
-                          <span>{t("Due Amount's")}</span>
+                          <span>{t("Due_Amount's")}</span>
                         </div>
                       </div>
                     </div>

@@ -57,15 +57,19 @@ function AddFee({ isOpen, setIsOpen }) {
         const response = await addFee(formData);
 
         if (response.status) {
-          toast.success("Successfully added new student");
+          toast.success(t("Successfully_added_student"));
           setTimeout(() => {
             navigate("/fee");
           }, 1000);
-        } else {
-          setErrors({ general: "Student name, father name, or class are wrong." });
+        }  else {
+          setErrors({ [response.field]: t(response.message) });          
         }
       } catch (err) {
-        setErrors({ general: "Failed to add fee, please try again." }); 
+        if (err.response && err.response.data && err.response.data.message) {
+          setErrors({ [err.response.data.field]: t(err.response.data.message) });
+        } else {
+          console.log(err);
+        }
       }
     }
   };
@@ -98,7 +102,7 @@ function AddFee({ isOpen, setIsOpen }) {
                               className="breadcrumb-item active"
                               aria-current="page"
                             >
-                              {t("Add Fee")}
+                              {t("Add_Fee")}
                             </li>
                           </ol>
                         </nav>
@@ -137,14 +141,14 @@ function AddFee({ isOpen, setIsOpen }) {
                     <form className="row g-3">
                     <div className="col-md-4">
                         <label htmlFor="rollnumber" className="custom-form-label">
-                        {t("Roll Number")}{" "}
+                        {t("Roll_Number")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="rollnumber"
-                          placeholder={t("Enter Roll Number")}
+                          placeholder={t("Enter_Roll_Number")}
                           value={rollNumber}
                           onChange={(e) =>setRollNumber(e.target.value)}
                         />
@@ -156,14 +160,14 @@ function AddFee({ isOpen, setIsOpen }) {
                       </div>
                       <div className="col-md-4">
                         <label htmlFor="fullname" className="custom-form-label">
-                        {t("Student Name")}{" "}
+                        {t("Student_Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fullname"
-                          placeholder={t("Enter Name")}
+                          placeholder={t("Enter_Name")}
                           value={studentName}
                           onChange={(e) => setStudentName(e.target.value)}
                         />
@@ -179,14 +183,14 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="fathername"
                           className="custom-form-label"
                         >
-                          {t("Father Name")}{" "}
+                          {t("Father_Name")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="fathername"
-                          placeholder={t("Enter Father Name")}
+                          placeholder={t("Enter_Father_Name")}
                           value={fatherName}
                           onChange={(e) => setFatherName(e.target.value)}
                         />
@@ -208,7 +212,7 @@ function AddFee({ isOpen, setIsOpen }) {
                           type="text"
                           className="custom-input-field"
                           id="school-class"
-                          placeholder={t("Enter Class")}
+                          placeholder={t("Enter_Class")}
                           name="classname"
                           value={classname}
                           onChange={(e) => setClassname(e.target.value)}
@@ -224,7 +228,7 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="class-section"
                           className="custom-form-label"
                         >
-                          {t("Section ")}<span className="required-validation">*</span>
+                          {t("Section")}<span className="required-validation">*</span>
                         </label>
                         <select
                           className="custom-input-field"
@@ -248,14 +252,14 @@ function AddFee({ isOpen, setIsOpen }) {
                           htmlFor="quarterly"
                           className="custom-form-label"
                         >
-                          {t("Quarterly fee")}{" "}
+                          {t("Quarterly_fee")}{" "}
                           <span className="required-validation">*</span>
                         </label>
                         <input
                           type="text"
                           className="custom-input-field"
                           id="quarterly"
-                          placeholder={t("Enter Quarterly fee")}
+                          placeholder={t("Enter_Quarterly_fee")}
                           name="quaterlyFee"
                           value={quaterlyFee}
                           onChange={(e) => setQuaterlyFee(e.target.value)}
@@ -316,7 +320,7 @@ function AddFee({ isOpen, setIsOpen }) {
                           type="text"
                           className="custom-input-field"
                           id="description"
-                          placeholder={t("Enter Description")}
+                          placeholder={t("Enter_Description")}
                           rows="6"
                           name="description"
                           value={description}
@@ -338,7 +342,7 @@ function AddFee({ isOpen, setIsOpen }) {
                           onClick={handleSubmit}
                           className="custom-btn col-md-4"
                         >
-                          {t("Add Fee")}
+                          {t("Add_Fee")}
                         </button>
                       </div>
                     </form>

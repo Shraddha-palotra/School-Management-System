@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import profileImg from "../assets/images/profileImg.png";
 import camera from "../assets/images/camera.png";
 import { toast, ToastContainer } from "react-toastify";
@@ -7,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar";
 import HeaderDash from "./HeaderDash";
+import { useTranslation } from "react-i18next";
+import { fetchUserData, updateUserProfile } from "../API's/ProfileAPI";
 
 
 function Profile({ items, isOpen, setIsOpen }) { 
@@ -14,40 +15,21 @@ function Profile({ items, isOpen, setIsOpen }) {
   const [loggedAdmin, setLoggedAdmin] = useState({});
   // console.log('userData',loggedAdmin);
   const navigate = useNavigate();
+  const {t} = useTranslation();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetchUserData();
+      fetchUserData(token)
+        .then(data => setLoggedAdmin(data))
+        .catch(err => console.error(err));
     } else {
       console.error("No user data found in localStorage");
     }
   }, []);
-  
-  const fetchUserData = async () => {
-    const token = localStorage.getItem("token");
-    try {
-      const response = await axios.get(`http://localhost:8080/auth/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      if (response.status === 200 && response.data) {
-        setLoggedAdmin(response.data.data);
-        // console.log("User data fetched:", response.data.data);
-      } else {
-        console.error("Failed to fetch user data");
-      }
-    } catch (error) {
-      console.error(error);
-    } 
-  }; 
-  
+
   const handleChange = (e) => {
-    // console.log(handleChange);
     const { name, value } = e.target;
-    console.log("name is", name);  
-    console.log("value is", value);
     setLoggedAdmin((prevData) => ({
       ...prevData,
       [name]: value,
@@ -63,7 +45,6 @@ function Profile({ items, isOpen, setIsOpen }) {
 
     if (!loggedAdmin || !loggedAdmin._id) { 
       toast.error("User data is missing.");
-      console.log("user data is missing.")
       return;
     }
 
@@ -71,41 +52,21 @@ function Profile({ items, isOpen, setIsOpen }) {
     formData.append("fullname", loggedAdmin.name || "");
     formData.append("email", loggedAdmin.email || "");
     formData.append("phoneNum", loggedAdmin.phoneNumber || "");
-
     if (profileImage) formData.append("profileImage", profileImage);
-    // console.log("fromdata is ", formData);
 
-    const fun = async (req, res) => {
-      try {
-        const id = loggedAdmin._id;
-        // console.log("id in profile handle submit", id);
-        const res = await axios.put(
-          `http://localhost:8080/auth/updateprofile/${id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        // console.log("response is", res.data);
-        if (res.data.status) {
-          localStorage.setItem(
-            "user",
-            JSON.stringify(res.data.updatedProfileUser)
-          );
-          toast.success("Successfully update prodile");
-          setLoggedAdmin(res.data.updatedProfileUser); 
-          setTimeout(() => {
-            navigate("/dashboard", { state: { items } });
-          }, 1000);
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to update profile");
+    try {
+      const response = await updateUserProfile(loggedAdmin._id, formData);
+      if (response.status) {
+        localStorage.setItem("user", JSON.stringify(response.updatedProfileUser));
+        toast.success("Successfully updated profile");
+        setLoggedAdmin(response.updatedProfileUser); 
+        setTimeout(() => {
+          navigate("/dashboard", { state: { items } });
+        }, 1000);
       }
-    };
-    fun();
+    } catch (error) {
+      toast.error("Failed to update profile");
+    }
   };
   return (
     <>
@@ -122,7 +83,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                     <div className="col-xxl-12">
                       <div className="greetingsText mb-3">
                         <div className="greetingsText-heading">
-                          <h3>Profile</h3>
+                          <h3>{t("Profile")}</h3>
                         </div>
                       </div>
                     </div>
@@ -164,7 +125,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                                 />
                               </div>
                             </div>
-                            <h6>Profile Image</h6>
+                            <h6>{t("Profile Image")}</h6>
                           </div>
                         </div>
                         <div className="col-md-12">
@@ -172,7 +133,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             htmlFor="fullname"
                             className="custom-htmlForm-label"
                           >
-                            Full Name{" "}
+                           {t("Full Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -189,7 +150,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             htmlFor="email"
                             className="custom-htmlForm-label"
                           >
-                            Email
+                            {t("Email")}
                           </label>
                           <input
                             type="email"
@@ -205,7 +166,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             htmlFor="contact-number"
                             className="custom-htmlForm-label"
                           >
-                            Contact Number{" "}
+                            {t("Contact Number")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -222,7 +183,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             htmlFor="address"
                             className="custom-htmlForm-label"
                           >
-                            Address
+                            {t("Address")}
                           </label>
                           <textarea
                             type="text"
@@ -236,7 +197,7 @@ function Profile({ items, isOpen, setIsOpen }) {
                             onClick={handleSubmit}
                             className="custom-btn col-md-6"
                           >
-                            Save
+                            {t("Save")}
                           </button>
                         </div>
                       </form>

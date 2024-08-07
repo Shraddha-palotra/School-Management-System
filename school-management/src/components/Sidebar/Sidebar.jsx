@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 
 function Sidebar({ isOpen }) {
   const navigate = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -55,7 +55,7 @@ function Sidebar({ isOpen }) {
               window.location.pathname === "/staff" ||
               window.location.pathname === "/add-staff" ||
               window.location.pathname === "/edit-staffs" ||
-              window.location.pathname === "/view-staffs" 
+              window.location.pathname === "/view-staffs"
                 ? "active item"
                 : "item"
             }
@@ -72,8 +72,8 @@ function Sidebar({ isOpen }) {
             className={
               window.location.pathname === "/fee" ||
               window.location.pathname === "/add-fee" ||
-              window.location.pathname === "/edit-fee" || 
-              window.location.pathname === "/view-fee" 
+              window.location.pathname === "/edit-fee" ||
+              window.location.pathname === "/view-fee"
                 ? "active item"
                 : "item"
             }

@@ -77,7 +77,7 @@ function AddStaff({ isOpen, setIsOpen }) {
       try {
         const response = await addStaff(formDataToSend); 
         if (response.status) {
-          toast.success("Successfully added new staff");
+          toast.success(t("Successfully_added_staff"));
           setTimeout(() => {
             navigate("/staff");
           }, 1000);
@@ -85,7 +85,7 @@ function AddStaff({ isOpen, setIsOpen }) {
       } catch (err) {
         console.error(err);
         if (err.response && err.response.data) {
-          setErrors({ [err.response.data.field]: err.response.data.message });
+          setErrors({ [err.response.data.field]:t(err.response.data.message) });
         } else {
           toast.error("An unexpected error occurred");
         }
@@ -123,7 +123,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                {t("Add Staff")}
+                                {t("Add_Staff")}
                               </li>
                             </ol>
                           </nav>
@@ -165,7 +165,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                             {errors.profileImage}
                           </p>
                         )}
-                        <h6>{t("Profile Image")}</h6>
+                        <h6>{t("Profile_Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
@@ -175,14 +175,14 @@ function AddStaff({ isOpen, setIsOpen }) {
                             htmlFor="fullname"
                             className="custom-form-label"
                           >
-                            {t("Full Name")}{" "}
+                            {t("Full_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="fullname"
-                            placeholder={t("Enter Name")}
+                            placeholder={t("Enter_Name")}
                             value={staffName}
                             onChange={(e) => setStaffName(e.target.value)}
                           />
@@ -194,7 +194,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="role" className="custom-form-label">
-                            {t("Staff Position")}{" "}
+                            {t("Staff_Position")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <select
@@ -205,17 +205,17 @@ function AddStaff({ isOpen, setIsOpen }) {
                             <option value="">{t("Position")}</option>
                             <option value="Principle">{t("Principle")}</option>
                             <option value="Vice principle">
-                              {t("Vice princeple")}
+                              {t("Vice_princeple")}
                             </option>
                             <option value="Accountent">
                               {t("Accountent")}
                             </option>
                             <option value="Senior Teacher">
-                              {t("Senior Teacher")}
+                              {t("Senior_Teacher")}
                             </option>
                             <option value="Teacher">{t("Teacher")}</option>
                             <option value="Other Staff">
-                              {t("Other Staff")}
+                              {t("Other_Staff")}
                             </option>
                             <option value="Security">{t("Security")}</option>
                           </select>
@@ -234,7 +234,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="email"
-                            placeholder={t("Enter Email")}
+                            placeholder={t("Enter_Email")}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                           />
@@ -249,14 +249,14 @@ function AddStaff({ isOpen, setIsOpen }) {
                             htmlFor="contact-number"
                             className="custom-form-label"
                           >
-                            {t("Phone Number")}{" "}
+                            {t("Phone_Number")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
                             type="text"
                             className="custom-input-field"
                             id="contact-number"
-                            placeholder={t("Enter Contact Nubmer")}
+                            placeholder={t("Enter_Contact_Nubmer")}
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
                           />
@@ -272,7 +272,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                             className="custom-form-label"
                           >
                             {" "}
-                            {t("Join Date")}
+                            {t("Join_Date")}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -297,7 +297,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="salary"
-                            placeholder={t("Enetr Salary")}
+                            placeholder={t("Enetr-Salary")}
                             value={salary}
                             onChange={(e) => setSalary(e.target.value)}
                           />
@@ -371,7 +371,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                             type="text"
                             className="custom-input-field"
                             id="description"
-                            placeholder={t("Enter Description")}
+                            placeholder={t("Enter_Description")}
                             rows="6"
                             value={description}
                             onChange={(e) => setDiscription(e.target.value)}
@@ -387,7 +387,7 @@ function AddStaff({ isOpen, setIsOpen }) {
                             onClick={handleSubmit}
                             className="custom-btn col-md-4"
                           >
-                            {t("Add Staff")}
+                            {t("Add_Staff")}
                           </button>
                         </div>
                       </form>

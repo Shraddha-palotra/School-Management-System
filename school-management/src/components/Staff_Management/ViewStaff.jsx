@@ -44,7 +44,7 @@ function ViewStaff({isOpen,setIsOpen}) {
                                 className="breadcrumb-item active"
                                 aria-current="page"
                               >
-                                {t("View Staff")}
+                                {t("View_Staff")}
                               </li>
                             </ol>
                           </nav>
@@ -74,14 +74,14 @@ function ViewStaff({isOpen,setIsOpen}) {
                             />
                           </div>
                         </div>
-                        <h6>{t("Profile Image")}</h6>
+                        <h6>{t("Profile_Image")}</h6>
                       </div>
                     </div>
                     <div className="col-xxl-10">
                       <form className="row g-3">
                         <div className="col-md-4">
                           <label htmlFor="fullname" className="custom-form-label">
-                            {t("Full Name")}{" "}
+                            {t("Full_Name")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -96,7 +96,7 @@ function ViewStaff({isOpen,setIsOpen}) {
                         </div>
                         <div className="col-md-4">
                           <label htmlFor="role" className="custom-form-label">
-                           {t("Staff Position")}{" "}
+                           {t("Staff_Position")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <select className="custom-input-field"
@@ -105,11 +105,11 @@ function ViewStaff({isOpen,setIsOpen}) {
                             disabled
                           >
                             <option>{t("Principle")}</option>
-                            <option value="Vice principle">{t("Vice princeple")}</option>
+                            <option value="Vice principle">{t("Vice_princeple")}</option>
                             <option value="Accountent">{t("Accountent")}</option>
-                            <option value="Senior Teacher">{t("Senior Teacher")}</option>
+                            <option value="Senior Teacher">{t("Senior_Teacher")}</option>
                             <option value="Teacher">{t("Teacher")}</option>
-                            <option value="Other Staff">{t("Other Staff")}</option>
+                            <option value="Other Staff">{t("Other_Staff")}</option>
                             <option value="Security">{t("Security")}</option>
                           </select>
                         </div>
@@ -132,7 +132,7 @@ function ViewStaff({isOpen,setIsOpen}) {
                             htmlFor="contact-number"
                             className="custom-form-label"
                           >
-                            {t("Phone Number")}{" "}
+                            {t("Phone_Number")}{" "}
                             <span className="required-validation">*</span>
                           </label>
                           <input
@@ -148,7 +148,7 @@ function ViewStaff({isOpen,setIsOpen}) {
                         <div className="col-md-4">
                           <label htmlFor="joindate" className="custom-form-label">
                             {" "}
-                            {t("Join Date")}
+                            {t("Join_Date")}
                             <span className="required-validation">*</span>
                           </label>
                           <input
